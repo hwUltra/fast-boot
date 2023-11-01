@@ -1,0 +1,186 @@
+syntax = "proto3";
+
+package umsPb;
+
+option go_package ="./umsPb";
+
+
+// ------------------------------------
+// Common Message
+// ------------------------------------
+message IdReq {
+  int64 id = 1;
+}
+
+message IdsReq {
+  string ids = 1;
+}
+
+message IdResp {
+  int64 id = 1;
+}
+
+message SuccessResp {
+}
+
+message SuccessIdResp {
+  int64 id = 1;
+}
+
+
+// ------------------------------------
+// Messages
+// ------------------------------------
+
+//--------------------------------学校-用户收货地址表--------------------------------
+message UserAddress {
+  int64 id = 1; //ID
+  int64 shopId = 2; //店铺id
+  int64 uid = 3; //用户ID
+  string name = 4; //联系人
+  string mobile = 5; //手机号
+  string area = 6; //学校地址
+  string info = 7; //详细地址
+  int64 isDefault = 8; //是否默认
+  string createdAt = 9; //createdAt
+}
+
+message UserAddressListResp {
+  repeated UserAddress userAddress = 1; //userAddress
+}
+
+//--------------------------------用户购物表--------------------------------
+message UserCarts {
+  int64 id = 1; //ID
+  int64 shopId = 2; //店铺id
+  int64 uid = 3; //用户id
+  int64 goodsId = 4; //商品id
+  string goodsName = 5; //商品名称
+  int64  checked = 6; //购物车中商品是否选择状态
+  string picUrl = 7; //商品图片或者商品货品图片
+  int64 num = 8; //数量
+  int64 skuId = 9; //sku id
+  string spec = 10; //spec
+  string specStr = 11; //spec 描述
+  string createdAt = 12; //createdAt
+}
+
+
+//--------------------------------用户反馈表--------------------------------
+message UserFeedback {
+  int64 id = 1; //id
+  int64 shopId = 2; //店铺ID
+  int64 uid = 3; //用户ID
+  int64 typeId = 4; //反馈类型
+  string title = 5; //标题
+  string content = 6; //反馈内容
+  int64 trueName = 7; //是否实名
+  int64 callMust = 8; //是否电话回复
+  int64 status = 9; //状态0未处理  1已处理
+  string responses = 10; //回复意见
+  string createdAt = 11; //createdAt
+}
+
+//--------------------------------第三方登录表--------------------------------
+message UserThird {
+  int64 id = 1; //id
+  string uid = 2; //会员ID
+  string platform = 3; //第三方应用
+  string openid = 4; //第三方唯一ID
+  string unionid = 5; //小程序unionid
+  string nickname = 6; //第三方会员昵称
+  string avatar = 7; //第三方会员头像
+  string accessToken = 8; //access_token
+  string refreshToken = 9; //refresh_token
+  string createdAt = 10; //createdAt
+}
+
+//--------------------------------users--------------------------------
+message User {
+  int64 id = 1; //id
+  string mobile = 2; //电话号码
+  string username = 3; //姓名
+  string nickname = 4; //昵称
+  string avatar = 5; //头像
+  string idCard = 6; //身份证号码
+  int64 gender = 7; //性别 0 未知 1男 2女
+  string signature = 8; //签名
+  string birthday = 9; //生日
+  string tags = 10; //tags
+  string source = 11; //来源，APP H5
+  int64 sourceUid = 12; //邀请uid
+  string createdAt = 13; //createdAt
+  string updatedAt = 14; //updatedAt
+}
+
+message UserForm{
+  int64 id = 1; //id
+  string mobile = 2; //电话号码
+  string username = 3; //姓名
+  string nickname = 4; //昵称
+  string avatar = 5; //头像
+  string idCard = 6; //身份证号码
+  int64 gender = 7; //性别 0 未知 1男 2女
+  string signature = 8; //签名
+  string birthday = 9; //生日
+  string tags = 10; //tags
+  string source = 11; //来源，APP H5
+  int64 sourceUid = 12; //邀请uid
+}
+
+message OpenIdReq {
+  string openId = 2; //openId
+}
+
+message BindReq {
+  string mobile = 1; //电话号码
+  string openId = 2; //openId
+}
+
+message UserInfoResp {
+  int64   uid = 1;
+  string  nickname = 2; //昵称
+  string  avatar = 3; //头像
+  string  mobile = 4; //mobile
+  string  token = 5;
+}
+
+
+message  ListReq{
+  string keywords = 1;
+  int64 pageNum = 2;
+  int64 pageSize = 3;
+}
+
+
+message  UserListResp{
+  repeated User list = 1;
+  int64 Total = 2;
+}
+
+message  UserThirdListResp{
+  repeated UserThird list = 1;
+  int64 Total = 2;
+}
+
+
+
+// ------------------------------------
+// Rpc Func
+// ------------------------------------
+
+service ums{
+  //UserUpdate
+  rpc ByOpenId(OpenIdReq) returns (UserInfoResp);
+  rpc Bind(BindReq) returns (UserInfoResp);
+  //-------
+  rpc UserGet(IdReq) returns (User);
+  rpc UserList(ListReq) returns (UserListResp);
+  rpc UserAdd(UserForm) returns(SuccessIdResp);
+  rpc UserUpdate(UserForm) returns(SuccessResp);
+  rpc UserDel(IdsReq) returns (SuccessResp);
+  //third
+  rpc UserThirdList(ListReq) returns (UserThirdListResp);
+}
+
+

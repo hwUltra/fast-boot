@@ -1,0 +1,57 @@
+info(
+	title: "其他-api"
+	desc: "其他-api"
+	author: "kyle"
+	email: "skywalkerwei@gmail.com"
+)
+
+type (
+	SendSmsReq {
+	}
+	SendSmsResp {
+	}
+
+	WxPayCallBackReq {
+	}
+	WxPayCallBackResp {
+		ReturnCode string `json:"return_code"`
+	}
+
+	FileUpload {
+		Hash string `json:"hash,optional"`
+		Name string `json:"name,optional"`
+		Ext  string `json:"ext,optional"`
+		Size int64  `json:"size,optional"`
+		Path string `json:"path,optional"`
+	}
+)
+
+
+@server(
+	group: other
+)
+service WxApp {
+	@doc(
+		summary: "发送短信"
+	)
+	@handler SendSms
+	post /SendSms(SendSmsReq) returns (SendSmsResp)
+
+	@doc(
+		summary: "文件上传"
+	)
+	@handler FileUpload
+	post /fileUpload(FileUpload) returns (FileUpload)
+}
+
+
+
+
+@server(
+	group: callBack
+)
+service WxApp {
+	@doc "第三方：微信支付回调"
+	@handler WxPay
+	post /callBack/wxPay(WxPayCallBackReq) returns (WxPayCallBackResp)
+}

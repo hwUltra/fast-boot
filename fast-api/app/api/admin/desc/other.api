@@ -1,0 +1,22 @@
+type (
+    FileUpload {
+        Hash string `json:"hash,optional"`
+        Name string `json:"name,optional"`
+        Ext  string `json:"ext,optional"`
+        Size int64  `json:"size,optional"`
+        Path string `json:"path,optional"`
+    }
+)
+
+@server(
+    group: other
+    prefix: /other
+)
+
+service admin-api {
+    // 文件上传
+    @handler FileUpload
+    post /upload(FileUpload) returns (FileUpload)
+}
+
+

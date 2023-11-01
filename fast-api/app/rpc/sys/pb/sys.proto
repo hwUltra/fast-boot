@@ -1,0 +1,490 @@
+syntax = "proto3";
+
+package sysPb;
+
+option go_package = "./sysPb";
+
+// ------------------------------------
+// Common Message
+// ------------------------------------
+message IdReq {
+  int64 id = 1;
+}
+
+message IdsReq {
+  string ids = 1;
+}
+
+message AnyReq {
+}
+
+message IdResp {
+  int64 id = 1;
+}
+
+message SuccessResp {
+}
+
+message SuccessIdResp {
+  int64 id = 1;
+}
+
+//--------------------------------角色表--------------------------------
+message SysRole {
+  int64 id = 1; //id
+  string name = 2; //角色名称
+  string code = 3; //角色编码
+  int64 sort = 4; //显示顺序
+  int64 status = 5; //角色状态(1-正常；0-停用)
+  int64 dataScope = 6; //数据权限(0-所有数据；1-部门及子部门数据；2-本部门数据；3-本人数据)
+  string createdAt = 7; //创建时间
+  string updatedAt = 8; //更新时间
+}
+
+//--------------------------------角色和菜单关联表--------------------------------
+message SysRoleMenu {
+  int64 roleId = 1; //角色ID
+  int64 menuId = 2; //菜单ID
+}
+
+//--------------------------------用户信息表--------------------------------
+message SysUser {
+  int64 id = 1; //id
+  string username = 2; //用户名
+  string nickname = 3; //昵称
+  int64 gender = 4; //性别((1:男;2:女))
+  string password = 5; //密码
+  int64 deptId = 6; //部门ID
+  string avatar = 7; //用户头像
+  string mobile = 8; //联系方式
+  int64 status = 9; //用户状态((1:正常;0:禁用))
+  string email = 10; //用户邮箱
+  string createdAt = 11; //创建时间
+  string updatedAt = 12; //更新时间
+  repeated string roles = 13;
+  string deptName = 14;
+  string  GenderLabel = 15;
+
+}
+
+//-----------sys_user_role---------------------角色和用户关联表--------------------------------
+message SysUserRole {
+  int64 userId = 1; //用户ID
+  int64 roleId = 2; //角色ID
+}
+
+
+message LoginReq {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResp {
+  int64  userId = 1;
+  string accessToken = 2;
+  int64  accessExpire = 3;
+  int64  refreshAfter = 4;
+}
+
+message RefreshTokenReq {
+  int64 userId = 1;
+}
+
+
+
+//用户相关
+message UserGetResp {
+  int64 Id = 1;
+  string username = 2;
+  string nickname = 3;
+  string avatar = 4;
+  int64 deptId = 5;
+  string email = 6;
+  int64 gender = 7;
+  string mobile = 8;
+  int64 status = 9;
+  repeated int64 roleIds = 10;
+  repeated string roles = 11;
+  repeated string perms = 12;
+}
+
+
+
+//--------------------------------菜单管理--------------------------------
+message SysMenu {
+  int64 id = 1; //id
+  int64 parentId = 2; //父菜单ID
+  string treePath = 3; //父节点ID路径
+  string name = 4; //菜单名称
+  int64 type = 5; //菜单类型(1:菜单；2:目录；3:外链；4:按钮)
+  string path = 6; //路由路径(浏览器地址栏路径)
+  string component = 7; //组件路径(vue页面完整路径，省略.vue后缀)
+  string perm = 8; //权限标识
+  int64 visible = 9; //显示状态(1-显示;0-隐藏)
+  int64 sort = 10; //排序
+  string icon = 11; //菜单图标
+  string redirect = 12; //跳转路径
+  string createdAt = 13; //创建时间
+  string updatedAt = 14; //更新时间
+  repeated string  roles = 15;
+}
+
+message SysMenuItem {
+  int64 id = 1; //id
+  int64 parentId = 2;
+  string treePath = 3;
+  string name = 4;
+  int64 type = 5;
+  string path = 6;
+  string component = 7;
+  string perm = 8;
+  int64 visible = 9;
+  int64 sort = 10;
+  string icon = 11;
+  string redirect = 12;
+  repeated SysMenuItem  children = 13;
+}
+
+message RoutesReq {
+  int64 uid = 1;
+  repeated int64 types = 2;
+}
+
+message RoutesResp {
+  repeated SysMenu list = 1;
+}
+
+//列表List
+message MenuListReq {
+  string keywords = 1;
+}
+
+//列表Resp
+message MenuListResp {
+  repeated SysMenuItem list = 1;
+}
+
+
+
+message  MenuForm{
+  int64 id = 1; //id
+  int64 parentId = 2; //父菜单ID
+  string name = 3; //菜单名称
+  int64 type = 4; //菜单类型(1:菜单；2:目录；3:外链；4:按钮)
+  string path = 5; //路由路径(浏览器地址栏路径)
+  string component = 6; //组件路径(vue页面完整路径，省略.vue后缀)
+  string perm = 7; //权限标识
+  int64 visible = 8; //显示状态(1-显示;0-隐藏)
+  int64 sort = 9; //排序
+  string icon = 10; //菜单图标
+  string redirect = 11; //跳转路径
+}
+
+message MenuOption{
+  string label = 1;
+  int64 value = 2;
+  repeated MenuOption children = 3;
+}
+
+message  MenuOptionsResp{
+  repeated MenuOption items = 3;
+}
+
+
+message  UserListReq{
+  string keywords = 1;
+  int64 deptId = 2;
+  int64 status = 3;
+  int64 pageNum = 4;
+  int64 pageSize = 5;
+  string startTime = 6;
+  string endTime = 7;
+}
+
+message UserListResp{
+  repeated SysUser list = 1;
+  int64 Total = 2;
+}
+
+message  UserAddReq{
+  string username = 1; //用户名
+  string nickname = 2; //昵称
+  int64 gender = 3; //性别((1:男;2:女))
+  string password = 4; //密码
+  int64 deptId = 5; //部门ID
+  string avatar = 6; //用户头像
+  string mobile = 7; //联系方式
+  int64 status = 8; //用户状态((1:正常;0:禁用))
+  string email = 9; //用户邮箱
+  repeated int64 roleIds = 10;
+}
+
+message   UserChangePwdReq{
+  int64  userId = 1; //userId
+  string password = 2; //密码
+}
+
+message  UserUpdateReq{
+  int64 id = 1; //id
+  string username = 2; //用户名
+  string nickname = 3; //昵称
+  int64 gender = 4; //性别((1:男;2:女))
+  string password = 5; //密码
+  int64 deptId = 6; //部门ID
+  string avatar = 7; //用户头像
+  string mobile = 8; //联系方式
+  int64 status = 9; //用户状态((1:正常;0:禁用))
+  string email = 10; //用户邮箱
+  repeated int64 roleIds = 11;
+}
+
+message  RoleListReq{
+  string keywords = 1;
+  int64 pageNum = 2;
+  int64 pageSize = 3;
+}
+
+
+message  RoleListResp{
+  repeated SysRole list = 1;
+  int64 Total = 2;
+}
+
+message RoleForm{
+  int64 id = 1;
+  string name = 2;
+  string code = 3;
+  int64 sort = 4;
+  int64 status = 5;
+  int64 dataScope = 6;
+}
+
+message RoleOption{
+  string label = 1;
+  int64 value = 2;
+}
+
+message RoleOptionsResp{
+  repeated RoleOption items = 1;
+}
+
+message  RoleMenuIdsResp{
+  repeated int64 items = 1;
+}
+
+message RoleSetMenuIdsReq{
+  int64 roleId = 1;
+  repeated int64 menuIds = 2;
+}
+
+
+//--------------------------------部门表--------------------------------
+message SysDept {
+  int64 id = 1; //主键
+  string name = 2; //部门名称
+  int64 parentId = 3; //父节点id
+  string treePath = 4; //父节点id路径
+  int64 sort = 5; //显示顺序
+  int64 status = 6; //状态(1:正常;0:禁用)
+  int64 deleted = 7; //逻辑删除标识(1:已删除;0:未删除)
+  int64 createBy = 8; //创建人ID
+  int64 updateBy = 9; //修改人ID
+  string createdAt = 10; //创建时间
+  string updatedAt = 11; //更新时间
+}
+
+
+message DeptForm{
+  int64 id = 1;
+  string name = 2;
+  int64 parentId = 3;
+  string treePath = 4;
+  int64 sort = 5;
+  int64 status = 6;
+  int64 createBy = 7;
+  int64 updateBy = 8;
+}
+
+message DeptListReq{
+  string keywords = 1;
+  int64 status = 2;
+}
+
+message SysDeptItem {
+  int64 id = 1; //主键
+  string name = 2; //部门名称
+  int64 parentId = 3; //父节点id
+  string treePath = 4; //父节点id路径
+  int64 sort = 5; //显示顺序
+  int64 status = 6; //状态(1:正常;0:禁用)
+  int64 deleted = 7; //逻辑删除标识(1:已删除;0:未删除)
+  int64 createBy = 8; //创建人ID
+  int64 updateBy = 9; //修改人ID
+  string createdAt = 10; //创建时间
+  string updatedAt = 11; //更新时间
+  repeated SysDeptItem  children = 12;
+}
+
+message DeptListResp{
+  repeated SysDeptItem list = 1;
+}
+
+message DeptOption{
+  string label = 1;
+  int64 value = 2;
+  repeated DeptOption children = 3;
+}
+
+message DeptOptionResp{
+  repeated DeptOption items = 1;
+}
+
+//--------------------------------字典数据表--------------------------------
+message SysDict {
+  int64 id = 1; //主键
+  string typeCode = 2; //字典类型编码
+  string name = 3; //字典项名称
+  string value = 4; //字典项值
+  int64 sort = 5; //排序
+  int64 status = 6; //状态(1:正常;0:禁用)
+  int64 defaulted = 7; //是否默认(1:是;0:否)
+  string remark = 8; //备注
+  string createdAt = 9; //创建时间
+  string updatedAt = 10; //更新时间
+}
+
+message SysDictType {
+  int64 id = 1; //主键
+  string name = 2; //类型名称
+  string code = 3; //类型编码
+  int64 status = 4; //状态(1:正常;0:禁用)
+  string remark = 5; //备注
+  string createdAt = 6; //创建时间
+  string updatedAt = 7; //更新时间
+}
+
+
+message DictTypeForm{
+  int64 id = 1; //主键
+  string name = 2; //类型名称
+  string code = 3; //类型编码
+  int64 status = 4; //状态(1:正常;0:禁用)
+  string remark = 5; //备注
+}
+
+message DictForm{
+  string typeCode = 1; //字典类型编码
+  string name = 2; //字典项名称
+  string value = 3; //字典项值
+  int64 sort = 4; //排序
+  int64 status = 5; //状态(1:正常;0:禁用)
+  string remark = 6; //备注
+  int64 id = 7;
+}
+
+message DictListReq{
+  string typeCode = 1;
+  int64 pageNum = 2;
+  int64 pageSize = 3;
+}
+
+message DictListResp{
+  repeated SysDict list = 1;
+  int64 Total = 2;
+}
+
+message DictTypeListReq{
+  string keywords = 1;
+  int64 pageNum = 3;
+  int64 pageSize = 4;
+}
+
+message DictTypeListResp{
+  repeated SysDictType list = 1;
+  int64 Total = 2;
+}
+
+message DictTypeOption{
+  string label = 1;
+  int64 value = 2;
+  repeated DeptOption children = 3;
+}
+
+message DictOption{
+  string label = 1;
+  string value = 2;
+  repeated DeptOption children = 3;
+}
+
+message DictTypeOptionsResp{
+  repeated DictTypeOption items = 1;
+}
+
+message DictOptionsResp{
+  repeated DictOption items = 1;
+}
+
+message   TypeReq{
+  string typeCode = 1;
+}
+
+
+
+
+service sys{
+
+  rpc Login(LoginReq) returns (LoginResp);
+  rpc RefreshToken(RefreshTokenReq) returns (LoginResp);
+  rpc UserList(UserListReq) returns (UserListResp);
+  rpc UserGet(IdReq) returns (UserGetResp);
+  rpc UserAdd(UserAddReq) returns (IdResp);
+  rpc UserUpdate(UserUpdateReq) returns (SuccessResp);
+  rpc UserChangePwd(UserChangePwdReq) returns (SuccessResp);
+  rpc UserDel(IdsReq) returns (SuccessResp);
+
+  rpc RoleList(RoleListReq) returns (RoleListResp);
+  rpc RoleOptions(AnyReq) returns (RoleOptionsResp);
+  rpc RoleGet(IdReq) returns (SysRole);
+  rpc RoleAdd(RoleForm) returns (IdResp);
+  rpc RoleUpdate(RoleForm) returns (SuccessResp);
+  rpc RoleDel(IdsReq) returns (SuccessResp);
+  rpc RoleMenuIds(IdReq) returns (RoleMenuIdsResp);
+  rpc RoleSetMenuIds(RoleSetMenuIdsReq) returns (SuccessResp);
+
+  rpc Routes(RoutesReq) returns (RoutesResp);
+  rpc MenuList(MenuListReq) returns (MenuListResp);
+  rpc MenuGet(IdReq) returns (SysMenu);
+  rpc MenuAdd(MenuForm) returns (SuccessResp);
+  rpc MenuUpdate(MenuForm) returns (SuccessResp);
+  rpc MenuDel(IdsReq) returns (SuccessResp);
+  rpc MenuOptions(AnyReq) returns (MenuOptionsResp);
+
+  rpc DeptAdd(DeptForm) returns (SuccessResp);
+  rpc DeptUpdate(DeptForm) returns (SuccessResp);
+  rpc DeptDel(IdsReq) returns (SuccessResp);
+  rpc DeptGet(IdReq) returns (SysDept);
+  rpc DeptList(DeptListReq) returns (DeptListResp);
+  rpc DeptOptions(AnyReq) returns (DeptOptionResp);
+
+
+  rpc DictTypeAdd(DictTypeForm) returns (SuccessResp);
+  rpc DictTypeUpdate(DictTypeForm) returns (SuccessResp);
+  rpc DictTypeDel(IdsReq) returns (SuccessResp);
+  rpc DictTypeGet(IdReq) returns (SysDictType);
+  rpc DictTypeList(DictTypeListReq) returns (DictTypeListResp);
+  rpc DictTypeOptions(AnyReq) returns (DictTypeOptionsResp);
+
+  rpc DictAdd(DictForm) returns (SuccessResp);
+  rpc DictUpdate(DictForm) returns (SuccessResp);
+  rpc DictDel(IdsReq) returns (SuccessResp);
+  rpc DictGet(IdReq) returns (SysDict);
+  rpc DictList(DictListReq) returns (DictListResp);
+  rpc DictOptions(TypeReq) returns (DictOptionsResp);
+
+
+}
+
+
+
+
+

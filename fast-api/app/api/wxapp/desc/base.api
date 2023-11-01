@@ -1,0 +1,22 @@
+type PathIdReq {
+	Id int64 `path:"id"`
+}
+
+type PathIdsReq {
+	Ids string `path:"ids"`
+}
+
+type IdReq {
+	Id int64 `form:"id"`
+}
+
+
+type IdResp {
+	ID int64 `json:"id"`
+}
+
+type Base {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+}
+

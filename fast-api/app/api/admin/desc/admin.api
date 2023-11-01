@@ -1,0 +1,23 @@
+info(
+	desc: "fast-boot admin-api"
+	author: "kyle"
+	email: "skywalkerwei@gmail.com"
+)
+
+//auth
+import "auth.api"
+//sys
+import "sys-user.api"
+import "sys-menu.api"
+import "sys-role.api"
+import "sys-dept.api"
+import "sys-dict.api"
+//ums
+import "ums-user.api"
+//pms
+import "pms-shop.api"
+import "pms-goods.api"
+//oms
+import "oms-order.api"
+//other
+import "other.api"

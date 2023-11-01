@@ -1,0 +1,52 @@
+Name: admin-api
+Host: 0.0.0.0
+Port: 8888
+MaxBytes: 10485760
+
+Auth:
+  AccessSecret: ad879037-c7a4-4063-9236-6bfc35d54b7d
+  AccessExpire: 86400
+
+Redis:
+  Host: 127.0.0.1:6379
+  Pass:
+  Type: node
+
+MinioX:
+  MinIOAccessKeyID: asdDScnMJrTk9Briqwo4
+  MinIOAccessSecretKey: 9N6lxKhBA2qgRsTJQf4bjRxiGpk6mCndFjjok7ij
+  MinIOEndpoint: www.imguo.com:9000
+  MinIOBucket: files
+  MinIOSSLBool: false
+  MinIOBucketLocation: cn-north-1
+  MinIOBasePath: https://img.imguo.com
+
+
+#系统
+SysRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: sys.rpc
+
+#用户
+UmsRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: ums.rpc
+
+PmsRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: pms.rpc
+
+Log:
+  Mode: file
+  Path: ../../../logs/api-admin
+
+#Prometheus:
+#  Host: 127.0.0.1
+#  Port: 8188
+#  Path: /metrics

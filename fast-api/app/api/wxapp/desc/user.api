@@ -1,0 +1,42 @@
+info(
+	title: "user-api"
+	desc: "user-api"
+	author: "kyle"
+	email: "skywalkerwei@gmail.com"
+)
+
+type (
+	userForm {
+		Id        int64  `json:"id,optional"`
+		Mobile    string `json:"mobile,optional"`         //电话号码
+		Username      string `json:"username,optional"`             //姓名
+		Nickname  string `json:"nickname,optional"`     //昵称
+		Avatar    string `json:"avatar,optional"`         //头像
+		IdCard    string `json:"idCard,optional"`         //身份证号码
+		Gender       int64  `json:"gender,optional"`              //性别 0 未知 1男 2女
+		Signature string `json:"signature,optional"`
+		Birthday  string `json:"birthday,optional"`
+		Tags      string `json:"tags,optional"`
+		Source    string `json:"source,optional"`
+		SourceUid int64  `json:"sourceUid,optional"`
+		CreatedAt  string `json:"created_at"`
+	}
+
+	userInfo {
+		Id        int64  `json:"id"`
+		Mobile    string `json:"mobile"`         //电话号码
+		Username  string `json:"username,optional"`
+		Nickname  string `json:"nickname"`     //昵称
+		Avatar    string `json:"avatar"`         //头像
+		IdCard    string `json:"idCard"`         //身份证号码
+		Gender       int64  `json:"gender,optional"`              //性别 0 未知 1男 2女
+		Signature string `json:"signature"`   //签名
+		Birthday  string `json:"birthday"`    //生日
+		Tags      string `json:"tags"`            //tags
+		Source    string `json:"source"`        //来源，APP H5
+		SourceUid int64  `json:"sourceUid"` //邀请uid
+	}
+
+)
+
+

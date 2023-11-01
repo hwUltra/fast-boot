@@ -1,0 +1,94 @@
+info(
+	title: "auth-api"
+	desc: "auth-api"
+	author: "kyle"
+	email: "skywalkerwei@gmail.com"
+)
+
+type (
+	// 用户登录
+	AuthCodeReq {
+		Code   		string `json:"code"`
+	}
+
+	// 解密
+	DecryptReq {
+		OpenId   		string `json:"openId"`
+		EncryptedData   string `json:"encryptedData"`
+		Iv   			string `json:"iv"`
+	}
+
+	MobileResp{
+		PhoneNumber     string `json:"phoneNumber"`
+		PurePhoneNumber string `json:"purePhoneNumber"`
+	}
+
+
+	BindReq {
+		OpenId   		string `json:"openId"`
+		EncryptedData   string `json:"encryptedData"`
+		Iv   			string `json:"iv"`
+	}
+
+	// 用户信息
+	TokenResp {
+		OpenID  string `json:"openID"`
+		Token  string `json:"token"`
+	}
+
+	userInfo {
+		Id        int64  `json:"id"`
+		Mobile    string `json:"mobile"`         //电话号码
+		Name      string `json:"name"`             //姓名
+		Nickname  string `json:"nickname"`     //昵称
+		Avatar    string `json:"avatar"`         //头像
+		IdCard    string `json:"idCard"`         //身份证号码
+		Sex       int64  `json:"sex"`              //性别 0 未知 1男 2女
+		Signature string `json:"signature"`   //签名
+		Birthday  string `json:"birthday"`    //生日
+		Tags      string `json:"tags"`            //tags
+		Source    string `json:"source"`        //来源，APP H5
+		SourceUid int64  `json:"sourceUid"` //邀请uid
+	}
+
+)
+
+
+@server(
+	group: auth
+)
+service WxApp {
+	@doc(
+		summary: "登录"
+	)
+	@handler code
+	post /auth/code(AuthCodeReq) returns (TokenResp)
+
+	@doc(
+		summary: "解密-手机号"
+	)
+	@handler GetMobile
+	post /auth/getMobile(DecryptReq) returns (MobileResp)
+
+	@doc(
+		summary: "绑定用户手机"
+	)
+	@handler bind
+	post /auth/bind(BindReq) returns (TokenResp)
+
+}
+
+@server(
+	group: auth
+	jwt: Auth
+)
+service WxApp {
+	@doc(
+		summary: "获取用户信息"
+	)
+	@handler me
+	get /me returns (userInfo)
+
+
+
+}

@@ -1,0 +1,24 @@
+dbType: mysql
+host: localhost
+port: 3306
+user: root
+password: 123456
+schema: boot
+tables:
+  - name: pms_shop
+  - name: pms_brand
+  - name: pms_category
+  - name: pms_category_attribute
+  - name: pms_goods
+  - name: pms_goods_attribute
+  - name: pms_sku
+onlyModel: true
+outPath: ./data/model/
+outFile:
+withUnitTest: false
+modelPkgName: model
+fieldNullable: false
+fieldWithIndexTag: false
+fieldWithTypeTag: false
+fieldCoverable: false
+ 

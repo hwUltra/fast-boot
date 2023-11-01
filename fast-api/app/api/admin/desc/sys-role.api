@@ -1,0 +1,106 @@
+info(
+    desc: "角色"
+    author: "kyle"
+    email: "skywalkerwei@gmail.com"
+)
+
+import "base.api"
+
+
+type (
+    SysRoleInfo {
+        Id  int64 `json:"id"`
+        Name  string `json:"name"`
+        Code  string `json:"code"`
+        Sort  int64 `json:"sort"`
+        Status  int64 `json:"status"`
+        DataScope  int64 `json:"dataScope"`
+    }
+
+    SysRoleListReq  {
+        Keywords string `form:"keywords,omitempty,optional"`
+        PageNum int64 `form:"pageNum,omitempty,optional,default=1"`
+        PageSize int64 `form:"pageSize,omitempty,optional,default=10"`
+    }
+
+    SysRoleListResp  {
+        List []*SysRoleInfo `json:"list"`
+        Total  int64 `json:"total"`
+    }
+
+    SysRoleFormReq {
+        Id  int64 `json:"id,optional"`
+        Name  string `json:"name"`  // 角色名称
+        Code  string `json:"code"`  // 角色编码
+        Sort  int64 `json:"sort"`  // 显示顺序
+        Status  int64 `json:"status"`  // 角色状态(1-正常；0-停用)
+        DataScope  int64 `json:"dataScope"`  // 数据权限(0-所有数据；1-部门及子部门数据；2-本部门数据；3-本人数据)
+    }
+
+    SysMenuIdsResp{
+        Items []int64 `json:"items"`
+    }
+
+    SysSetMenuIdsReq{
+        RoleId  int64 `json:"roleId,optional"`
+        MenuIds  []int64 `json:"menuIds,optional"`
+    }
+
+    SysRoleChangeStatusReq{
+        RoleId  int64 `json:"roleId"`
+        Status  string `json:"status"`
+    }
+
+    SysRoleOption {
+        Label string `json:"label"`
+        Value int64 `json:"value"`
+    }
+
+    SysRoleOptionsResp {
+        List []*SysRoleOption `json:"list"`
+    }
+
+)
+
+@server(
+    jwt: Auth
+    group: sys/role
+    prefix: /sys/role
+)
+service admin-api {
+    @doc "角色分页列表"
+    @handler List
+    get /list (SysRoleListReq) returns (SysRoleListResp)
+
+    @doc "新增角色"
+    @handler Add
+    post /add (SysRoleFormReq) returns (IdResp)
+
+    @doc "获取角色"
+    @handler Get
+    get /:id (PathIdReq)  returns (SysRoleInfo)
+
+    @doc "角色下拉列表"
+    @handler Options
+    get /options  returns (SysRoleOptionsResp)
+
+    @doc "修改角色"
+    @handler Update
+    post /update (SysRoleFormReq) returns (IdResp)
+
+    @doc "删除角色"
+    @handler Del
+    get /del/:ids (PathIdsReq)
+
+    @doc "获取角色的菜单ID集合"
+    @handler MenuIds
+    get /menuIds/:id (PathIdReq)  returns (SysMenuIdsResp)
+
+    @doc "分配菜单权限给角色"
+    @handler SetMenuIds
+    post /setMenuIds (SysSetMenuIdsReq)
+
+    @doc "修改用户状态"
+    @handler ChangeStatus
+    post /changeStatus (SysRoleChangeStatusReq)
+}
