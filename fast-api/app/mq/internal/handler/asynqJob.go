@@ -1,7 +1,8 @@
-package deferMq
+package handler
 
 import (
 	"context"
+	"fast-boot/app/mq/internal/logic"
 	"fast-boot/app/mq/internal/svc"
 	"fmt"
 	"log"
@@ -9,10 +10,6 @@ import (
 	"github.com/hibiken/asynq"
 )
 
-/*
-*
-监听关闭订单
-*/
 type AsynqJob struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
@@ -43,7 +40,8 @@ func (l *AsynqJob) Start() {
 
 	mux := asynq.NewServeMux()
 
-	mux.HandleFunc("msg", l.testJob)
+	mux.HandleFunc("testTask", logic.TestJob)
+	mux.HandleFunc("orderTask", logic.OrderJob)
 
 	if err := srv.Run(mux); err != nil {
 		log.Fatalf("could not run server: %v", err)

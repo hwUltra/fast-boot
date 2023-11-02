@@ -8,4 +8,5 @@ import (
 type Config struct {
 	service.ServiceConf
 	Redis redis.RedisConf
+	//SendWxMiniTplMessageConf kq.KqConf
 }

@@ -18,6 +18,7 @@ require (
 	gorm.io/gorm v1.25.5
 	gorm.io/plugin/dbresolver v1.4.7
 	gorm.io/plugin/soft_delete v1.2.1
+	github.com/go-pay/gopay v1.5.97
 )
 
 require (

@@ -1,8 +1,9 @@
-package deferMq
+package handler
 
 import (
 	"context"
 	"encoding/json"
+	"fast-boot/app/mq/internal/logic"
 	"fast-boot/app/mq/internal/svc"
 	"fmt"
 	"log"
@@ -11,10 +12,6 @@ import (
 	"github.com/hibiken/asynq"
 )
 
-/*
-*
-监听关闭订单
-*/
 type SchedulerJob struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
@@ -41,11 +38,11 @@ func (l *SchedulerJob) Start() {
 		},
 	)
 
-	payload, err := json.Marshal(TestTaskPayload{Sn: "sb"})
+	payload, err := json.Marshal(logic.TestTaskPayload{Sn: "msg for sn"})
 	if err != nil {
 		log.Fatal(err)
 	}
-	entryID, err := srv.Register("*/1 * * * *", asynq.NewTask("msg", payload))
+	entryID, err := srv.Register("*/2 * * * *", asynq.NewTask("testTask", payload))
 	if err != nil {
 		log.Fatal(err)
 	}

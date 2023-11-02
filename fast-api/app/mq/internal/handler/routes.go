@@ -1,4 +1,4 @@
-package listen
+package handler
 
 import (
 	"context"
@@ -16,10 +16,19 @@ func Mqs(c config.Config) []service.Service {
 
 	var services []service.Service
 
-	//kq ：消息队列.
-	//services = append(services, KqMqs(c, ctx, svcContext)...)
-	//asynq ： 延迟队列、定时任务
-	services = append(services, AsynqMqs(c, ctx, svcContext)...)
+	services = append(services, AsynqMqs(ctx, svcContext)...)
 
 	return services
+}
+
+// AsynqMqs  异步队列
+func AsynqMqs(ctx context.Context, svcContext *svc.ServiceContext) []service.Service {
+
+	return []service.Service{
+		//监听延迟队列
+		NewAsynqJob(ctx, svcContext),
+		//监听定时任务
+		NewSchedulerJob(ctx, svcContext),
+	}
+
 }
