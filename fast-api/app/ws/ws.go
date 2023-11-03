@@ -1,8 +1,10 @@
 package main
 
 import (
-	"fast-boot/app/ws/internal"
 	"fast-boot/app/ws/internal/config"
+	"fast-boot/app/ws/internal/service"
+	"fast-boot/common/websocket/core"
+
 	"flag"
 	"github.com/zeromicro/go-zero/core/conf"
 	"net/http"
@@ -25,19 +27,9 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 	server := rest.MustNewServer(c.RestConf, rest.WithCors())
-	//engine := rest.MustNewServer(rest.RestConf{
-	//	ServiceConf: service.ServiceConf{
-	//		Log: logx.LogConf{
-	//			Mode: "console",
-	//		},
-	//	},
-	//	Port:         *port,
-	//	Timeout:      *timeout,
-	//	CpuThreshold: *cpu,
-	//})
 	defer server.Stop()
 
-	hub := internal.NewHub()
+	hub := core.CreateHubFactory()
 	go hub.Run()
 
 	server.AddRoute(rest.Route{
@@ -52,7 +44,6 @@ func main() {
 				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 				return
 			}
-
 			http.ServeFile(w, r, "home.html")
 		},
 	})
@@ -61,7 +52,9 @@ func main() {
 		Method: http.MethodGet,
 		Path:   "/ws",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
-			internal.ServeWs(hub, w, r)
+			if ws, ok := service.OnOpen(hub, w, r); ok {
+				ws.OnMessage(r.Context())
+			}
 		},
 	})
 
