@@ -55,39 +55,10 @@ type WxPayCallBackResp struct {
 	ReturnCode string `json:"return_code"`
 }
 
-type FileUpload struct {
-	Hash string `json:"hash,optional"`
-	Name string `json:"name,optional"`
-	Ext  string `json:"ext,optional"`
-	Size int64  `json:"size,optional"`
-	Path string `json:"path,optional"`
-}
-
-type UserInfoRep struct {
-	Mobile    string `json:"mobile,optional"`    //电话号码
-	Name      string `json:"name,optional"`      //姓名
-	Nickname  string `json:"nickname,optional"`  //昵称
-	Avatar    string `json:"avatar,optional"`    //头像
-	IdCard    string `json:"idCard,optional"`    //身份证号码
-	Sex       int64  `json:"sex,optional"`       //性别 0 未知 1男 2女
-	Signature string `json:"signature,optional"` //签名
-	Birthday  string `json:"birthday,optional"`  //生日
-	Tags      string `json:"tags,optional"`      //tags
-	Source    string `json:"source,optional"`    //来源，APP H5
-	SourceUid int64  `json:"sourceUid,optional"` //邀请uid
-}
-
-type UserInfoResq struct {
-	Id        int64  `json:"id"`
-	Mobile    string `json:"mobile"`    //电话号码
-	Name      string `json:"name"`      //姓名
-	Nickname  string `json:"nickname"`  //昵称
-	Avatar    string `json:"avatar"`    //头像
-	IdCard    string `json:"idCard"`    //身份证号码
-	Sex       int64  `json:"sex"`       //性别 0 未知 1男 2女
-	Signature string `json:"signature"` //签名
-	Birthday  string `json:"birthday"`  //生日
-	Tags      string `json:"tags"`      //tags
-	Source    string `json:"source"`    //来源，APP H5
-	SourceUid int64  `json:"sourceUid"` //邀请uid
+type FileUploadResp struct {
+	Hash string `json:"hash"`
+	Name string `json:"name"`
+	Ext  string `json:"ext"`
+	Size int64  `json:"size"`
+	Path string `json:"path"`
 }

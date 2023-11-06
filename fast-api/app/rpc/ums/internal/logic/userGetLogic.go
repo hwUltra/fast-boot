@@ -3,7 +3,9 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
+	"fast-boot/common/xerr"
 	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
 
 	"fast-boot/app/rpc/ums/internal/svc"
 	"fast-boot/app/rpc/ums/umsPb"
@@ -31,7 +33,7 @@ func (l *UserGetLogic) UserGet(in *umsPb.IdReq) (*umsPb.User, error) {
 
 	res := &umsPb.User{}
 	if err := copier.Copy(&res, userInfo); err != nil {
-		return nil, err
+		return nil, errors.Wrapf(xerr.NewErrMsg("数据转化有误"), "UserAdd err:%v", err)
 	}
 
 	//特别处理

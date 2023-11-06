@@ -1,126 +1,211 @@
 {
-  "pages": [
-    //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-    {
-      "path": "pages/index/index",
-      "style": {
-		  // "navigationStyle": "custom" ,
-		  // "navigationBarTextStyle": "white" ,
-        "navigationBarTitleText": "首页",
-		"transparentTitle": "auto"
-      }
-    },
-    {
-      "path": "pages/mine/index",
-      "style": {
-        "navigationBarTitleText": "个人中心",
-        "enablePullDownRefresh": false
-      }
-    }
-  ],
-  // 分包配置 https://uniapp.dcloud.net.cn/collocation/pages.html#subpackages
-  "subPackages": [
-	{
-	  "root": "subPackages/home",
-	  "pages": [
-	      {
-	        "path": "ad",
-	        "style": {
-	          "navigationBarTitleText": "adtest",
-	          "enablePullDownRefresh": false
-	        }
-	      },
-		  {
-		    "path": "tt",
-		    "style": {
-		      "navigationBarTitleText": "tt-title",
-		      "enablePullDownRefresh": false
-		    }
-		  }
-	    ]
-	},
-    {
-      "root": "subPackages/test",
-      "pages": [
-        {
-          "path": "demo",
-          "style": {
-            "navigationBarTitleText": "测试分包",
-            "enablePullDownRefresh": false
-          }
-        }
-      ]
-    },
-    {
-      "root": "subPackages/mine",
-      "pages": [
-        {
-          "path": "user",
-          "style": {
-            "navigationBarTitleText": "个人信息",
-            "enablePullDownRefresh": false
-          }
-        },
+	"pages": [
+		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-		  "path": "address",
-		  "style": {
-		    "navigationBarTitleText": "地址",
-		    "enablePullDownRefresh": false
-		  }
+			"path": "pages/index/index",
+			"style": {
+				// #ifdef MP 
+				"navigationBarTitleText": "首页",
+				//"navigationStyle": "custom",
+				// #endif 
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent",
+						"searchInput": {
+							"backgroundColor": "rgba(231, 231, 231,.7)",
+							"borderRadius": "16px",
+							"placeholder": "请输入地址 如：武汉",
+							"disabled": true,
+							"placeholderColor": "#606266"
+						},
+						"buttons": [{
+								"fontSrc": "/static/yticon.ttf",
+								"text": "\ue60d",
+								"fontSize": "26",
+								"color": "#303133",
+								"float": "left",
+								"background": "rgba(0,0,0,0)"
+							},
+							{
+								"fontSrc": "/static/yticon.ttf",
+								"text": "\ue744",
+								"fontSize": "27",
+								"color": "#303133",
+								"background": "rgba(0,0,0,0)",
+								"redDot": true
+							}
+						]
+					}
+				}
+			}
 		},
 		{
-		  "path": "addressAdd",
-		  "style": {
-		    "navigationBarTitleText": "添加地址",
-		    "enablePullDownRefresh": false
-		  }
+			"path": "pages/cate/index",
+			"style": {
+				"navigationBarTitleText": "分类",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/cart/index",
+			"style": {
+				"navigationBarTitleText": "购物车",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/mine/index",
+			"style": {
+				"navigationBarTitleText": "我的",
+				// #ifdef MP
+				"navigationStyle": "custom",
+				// #endif
+				"app-plus": {
+					"bounce": "none",
+					"titleNView": {
+						"type": "transparent",
+						"buttons": [{
+								"fontSrc": "/static/yticon.ttf",
+								"text": "\ue60f",
+								"fontSize": "24",
+								"color": "#303133",
+								"width": "46px",
+								"background": "rgba(0,0,0,0)"
+							},
+							{
+								"fontSrc": "/static/yticon.ttf",
+								"text": "\ue744",
+								"fontSize": "28",
+								"color": "#303133",
+								"background": "rgba(0,0,0,0)",
+								"redDot": true
+							}
+						]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false,
+					"animationType": "slide-in-bottom"
+				}
+			}
 		}
-      ]
-    }
-  ],
-  // 分包预载配置 https://uniapp.dcloud.net.cn/collocation/pages.html#preloadrule
-  "preloadRule": {
-    // 在进入小程序某个页面时，由框架自动预下载可能需要的分包，提升进入后续分包页面时的启动速度
-    "pages/index/index": {
-      "network": "all", // 在指定网络下预下载，可选值为：all（不限网络）、wifi（仅wifi下预下载）
-      "packages": [
-		"subPackages/home",
-        "subPackages/test",
-        "subPackages/mine"
-      ] // 进入页面后预下载分包的 root 或 name。__APP__ 表示主包。
-    }
-  },
-  "easycom": {
-    // 注意一定要放在custom里，否则无效，https://ask.dcloud.net.cn/question/131175
-    "custom": {
-		"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
-    }
-  },
-  "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
-  },
-  "tabBar": {
-    "color": "#7A7E83",
-    "selectedColor": "#000",
-    "borderStyle": "black",
-    "backgroundColor": "#ffffff",
-    // "custom": true, 
-    "list": [
-      {
-        "pagePath": "pages/index/index",
-        "text": "首页",
-        "iconPath": "static/images/tabBar/index.png",
-        "selectedIconPath": "static/images/tabBar/index_selected.png"
-      },
-      {
-        "pagePath": "pages/mine/index",
-        "text": "我的",
-        "iconPath": "static/images/tabBar/mine.png",
-        "selectedIconPath": "static/images/tabBar/mine_selected.png"
-      }
-    ]
-  }
+	],
+	// 分包配置 https://uniapp.dcloud.net.cn/collocation/pages.html#subpackages
+	"subPackages": [{
+			"root": "subPackages/home",
+			"pages": [{
+					"path": "ad",
+					"style": {
+						"navigationBarTitleText": "adtest",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "tt",
+					"style": {
+						"navigationBarTitleText": "tt-title",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
+		},
+		{
+			"root": "subPackages/test",
+			"pages": [{
+				"path": "demo",
+				"style": {
+					"navigationBarTitleText": "测试分包",
+					"enablePullDownRefresh": false
+				}
+			}]
+		},
+		{
+			"root": "subPackages/mine",
+			"pages": [{
+					"path": "user",
+					"style": {
+						"navigationBarTitleText": "个人信息",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "address",
+					"style": {
+						"navigationBarTitleText": "地址",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "addressAdd",
+					"style": {
+						"navigationBarTitleText": "添加地址",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
+		}
+	],
+	// 分包预载配置 https://uniapp.dcloud.net.cn/collocation/pages.html#preloadrule
+	"preloadRule": {
+		// 在进入小程序某个页面时，由框架自动预下载可能需要的分包，提升进入后续分包页面时的启动速度
+		"pages/index/index": {
+			"network": "all", // 在指定网络下预下载，可选值为：all（不限网络）、wifi（仅wifi下预下载）
+			"packages": [
+				"subPackages/home",
+				"subPackages/test",
+				"subPackages/mine"
+			] // 进入页面后预下载分包的 root 或 name。__APP__ 表示主包。
+		}
+	},
+	"easycom": {
+		// 注意一定要放在custom里，否则无效，https://ask.dcloud.net.cn/question/131175
+		"custom": {
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+		}
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#C0C4CC",
+		"selectedColor": "#fa436a",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		// "custom": true, 
+		"list": [{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "static/images/tabBar/home.png",
+				"selectedIconPath": "static/images/tabBar/home_selected.png"
+			},
+			{
+				"pagePath": "pages/cate/index",
+				"text": "分类",
+				"iconPath": "static/images/tabBar/cate.png",
+				"selectedIconPath": "static/images/tabBar/cate_selected.png"
+			},
+			{
+				"pagePath": "pages/cart/index",
+				"text": "购物车",
+				"iconPath": "static/images/tabBar/cart.png",
+				"selectedIconPath": "static/images/tabBar/cart_selected.png"
+			},
+			{
+				"pagePath": "pages/mine/index",
+				"text": "我的",
+				"iconPath": "static/images/tabBar/m.png",
+				"selectedIconPath": "static/images/tabBar/m_selected.png"
+			}
+		]
+	}
 }

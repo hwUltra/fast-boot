@@ -29,7 +29,7 @@ type (
 		Nickname  string `json:"nickname"`     //昵称
 		Avatar    string `json:"avatar"`         //头像
 		IdCard    string `json:"idCard"`         //身份证号码
-		Gender       int64  `json:"gender,optional"`              //性别 0 未知 1男 2女
+		Gender    int64  `json:"gender,optional"`              //性别 0 未知 1男 2女
 		Signature string `json:"signature"`   //签名
 		Birthday  string `json:"birthday"`    //生日
 		Tags      string `json:"tags"`            //tags

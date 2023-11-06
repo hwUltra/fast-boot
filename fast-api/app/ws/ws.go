@@ -4,7 +4,6 @@ import (
 	"fast-boot/app/ws/internal/config"
 	"fast-boot/app/ws/internal/service"
 	"fast-boot/common/websocket/core"
-
 	"flag"
 	"github.com/zeromicro/go-zero/core/conf"
 	"net/http"
@@ -52,7 +51,7 @@ func main() {
 		Method: http.MethodGet,
 		Path:   "/ws",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
-			if ws, ok := service.OnOpen(hub, w, r); ok {
+			if ws, ok := service.OnOpen(hub, w, r, c); ok {
 				ws.OnMessage(r.Context())
 			}
 		},

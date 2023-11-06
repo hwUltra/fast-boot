@@ -23,20 +23,19 @@ type Client struct {
 	ClientMoreParams // 这里追加一个结构体，方便开发者在成功上线后，可以自定义追加更多字段信息
 }
 
-// 处理握手+协议升级
+// OnOpen 处理握手+协议升级
 func (c *Client) OnOpen(hub *Hub, w http.ResponseWriter, r *http.Request) (*Client, bool) {
 	// 1.升级连接,从http--->websocket
 	defer func() {
 		err := recover()
 		if err != nil {
-			if val, ok := err.(error); ok {
-				fmt.Println("websocket onopen 发生错误", val)
-			}
+			fmt.Println("websocket onopen 发生错误", err)
 		}
 	}()
 	var upGrader = websocket.Upgrader{
 		ReadBufferSize:  20480,
 		WriteBufferSize: 20480,
+		Subprotocols:    []string{r.Header.Get("Sec-WebSocket-Protocol")},
 		CheckOrigin: func(r *http.Request) bool {
 			return true
 		},
@@ -47,9 +46,6 @@ func (c *Client) OnOpen(hub *Hub, w http.ResponseWriter, r *http.Request) (*Clie
 		fmt.Println("websocket Upgrade 协议升级, 发生错误" + err.Error())
 		return nil, false
 	} else {
-		//if wsHub, ok := WebsocketHub.(*Hub); ok {
-		//	c.Hub = wsHub
-		//}
 		c.Hub = hub
 		c.Conn = wsConn
 		c.Send = make(chan []byte, 20480)
@@ -57,7 +53,7 @@ func (c *Client) OnOpen(hub *Hub, w http.ResponseWriter, r *http.Request) (*Clie
 		c.ReadDeadline = time.Second * 100
 		c.WriteDeadline = time.Second * 35
 
-		if err := c.SendMessage(websocket.TextMessage, WebsocketHandshakeSuccess); err != nil {
+		if err := c.SendMessage(websocket.TextMessage, []byte(WebsocketHandshakeSuccess)); err != nil {
 			fmt.Println("websocket  Write Msg(send msg) 失败", err)
 		}
 		c.Conn.SetReadLimit(65535) // 设置最大读取长度
@@ -74,9 +70,7 @@ func (c *Client) ReadPump(callbackOnMessage func(messageType int, receivedData [
 	defer func() {
 		err := recover()
 		if err != nil {
-			if realErr, isOk := err.(error); isOk {
-				fmt.Println("websocket ReadPump(实时读取消息)协程出错", realErr)
-			}
+			fmt.Println("websocket ReadPump(实时读取消息)协程出错", err)
 		}
 		callbackOnClose()
 	}()
@@ -86,7 +80,7 @@ func (c *Client) ReadPump(callbackOnMessage func(messageType int, receivedData [
 		if c.State == 1 {
 			mt, bReceivedData, err := c.Conn.ReadMessage()
 			if err == nil {
-				fmt.Println("ReadPump", mt, string(bReceivedData))
+				//fmt.Println("ReadPump", mt, string(bReceivedData))
 				callbackOnMessage(mt, bReceivedData)
 
 			} else {
@@ -106,18 +100,16 @@ func (c *Client) ReadPump(callbackOnMessage func(messageType int, receivedData [
 // SendMessage 发送消息，请统一调用本函数进行发送
 // 消息发送时增加互斥锁，加强并发情况下程序稳定性
 // 提醒：开发者发送消息时，不要调用 c.Conn.WriteMessage(messageType, []byte(message)) 直接发送消息
-func (c *Client) SendMessage(messageType int, message string) error {
+func (c *Client) SendMessage(messageType int, message []byte) error {
 	c.Lock()
 	defer func() {
 		c.Unlock()
 	}()
-	// 发送消息时，必须设置本次消息的最大允许时长(秒)
 	if err := c.Conn.SetWriteDeadline(time.Now().Add(c.WriteDeadline)); err != nil {
 		fmt.Println("websocket  设置消息写入截止时间出错", err)
 		return err
 	}
-	fmt.Println("SendMessage", message)
-	if err := c.Conn.WriteMessage(messageType, []byte(message)); err != nil {
+	if err := c.Conn.WriteMessage(messageType, message); err != nil {
 		return err
 	}
 	return nil
@@ -130,9 +122,7 @@ func (c *Client) Heartbeat() {
 	defer func() {
 		err := recover()
 		if err != nil {
-			if val, ok := err.(error); ok {
-				fmt.Println("websocket BeatHeart心跳协程出错", val)
-			}
+			fmt.Println("websocket BeatHeart心跳协程出错", err)
 		}
 		ticker.Stop() // 停止该client的心跳检测
 	}()
@@ -156,7 +146,7 @@ func (c *Client) Heartbeat() {
 		select {
 		case <-ticker.C:
 			if c.State == 1 {
-				if err := c.SendMessage(websocket.PingMessage, WebsocketServerPingMsg); err != nil {
+				if err := c.SendMessage(websocket.PingMessage, []byte(WebsocketServerPingMsg)); err != nil {
 					c.HeartbeatFailTimes++
 					if c.HeartbeatFailTimes > HeartbeatFailMaxTimes {
 						c.State = 0
@@ -173,4 +163,10 @@ func (c *Client) Heartbeat() {
 
 		}
 	}
+}
+
+func (c *Client) Close() {
+	c.State = 0
+	c.Hub.UnRegister <- c
+	_ = c.Conn.Close()
 }

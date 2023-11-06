@@ -7,7 +7,6 @@ import (
 	auth "fast-boot/app/api/wxapp/internal/handler/auth"
 	callBack "fast-boot/app/api/wxapp/internal/handler/callBack"
 	other "fast-boot/app/api/wxapp/internal/handler/other"
-	user "fast-boot/app/api/wxapp/internal/handler/user"
 	"fast-boot/app/api/wxapp/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -54,7 +53,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/fileUpload",
+				Path:    "/upload",
 				Handler: other.FileUploadHandler(serverCtx),
 			},
 		},
@@ -68,16 +67,5 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: callBack.WxPayHandler(serverCtx),
 			},
 		},
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/update",
-				Handler: user.UpdateHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 	)
 }

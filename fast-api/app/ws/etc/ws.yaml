@@ -4,8 +4,16 @@ Port: 7300
 Timeout: 0
 Cpu: 500
 
+Redis:
+  Host: 127.0.0.1:6379
+  Pass:
+  Type: node
+
+JWT:
+  AccessSecret: ad879038-c7a8-8063-9236-6bfc35d54b8d
+  AccessExpire: 864000
 
 Log:
   ServiceName: ws
-  Level: error
-
+  Mode: file
+  Path: ../../../logs/ws

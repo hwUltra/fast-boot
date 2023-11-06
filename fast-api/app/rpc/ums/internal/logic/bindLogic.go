@@ -6,6 +6,8 @@ import (
 	"fast-boot/app/rpc/ums/internal/svc"
 	"fast-boot/app/rpc/ums/umsPb"
 	"fast-boot/common/jwtx"
+	"fast-boot/common/xerr"
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 	"time"
 
@@ -48,7 +50,7 @@ func (l *BindLogic) Bind(in *umsPb.BindReq) (*umsPb.UserInfoResp, error) {
 			}
 			return nil
 		}); err != nil {
-			return nil, err
+			return nil, errors.Wrapf(xerr.NewErrMsg("数据有误"), "Bind err:%v", err)
 		}
 	}
 	now := time.Now().Unix()

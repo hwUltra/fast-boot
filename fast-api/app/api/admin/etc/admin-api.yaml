@@ -13,13 +13,12 @@ Redis:
   Type: node
 
 MinioX:
-  MinIOAccessKeyID: asdDScnMJrTk9Briqwo4
-  MinIOAccessSecretKey: 9N6lxKhBA2qgRsTJQf4bjRxiGpk6mCndFjjok7ij
-  MinIOEndpoint: www.imguo.com:9000
+  MinIOAccessSecretKey: 
+  MinIOEndpoint: 
   MinIOBucket: files
   MinIOSSLBool: false
   MinIOBucketLocation: cn-north-1
-  MinIOBasePath: https://img.imguo.com
+  MinIOBasePath: 
 
 
 #系统

@@ -2,14 +2,6 @@ Name: WxApp
 Host: 0.0.0.0
 Port: 888
 
-Mysql:
-  DataSource: root:123456@tcp(mysql:3306)/api?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
-
-CacheRedis:
-  - Host: 127.0.0.1:6379
-    Pass:
-    Type: node
-
 Auth:
   AccessSecret: ad879038-c7a8-8063-9236-6bfc35d54b8d
   AccessExpire: 864000
@@ -20,13 +12,13 @@ RedisConf:
   Type: node
 
 MinioX:
-  MinIOAccessKeyID:
-  MinIOAccessSecretKey:
-  MinIOEndpoint:
+  MinIOAccessKeyID: 
+  MinIOAccessSecretKey: 
+  MinIOEndpoint: 
   MinIOBucket: files
   MinIOSSLBool: false
   MinIOBucketLocation: cn-north-1
-  MinIOBasePath:
+  MinIOBasePath: 
 
 #Sms
 SmsConf:
@@ -47,11 +39,12 @@ SmsConf:
 
 #小程序配置
 WxMiniConf:
-  AppId:
-  Secret:
+  AppId: 
+  Secret: 
 
 WxPayConf:
   MchId: "11234455"
+  AppMiniId: 
   SerialNo: 333333964008A80E5524718049ABB333322
   APIv3Key: twewe23vjXrlnpTed5afyZZJ6FrI2323dd
   PrivateKey: |-
@@ -73,6 +66,11 @@ UmsRpc:
       - localhost:2379
     Key: ums.rpc
 
+Log:
+  Mode: file
+  Path: ../../../logs/api-wxapp
+
+
 #UserRpc:
 #  App: userapi                          # App 标识
 #  Token: 6jKNZbEpYGeUMAifz10gOnmoty3TV  # Token 值
@@ -80,6 +78,4 @@ UmsRpc:
 #    Hosts:
 #      - 127.0.0.1:2379
 #    Key: rpc.user
-
-
 

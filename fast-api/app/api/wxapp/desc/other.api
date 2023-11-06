@@ -17,12 +17,12 @@ type (
 		ReturnCode string `json:"return_code"`
 	}
 
-	FileUpload {
-		Hash string `json:"hash,optional"`
-		Name string `json:"name,optional"`
-		Ext  string `json:"ext,optional"`
-		Size int64  `json:"size,optional"`
-		Path string `json:"path,optional"`
+	FileUploadResp {
+		Hash string `json:"hash"`
+		Name string `json:"name"`
+		Ext  string `json:"ext"`
+		Size int64  `json:"size"`
+		Path string `json:"path"`
 	}
 )
 
@@ -41,7 +41,7 @@ service WxApp {
 		summary: "文件上传"
 	)
 	@handler FileUpload
-	post /fileUpload(FileUpload) returns (FileUpload)
+	post /upload returns (FileUploadResp)
 }
 
 
@@ -54,4 +54,5 @@ service WxApp {
 	@doc "第三方：微信支付回调"
 	@handler WxPay
 	post /callBack/wxPay(WxPayCallBackReq) returns (WxPayCallBackResp)
+
 }

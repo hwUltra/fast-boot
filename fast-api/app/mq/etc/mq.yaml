@@ -2,11 +2,24 @@ Name: message-mq
 Host: 0.0.0.0
 Port: 7200
 
-Log:
-  ServiceName: message-mq
-  Level: error
-
 Redis:
   Host: 127.0.0.1:6379
   Type: node
   Pass:
+
+Log:
+  ServiceName: message-mq
+  Mode: file
+  Path: ../../../logs/mq
+
+
+#kq
+#SendWxMiniTplMessageConf:
+#  Name: SendWxMiniTplMessage
+#  Brokers:
+#    - kafka:9092
+#  Group: send-wx-mini-tpl-message
+#  Topic: send-wx-mini-tpl-message
+#  Offset: first
+#  Consumers: 1
+#  Processors: 1

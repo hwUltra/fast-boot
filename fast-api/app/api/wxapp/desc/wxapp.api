@@ -9,5 +9,4 @@ import(
 	"auth.api"
 	"carts.api"
 	"other.api"
-	"user.api"
 )

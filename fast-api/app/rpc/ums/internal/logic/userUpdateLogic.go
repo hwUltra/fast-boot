@@ -4,7 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"fast-boot/app/rpc/model"
-	"google.golang.org/grpc/status"
+	"fast-boot/common/xerr"
+	"github.com/pkg/errors"
 	"time"
 
 	"fast-boot/app/rpc/ums/internal/svc"
@@ -32,8 +33,7 @@ func (l *UserUpdateLogic) UserUpdate(in *umsPb.UserForm) (*umsPb.SuccessResp, er
 	info := model.UserModel{}
 	l.svcCtx.GormConn.Where("`id` = ?", in.Id).First(&info)
 	if info.Id == 0 {
-		logx.WithContext(l.ctx).Errorf("用户不存在: %s", in.Id)
-		return nil, status.Error(100, "用户不存在")
+		return nil, errors.Wrapf(xerr.NewErrMsg("用户不存在"), "用户不存在：%d ", in.Id)
 	}
 
 	if len(in.Username) > 0 && (in.Username != info.Username) {

@@ -1,5 +1,7 @@
 package ghelp
 
+import "reflect"
+
 // InArray 判断元素是否在数组中
 // 支持string,int,int8,int16,int32,int64,float32,float64,bool类型
 func InArray(item interface{}, items interface{}) bool {
@@ -121,4 +123,22 @@ func ArrayKeys(items map[interface{}]interface{}) interface{} {
 		i++
 	}
 	return keys
+}
+
+// ArrayIntersection 取交集
+func ArrayIntersection[T any](arrs1, arrs2 []T) []T {
+	ret := make([]T, 0)
+	for _, v1 := range arrs1 {
+		canAdd := false
+		for _, v2 := range arrs2 {
+			if reflect.ValueOf(v1).Interface() == reflect.ValueOf(v2).Interface() {
+				canAdd = true
+			}
+		}
+		if canAdd {
+			ret = append(ret, v1)
+		}
+	}
+
+	return ret
 }

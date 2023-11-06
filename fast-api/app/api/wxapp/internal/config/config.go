@@ -22,8 +22,4 @@ type Config struct {
 		AccessExpire int64
 	}
 	UmsRpc zrpc.RpcClientConf
-	//CartRpc    zrpc.RpcClientConf
-	//ProductRpc zrpc.RpcClientConf
-	//OrderRpc   zrpc.RpcClientConf
-	//PayRpc     zrpc.RpcClientConf
 }

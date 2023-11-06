@@ -50,3 +50,69 @@ func TestRedisBuilder(t *testing.T) {
 	}
 
 }
+
+func TestRedisDelBuilder(t *testing.T) {
+
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:6379", Type: "node"})
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	del, err := redisClient.Del("user_1")
+	if err != nil {
+		return
+	}
+	fmt.Println(del)
+}
+
+func TestRedisSetBuilder(t *testing.T) {
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:6379", Type: "node"})
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	onLine, err := redisClient.Sadd("onLine", "1", "2", "3")
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println("onLine:", onLine)
+
+	sismember, err := redisClient.Sismember("onLine", "1")
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println("onLine:", sismember)
+
+	//redisClient.Srem("onLine", "1")
+
+}
+
+func TestRedisZSetBuilder(t *testing.T) {
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:6379", Type: "node"})
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+
+	key := "string:zset"
+	pairs := []redis.Pair{
+		{Score: 80, Key: "Java"},
+		{Score: 90, Key: "Python"},
+		{Score: 95, Key: "Golang"},
+		{Score: 98, Key: "PHP"},
+	}
+	redisClient.Zadds(key, pairs...)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	incr, err := redisClient.Zincrby(key, 29, "Java")
+	if err != nil {
+		return
+	}
+	fmt.Println("incr", incr)
+
+	strings, err := redisClient.ZrevrangebyscoreWithScores(key, 0, 1000)
+	if err != nil {
+		return
+	}
+	fmt.Println("strings", strings)
+
+}

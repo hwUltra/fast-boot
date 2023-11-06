@@ -16,7 +16,7 @@ type (
 service admin-api {
     // 文件上传
     @handler FileUpload
-    post /upload(FileUpload) returns (FileUpload)
+    post /upload returns (FileUpload)
 }
 
 

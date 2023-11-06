@@ -2,12 +2,11 @@ package callBack
 
 import (
 	"context"
-	"net/http"
-
 	"fast-boot/app/api/wxapp/internal/svc"
 	"fast-boot/app/api/wxapp/internal/types"
-
+	"fast-boot/common/mq"
 	"github.com/zeromicro/go-zero/core/logx"
+	"net/http"
 )
 
 type WxPayLogic struct {
@@ -24,7 +23,10 @@ func NewWxPayLogic(ctx context.Context, svcCtx *svc.ServiceContext) WxPayLogic {
 	}
 }
 
-func (l *WxPayLogic) WxPay(rw http.ResponseWriter, req *http.Request) (resp *types.WxPayCallBackResp, err error) {
+func (l *WxPayLogic) WxPay(req *http.Request) (resp *types.WxPayCallBackResp, err error) {
+	//return nil, errors.Wrapf(xerr.NewErrMsg("该用户已被注册"), "用户已经存在 mobile:%s,err:%v", "xxx", err)
+	payload := map[string]interface{}{"OrderNo": "9999", "OrderMsg": "success ok"}
+	_ = mq.DfSend(l.svcCtx.Config.RedisConf.Host, "orderTask", payload)
 
-	return
+	return resp, err
 }
