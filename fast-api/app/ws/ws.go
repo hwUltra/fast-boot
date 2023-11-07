@@ -12,12 +12,6 @@ import (
 	"github.com/zeromicro/go-zero/rest"
 )
 
-//var (
-//	port    = flag.Int("port", 3333, "the port to listen")
-//	timeout = flag.Int64("timeout", 0, "timeout of milliseconds")
-//	cpu     = flag.Int64("cpu", 500, "cpu threshold")
-//)
-
 var configFile = flag.String("f", "./etc/ws.yaml", "the config file")
 
 func main() {

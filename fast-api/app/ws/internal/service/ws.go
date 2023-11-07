@@ -3,13 +3,14 @@ package service
 import (
 	"context"
 	"fast-boot/app/ws/internal/config"
-	"fast-boot/common/jwtx"
 	"fast-boot/common/websocket/core"
+	"fast-boot/common/xerr"
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"net/http"
+	"strconv"
 )
 
 type Ws struct {
@@ -26,8 +27,12 @@ func OnOpen(hub *core.Hub, rw http.ResponseWriter, r *http.Request, c config.Con
 		ws.RedisClient = redis.MustNewRedis(c.Redis)
 
 		client.ClientId = uuid.New().String()
+
 		token := r.Header.Get("Sec-WebSocket-Protocol")
-		uid := jwtx.GetUidByToken(c.JWT.AccessSecret, token)
+		//uid := jwtx.GetUidByToken(c.JWT.AccessSecret, token)
+		//上线用上面
+		uid, _ := strconv.ParseInt(token, 10, 64)
+		fmt.Println("xlsx", token, uid)
 		client.Uid = uid
 		if uid == 1 {
 			client.Role = "admin"
@@ -36,9 +41,9 @@ func OnOpen(hub *core.Hub, rw http.ResponseWriter, r *http.Request, c config.Con
 		}
 		go client.Heartbeat()
 
-		return ws, true
+		return ws, ok
 	} else {
-		return nil, false
+		return nil, ok
 	}
 }
 
@@ -88,8 +93,8 @@ func (w *Ws) sendToClient(clientId string, msg []byte) {
 	}
 }
 
-// sendToClient 向指定Uid发送消息
-func (w *Ws) sendToUid(uid int64, msg []byte) {
+// SendToUid 向指定Uid发送消息
+func (w *Ws) SendToUid(uid int64, msg []byte) {
 	for onlineClient := range w.WsClient.Hub.Clients {
 		if onlineClient.Uid == uid {
 			if err := onlineClient.SendMessage(websocket.TextMessage, msg); err != nil {
@@ -157,31 +162,45 @@ func (w *Ws) GetClientById(clientId string) (*core.Client, bool) {
 }
 
 // CreateGroup 创建群组
-func (w *Ws) CreateGroup(groupId string) {
-	_, _ = w.RedisClient.Sadd("Group", groupId)
+func (w *Ws) CreateGroup(groupId string) error {
+	_, err := w.RedisClient.Sadd("Group", groupId)
+	return err
 }
 
 // Ungroup 取消群组
-func (w *Ws) Ungroup(groupId string) {
-	_, _ = w.RedisClient.Srem("Group", groupId)
+func (w *Ws) Ungroup(groupId string) error {
+	_, err := w.RedisClient.Srem("Group", groupId)
+	return err
 }
 
 // JoinGroup 加入群组
-func (w *Ws) JoinGroup(clientId string, groupId string) {
-	_, _ = w.RedisClient.Sadd(groupId, clientId)
+func (w *Ws) JoinGroup(uid int64, groupId string) error {
+	//
+	if ok, _ := w.RedisClient.Sismember("Group", groupId); ok == false {
+		return xerr.NewErrCodeMsg(xerr.SERVER_COMMON_ERROR, "群组不存在")
+	}
+	if _, err := w.RedisClient.Sadd(groupId, uid); err != nil {
+		return xerr.NewErrCodeMsg(xerr.SERVER_COMMON_ERROR, "加入失败")
+	}
+	return nil
 }
 
 // LeaveGroup 离开群组
-func (w *Ws) LeaveGroup(clientId string, groupId string) {
-	_, _ = w.RedisClient.Srem(groupId, clientId)
+func (w *Ws) LeaveGroup(uid int64, groupId string) error {
+	if ok, _ := w.RedisClient.Sismember("Group", groupId); ok == false {
+		return xerr.NewErrCodeMsg(xerr.SERVER_COMMON_ERROR, "群组不存在")
+	}
+	if _, err := w.RedisClient.Srem(groupId, uid); err != nil {
+		return xerr.NewErrCodeMsg(xerr.SERVER_COMMON_ERROR, "退出失败")
+	}
+	return nil
 }
 
-// SendToGroup 向某个分组的所有在线client_id发送数据 ）
+// SendToGroup 向某个分组的所有在线发送数据 ）
 func (w *Ws) SendToGroup(groupId string, msg []byte) {
 	for onlineClient := range w.WsClient.Hub.Clients {
-		if _, err := w.RedisClient.Sismember(groupId, onlineClient.ClientId); err == nil {
-			if err := onlineClient.SendMessage(websocket.TextMessage, msg); err != nil {
-			}
+		if ok, _ := w.RedisClient.Sismember(groupId, onlineClient.Uid); ok {
+			_ = onlineClient.SendMessage(websocket.TextMessage, msg)
 		}
 	}
 }

@@ -1,10 +1,10 @@
 package core
 
 var (
-	WebsocketHandshakeSuccess = `{"code":200,"msg":"ws连接成功","data":""}`
+	WebsocketHandshakeSuccess = `{"code":200,"msg":"ws连接成功"}`
 	WebsocketServerPingMsg    = "Server->Ping->Client"
 	HeartbeatFailMaxTimes     = 4
-	WebsocketHandshakeError   = `{"code":0,"msg":"发送消息格式不正确","data":""}`
+	WebsocketHandshakeError   = `{"code":0,"msg":"发送消息格式不正确"}`
 )
 
 // ClientMoreParams  为客户端成功上线后设置更多的参数
