@@ -85,7 +85,23 @@ orderCount.value = 2000;
             {{ greetings }}
           </div>
 
-          <div class="space-x-2 flex items-center justify-end"></div>
+          <div class="space-x-2 flex items-center justify-end">
+            <el-link target="_blank" type="danger">💥官方从零到一文档</el-link>
+            <el-divider direction="vertical" />
+            <el-link
+              target="_blank"
+              type="success"
+              href="https://gitee.com/skywalker/fast-boot"
+              >Gitee</el-link
+            >
+            <el-divider direction="vertical" />
+            <el-link
+              target="_blank"
+              type="primary"
+              href="https://github.com/AnakinXY/fast-boot"
+              >GitHub
+            </el-link>
+          </div>
         </div>
       </el-card>
     </el-row>
@@ -94,10 +110,8 @@ orderCount.value = 2000;
     <el-row :gutter="40" class="mb-4">
       <el-col :xs="24" :sm="12" :lg="6" class="mb-4">
         <div class="data-box">
-          <div
-            class="text-[#40c9c6] hover:!text-white hover:bg-[#40c9c6] p-3 rounded"
-          >
-            <svg-icon icon-class="uv" size="3em" />
+          <div class="p-3 rounded">
+            <svg-icon icon-class="visit" size="3em" />
           </div>
           <div class="flex flex-col space-y-3">
             <div class="text-[var(--el-text-color-secondary)]">访问数</div>
@@ -111,9 +125,7 @@ orderCount.value = 2000;
       <!--消息数-->
       <el-col :xs="24" :sm="12" :lg="6" class="mb-4">
         <div class="data-box">
-          <div
-            class="text-[#36a3f7] hover:!text-white hover:bg-[#36a3f7] p-3 rounded"
-          >
+          <div class="p-3 rounded">
             <svg-icon icon-class="message" size="3em" />
           </div>
           <div class="flex flex-col space-y-3">
@@ -127,9 +139,7 @@ orderCount.value = 2000;
 
       <el-col :xs="24" :sm="12" :lg="6" class="mb-4">
         <div class="data-box">
-          <div
-            class="text-[#f4516c] hover:!text-white hover:bg-[#f4516c] p-3 rounded"
-          >
+          <div class="p-3 rounded">
             <svg-icon icon-class="money" size="3em" />
           </div>
           <div class="flex flex-col space-y-3">
@@ -142,10 +152,8 @@ orderCount.value = 2000;
       </el-col>
       <el-col :xs="24" :sm="12" :lg="6" class="mb-2">
         <div class="data-box">
-          <div
-            class="text-[#34bfa3] hover:!text-white hover:bg-[#34bfa3] p-3 rounded"
-          >
-            <svg-icon icon-class="shopping" size="3em" />
+          <div class="p-3 rounded">
+            <svg-icon icon-class="cart" size="3em" />
           </div>
           <div class="flex flex-col space-y-3">
             <div class="text-[var(--el-text-color-secondary)]">订单数</div>

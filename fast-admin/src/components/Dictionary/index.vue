@@ -51,9 +51,9 @@ watch([options, () => props.modelValue], ([newOptions, newModelValue]) => {
     selectedValue.value = undefined;
     return;
   }
-  if (typeof newOptions[0].value == "number") {
+  if (typeof newOptions[0].value === "number") {
     selectedValue.value = Number(newModelValue);
-  } else if (typeof newOptions[0].value == "string") {
+  } else if (typeof newOptions[0].value === "string") {
     selectedValue.value = String(newModelValue);
   } else {
     selectedValue.value = newModelValue;

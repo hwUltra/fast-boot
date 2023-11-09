@@ -24,7 +24,7 @@ export function getRolePage(
  */
 export function getRoleOptions(
   queryParams?: RoleQuery
-): AxiosPromise<OptionType[]> {
+): AxiosPromise<OptionList> {
   return request({
     url: "/sys/role/options",
     method: "get",

@@ -5,10 +5,7 @@ dist-ssr
 *.local
 
 # Editor directories and files
-/.idea/
-.idea/
 .idea
-.vscode
 *.suo
 *.ntvs*
 *.njsproj

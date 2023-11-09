@@ -29,7 +29,7 @@ export const useUserStore = defineStore("user", () => {
       loginApi(loginData)
         .then((response) => {
           const { accessToken } = response.data;
-          token.value = accessToken; // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+          token.value = accessToken;
           resolve();
         })
         .catch((error) => {

@@ -1,75 +1,99 @@
 <template>
   <div class="login-container">
-    <el-form
-      ref="loginFormRef"
-      :model="loginData"
-      :rules="loginRules"
-      class="login-form"
+    <!-- 顶部 -->
+    <div class="absolute top-0 flex items-center justify-end px-5 h-20 w-full">
+      <el-switch
+        v-model="isDark"
+        inline-prompt
+        :active-icon="IconEpMoon"
+        :inactive-icon="IconEpSunny"
+        active-color="var(--el-fill-color-dark)"
+        inactive-color="var(--el-color-primary)"
+        @change="handleThemeChange"
+      />
+      <lang-select class="ml-2 cursor-pointer" />
+    </div>
+    <!-- 登录表单 -->
+    <el-card
+      class="z-1 !border-none w-100 !bg-transparent !rounded-4% <sm:w-83"
     >
-      <div class="flex text-white items-center py-4 title-wrap">
-        <span class="text-2xl flex-1 text-center title">
-          {{ $t("login.title") }}
-        </span>
-        <lang-select class="text-white! cursor-pointer" />
+      <div class="text-center relative">
+        <h2>{{ defaultSettings.title }}</h2>
+        <el-tag class="ml-2 absolute top-0 right-0">{{
+          defaultSettings.version
+        }}</el-tag>
       </div>
-
-      <el-form-item prop="username">
-        <div class="p-2 text-white">
-          <svg-icon icon-class="user" />
-        </div>
-        <el-input
-          ref="username"
-          v-model="loginData.username"
-          class="flex-1"
-          size="large"
-          :placeholder="$t('login.username')"
-          name="username"
-        />
-      </el-form-item>
-
-      <el-tooltip
-        :disabled="isCapslock === false"
-        content="Caps lock is On"
-        placement="right"
+      <el-form
+        ref="loginFormRef"
+        :model="loginData"
+        :rules="loginRules"
+        class="login-form"
       >
-        <el-form-item prop="password">
-          <span class="p-2 text-white">
-            <svg-icon icon-class="password" />
-          </span>
+        <el-form-item prop="username">
+          <div class="p-2">
+            <svg-icon icon-class="user" />
+          </div>
           <el-input
-            v-model="loginData.password"
+            ref="username"
+            v-model="loginData.username"
             class="flex-1"
-            :placeholder="$t('login.password')"
-            :type="passwordVisible === false ? 'password' : 'input'"
             size="large"
-            name="password"
-            @keyup="checkCapslock"
-            @keyup.enter="handleLogin"
+            :placeholder="$t('login.username')"
+            name="username"
           />
-          <span class="mr-2" @click="passwordVisible = !passwordVisible">
-            <svg-icon
-              :icon-class="passwordVisible === false ? 'eye' : 'eye-open'"
-              class="text-white cursor-pointer"
-            />
-          </span>
         </el-form-item>
-      </el-tooltip>
 
-      <el-button
-        size="default"
-        :loading="loading"
-        type="primary"
-        class="w-full"
-        @click.prevent="handleLogin"
-        >{{ $t("login.login") }}
-      </el-button>
+        <el-tooltip
+          :disabled="isCapslock === false"
+          content="Caps lock is On"
+          placement="right"
+        >
+          <el-form-item prop="password">
+            <span class="p-2">
+              <svg-icon icon-class="password" />
+            </span>
+            <el-input
+              v-model="loginData.password"
+              class="flex-1"
+              :placeholder="$t('login.password')"
+              :type="passwordVisible === false ? 'password' : 'input'"
+              size="large"
+              name="password"
+              @keyup="checkCapslock"
+              @keyup.enter="handleLogin"
+            />
+            <span class="mr-2" @click="passwordVisible = !passwordVisible">
+              <svg-icon
+                :icon-class="passwordVisible === false ? 'eye' : 'eye-open'"
+                class="cursor-pointer"
+              />
+            </span>
+          </el-form-item>
+        </el-tooltip>
 
-      <!-- 账号密码提示 -->
-      <div class="mt-4 text-white text-sm">
-        <span>{{ $t("login.username") }}: kyle</span>
-        <span class="ml-4"> {{ $t("login.password") }}: 123123</span>
-      </div>
-    </el-form>
+        <el-button
+          :loading="loading"
+          type="primary"
+          class="w-full"
+          @click.prevent="handleLogin"
+          >{{ $t("login.login") }}
+        </el-button>
+
+        <!-- 账号密码提示 -->
+        <div class="mt-10 text-sm">
+          <span>{{ $t("login.username") }}: {{ loginData.username }}</span>
+          <span class="ml-4">
+            {{ $t("login.password") }}: {{ loginData.password }}</span
+          >
+        </div>
+      </el-form>
+    </el-card>
+
+    <!-- ICP备案 -->
+    <div class="absolute bottom-1 text-[10px] text-center">
+      <p>Copyright © 2023 - 2024 kyle All Rights Reserved. 版权所有</p>
+      <p>ICP备案号:鄂ICP备xxxxx号-1</p>
+    </div>
   </div>
 </template>
 
@@ -78,6 +102,9 @@ import { useI18n } from "vue-i18n";
 import router from "@/router";
 import LangSelect from "@/components/LangSelect/index.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
+import IconEpSunny from "~icons/ep/sunny";
+import IconEpMoon from "~icons/ep/moon";
+import { useSettingsStore } from "@/store/modules/settings";
 
 // 状态管理依赖
 import { useUserStore } from "@/store/modules/user";
@@ -86,10 +113,23 @@ import { useAppStore } from "@/store/modules/app";
 // API依赖
 import { LocationQuery, LocationQueryValue, useRoute } from "vue-router";
 import { LoginData } from "@/api/auth/types";
+import defaultSettings from "@/settings";
 
 const appStore = useAppStore();
+const settingsStore = useSettingsStore();
 const userStore = useUserStore();
 const route = useRoute();
+
+const isDark = ref<boolean>(settingsStore.theme === "dark");
+
+function handleThemeChange(isDark: boolean) {
+  console.log("登录页面主题切换", isDark);
+  useToggle(isDark);
+  settingsStore.changeSetting({
+    key: "theme",
+    value: isDark ? "dark" : "light",
+  });
+}
 
 /**
  * 按钮loading
@@ -136,30 +176,6 @@ const loginRules = computed(() => {
     ],
   };
 });
-// const loginRules = reactive({
-//   username: [
-//     {
-//       required: true,
-//       trigger: "blur",
-//       message: `请输入${t("login.username")}`,
-//     },
-//   ],
-//   password: [
-//     {
-//       required: true,
-//       trigger: "blur",
-//       validator: passwordValidator,
-//       message: `请输入${t("login.password")}`,
-//     },
-//   ],
-//   verifyCode: [
-//     {
-//       required: true,
-//       trigger: "blur",
-//       message: `请输入${t("login.verifyCode")}`,
-//     },
-//   ],
-// });
 
 /**
  * 密码校验器
@@ -206,7 +222,9 @@ function handleLogin() {
 
           router.push({ path: redirect, query: otherQueryParams });
         })
-        .catch(() => {})
+        .catch(() => {
+          loading.value = false;
+        })
         .finally(() => {
           loading.value = false;
         });
@@ -214,91 +232,74 @@ function handleLogin() {
   });
 }
 
-onMounted(() => {});
+onMounted(() => {
+  // 主题初始化
+  const theme = useSettingsStore().theme;
+  useSettingsStore().changeSetting({ key: "theme", value: theme });
+  if (theme == "dark") {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+});
 </script>
 
 <style lang="scss" scoped>
+.dark .login-container {
+  background: url("@/assets/images/login-bg-dark.jpg") no-repeat center right;
+}
+
 .login-container {
-  width: 100%;
-  min-height: 100%;
-  overflow: hidden;
-  background-color: #2d3a4b;
+  @apply w-full h-full flex-center;
 
-  .title-wrap {
-    filter: contrast(30);
-
-    .title {
-      letter-spacing: 4px;
-      animation: showup 3s forwards;
-    }
-
-    @keyframes showup {
-      0% {
-        letter-spacing: -20px;
-      }
-
-      100% {
-        letter-spacing: 4px;
-      }
-    }
-  }
+  overflow-y: auto;
+  background: url("@/assets/images/login-bg.jpg") no-repeat center right;
 
   .login-form {
-    width: 520px;
-    max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
-    overflow: hidden;
+    padding: 30px 10px;
 
     .captcha {
       position: absolute;
       top: 0;
       right: 0;
 
-      img {
-        width: 120px;
-        height: 48px;
-        cursor: pointer;
+      .image-slot {
+        display: flex;
+        align-items: center;
+        justify-content: right;
+        width: 100%;
+        height: 100%;
+        font-size: 18px;
+        color: var(--el-text-color-secondary);
+        background: var(--el-fill-color-light);
+
+        svg {
+          margin-right: 10px;
+        }
       }
     }
   }
 }
 
 .el-form-item {
-  background: rgb(0 0 0 / 10%);
-  border: 1px solid rgb(255 255 255 / 10%);
+  background: var(--el-input-bg-color);
+  border: 1px solid var(--el-border-color);
   border-radius: 5px;
 }
 
-.el-input {
-  background: transparent;
-
-  // 子组件 scoped 无效，使用 :deep
-  :deep(.el-input__wrapper) {
+:deep(.el-input) {
+  .el-input__wrapper {
     padding: 0;
-    background: transparent;
+    background-color: transparent;
     box-shadow: none;
 
-    .el-input__inner {
-      color: #fff;
-      background: transparent;
-      border: 0;
-      border-radius: 0;
-      caret-color: #fff;
+    &.is-focus,
+    &:hover {
+      box-shadow: none !important;
+    }
 
-      &:-webkit-autofill {
-        box-shadow: 0 0 0 1000px transparent inset !important;
-        -webkit-text-fill-color: #fff !important;
-      }
-
-      // 设置输入框自动填充的延迟属性
-      &:-webkit-autofill,
-      &:-webkit-autofill:hover,
-      &:-webkit-autofill:focus,
-      &:-webkit-autofill:active {
-        transition: color 99999s ease-out, background-color 99999s ease-out;
-        transition-delay: 99999s;
-      }
+    input:-webkit-autofill {
+      transition: background-color 5000s ease-in-out 0s; /* 通过延时渲染背景色变相去除背景颜色 */
     }
   }
 }

@@ -6,7 +6,6 @@ export default {
   },
   // 登录页面国际化
   login: {
-    title: "fast-boot-admin",
     username: "Username",
     password: "Password",
     login: "Login",

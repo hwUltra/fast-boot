@@ -1,9 +1,3 @@
-<!--
-  多图上传组件
-  @author: youlaitech
-  @date 2022/11/20
--->
-
 <template>
   <el-upload
     v-model:file-list="fileList"

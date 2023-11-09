@@ -12,13 +12,13 @@ RedisConf:
   Type: node
 
 MinioX:
-  MinIOAccessKeyID: 
-  MinIOAccessSecretKey: 
-  MinIOEndpoint: 
+  MinIOAccessKeyID:
+  MinIOAccessSecretKey:
+  MinIOEndpoint:
   MinIOBucket: files
   MinIOSSLBool: false
   MinIOBucketLocation: cn-north-1
-  MinIOBasePath: 
+  MinIOBasePath:
 
 #Sms
 SmsConf:
@@ -39,14 +39,14 @@ SmsConf:
 
 #小程序配置
 WxMiniConf:
-  AppId: 
-  Secret: 
+  AppId:
+  Secret:
 
 WxPayConf:
-  MchId: "11234455"
-  AppMiniId: 
-  SerialNo: 333333964008A80E5524718049ABB333322
-  APIv3Key: twewe23vjXrlnpTed5afyZZJ6FrI2323dd
+  MchId:
+  AppMiniId:
+  SerialNo:
+  APIv3Key:
   PrivateKey: |-
     -----BEGIN PRIVATE KEY-----
     11BADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDBY/kxOoNkZxgK
@@ -59,7 +59,7 @@ WxPayConf:
     -----END PRIVATE KEY-----
   NotifyUrl : http://xxx.xxx.com/payment/v1/thirdPayment/thirdPaymentWxPayCallback
 
-#用户
+
 UmsRpc:
   Etcd:
     Hosts:

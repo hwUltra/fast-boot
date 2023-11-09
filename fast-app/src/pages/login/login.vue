@@ -8,7 +8,7 @@
 			<!-- #ifdef MP -->
 			<button class="confirm-btn" @click.stop="getUserProfile">小程序登录授权</button>
 			<view class="tip">
-				温馨提示:未注册有来小店的用户,初次登录时将完成注册
+				温馨提示:未注册小店的用户,初次登录时将完成注册
 			</view>
 			<!-- #endif -->
 
@@ -35,7 +35,7 @@
 			</view>
 			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
 			<view class="tip">
-				默认手机号码/验证码: 18866668888/666666
+				默认手机号码/验证码: {{mobile}}/{{verifyCode}}
 			</view>
 			<!-- #endif -->
 		</view>

@@ -13,12 +13,13 @@ Redis:
   Type: node
 
 MinioX:
-  MinIOAccessSecretKey: 
-  MinIOEndpoint: 
+  MinIOAccessKeyID:
+  MinIOAccessSecretKey:
+  MinIOEndpoint:
   MinIOBucket: files
   MinIOSSLBool: false
   MinIOBucketLocation: cn-north-1
-  MinIOBasePath: 
+  MinIOBasePath:
 
 
 #系统
@@ -34,12 +35,6 @@ UmsRpc:
     Hosts:
       - 127.0.0.1:2379
     Key: ums.rpc
-
-PmsRpc:
-  Etcd:
-    Hosts:
-      - 127.0.0.1:2379
-    Key: pms.rpc
 
 Log:
   Mode: file

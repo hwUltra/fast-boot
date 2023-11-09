@@ -18,6 +18,9 @@ export const useSettingsStore = defineStore("setting", () => {
     "themeColor",
     defaultSettings.themeColor
   );
+
+  const theme = useStorage<string>("theme", defaultSettings.theme);
+
   // actions
   function changeSetting(param: { key: string; value: any }) {
     const { key, value } = param;
@@ -40,6 +43,14 @@ export const useSettingsStore = defineStore("setting", () => {
       case "themeColor":
         themeColor.value = value;
         break;
+      case "theme":
+        theme.value = value;
+        if (theme.value === "dark") {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+        break;
     }
   }
 
@@ -51,5 +62,6 @@ export const useSettingsStore = defineStore("setting", () => {
     layout,
     themeColor,
     changeSetting,
+    theme,
   };
 });

@@ -21,10 +21,6 @@ declare global {
     total: number;
   }
 
-  interface ListResult<T> {
-    list: T;
-  }
-
   /**
    * 弹窗属性
    */
@@ -55,5 +51,9 @@ declare global {
      */
     children?: OptionType[];
   }
+
+  interface OptionList {
+    list: OptionType[];
+  }
 }
-export { };
+export { PageQuery, PageResult, DialogOption, OptionType, OptionList };

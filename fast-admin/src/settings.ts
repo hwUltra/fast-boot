@@ -3,9 +3,13 @@
  */
 interface DefaultSettings {
   /**
-   * 系统title
+   * 系统标题
    */
   title: string;
+  /**
+   * 系统版本
+   */
+  version: string;
   /**
    * 是否显示设置
    */
@@ -49,12 +53,13 @@ interface DefaultSettings {
 
 const defaultSettings: DefaultSettings = {
   title: "fast-boot-admin",
+  version: "v0.0.1",
   showSettings: true,
   tagsView: true,
   fixedHeader: false,
   sidebarLogo: true,
   layout: "left", // 默认左侧模式
-  theme: "light", // 默认暗黑模式
+  theme: "light", // 暗黑模式-dark 明亮模式-light
   size: "default",
   language: "zh-cn",
   themeColor: "#409EFF",

@@ -1,5 +1,9 @@
 package ghelp
 
+import (
+	"strconv"
+)
+
 // IsNumeric  判断是否是数字
 func IsNumeric(item interface{}) bool {
 	switch item.(type) {
@@ -13,4 +17,9 @@ func IsNumeric(item interface{}) bool {
 	default:
 		return false
 	}
+}
+
+func isNum(s string) bool {
+	_, err := strconv.Atoi(s)
+	return err == nil
 }
