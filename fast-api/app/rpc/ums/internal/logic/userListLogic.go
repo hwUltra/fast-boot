@@ -50,7 +50,7 @@ func (l *UserListLogic) UserList(in *umsPb.ListReq) (*umsPb.UserListResp, error)
 		for _, item := range items {
 			var it umsPb.User
 			_ = copier.Copy(&it, item)
-			it.CreatedAt = item.CreatedAt.String()
+
 			list = append(list, &it)
 		}
 	}

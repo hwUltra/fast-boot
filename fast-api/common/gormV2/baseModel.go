@@ -1,23 +1,22 @@
 package gormV2
 
 import (
-	"fast-boot/common/gormV2/types"
 	"gorm.io/gorm"
 	"gorm.io/plugin/soft_delete"
 )
 
 type Base struct {
 	//*gorm.DB  `gorm:"-" json:"-"`
-	Id        int64      `gorm:"primarykey" json:"id"`
-	CreatedAt types.Time `gorm:"created_at" json:"createdAt"`
-	UpdatedAt types.Time `gorm:"updated_at" json:"updatedAt"`
+	Id        int64  `gorm:"primarykey" json:"id"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
 }
 
 type BaseDel struct {
 	//*gorm.DB  `gorm:"-" json:"-"`
 	Id        int64                 `gorm:"primarykey" json:"id"`
-	CreatedAt types.Time            `gorm:"created_at" json:"createdAt"`
-	UpdatedAt types.Time            `gorm:"updated_at" json:"updatedAt"`
+	CreatedAt string                `json:"created_at"`
+	UpdatedAt string                `json:"updated_at"`
 	DeletedAt soft_delete.DeletedAt `gorm:"delete_at" json:"-"`
 }
 

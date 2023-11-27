@@ -48,8 +48,6 @@ func (l *DictTypeListLogic) DictTypeList(in *sysPb.DictTypeListReq) (*sysPb.Dict
 		for _, item := range items {
 			var it sysPb.SysDictType
 			_ = copier.Copy(&it, item)
-			it.CreatedAt = item.CreatedAt.String()
-			it.UpdatedAt = item.UpdatedAt.String()
 
 			list = append(list, &it)
 		}

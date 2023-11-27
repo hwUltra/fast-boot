@@ -75,8 +75,6 @@ func (l *RoutesLogic) Routes(in *sysPb.RoutesReq) (*sysPb.RoutesResp, error) {
 			roles = append(roles, v.Code)
 		}
 		menu.Roles = roles
-		menu.CreatedAt = item.CreatedAt.String()
-		menu.UpdatedAt = item.UpdatedAt.String()
 
 		list = append(list, &menu)
 	}

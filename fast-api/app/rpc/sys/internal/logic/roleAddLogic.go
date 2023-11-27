@@ -27,7 +27,7 @@ func NewRoleAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RoleAddLo
 
 // RoleAdd 添加
 func (l *RoleAddLogic) RoleAdd(in *sysPb.RoleForm) (*sysPb.IdResp, error) {
-	item := &model.SysRoleModel{}
+	item := model.SysRoleModel{}
 	if err := copier.Copy(&item, in); err != nil {
 		return nil, err
 	}

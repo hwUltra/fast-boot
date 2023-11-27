@@ -28,7 +28,7 @@ func NewMenuAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *MenuAddLo
 
 // MenuAdd 添加
 func (l *MenuAddLogic) MenuAdd(in *sysPb.MenuForm) (*sysPb.SuccessResp, error) {
-	item := &model.SysMenuModel{}
+	item := model.SysMenuModel{}
 	if err := copier.Copy(&item, in); err != nil {
 		return nil, err
 	}

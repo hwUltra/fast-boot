@@ -47,8 +47,7 @@ func (l *DictListLogic) DictList(in *sysPb.DictListReq) (*sysPb.DictListResp, er
 		for _, item := range items {
 			var it sysPb.SysDict
 			_ = copier.Copy(&it, item)
-			it.CreatedAt = item.CreatedAt.String()
-			it.UpdatedAt = item.UpdatedAt.String()
+
 			list = append(list, &it)
 		}
 	}

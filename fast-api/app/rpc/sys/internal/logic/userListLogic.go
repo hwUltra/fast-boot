@@ -74,8 +74,6 @@ func (l *UserListLogic) UserList(in *sysPb.UserListReq) (*sysPb.UserListResp, er
 				it.DeptName = item.Dept.Name
 			}
 			it.GenderLabel = static.GetGenderStr(it.Gender)
-			it.CreatedAt = item.CreatedAt.String()
-			it.UpdatedAt = item.UpdatedAt.String()
 
 			roles := make([]string, 0)
 			for _, v := range item.Roles {

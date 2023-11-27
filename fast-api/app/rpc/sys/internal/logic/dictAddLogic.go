@@ -26,7 +26,7 @@ func NewDictAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DictAddLo
 }
 
 func (l *DictAddLogic) DictAdd(in *sysPb.DictForm) (*sysPb.SuccessResp, error) {
-	item := &model.SysDictModel{}
+	item := model.SysDictModel{}
 	if err := copier.Copy(&item, in); err != nil {
 		return nil, err
 	}

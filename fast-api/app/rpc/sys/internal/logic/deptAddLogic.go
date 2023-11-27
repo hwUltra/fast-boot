@@ -26,7 +26,7 @@ func NewDeptAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeptAddLo
 }
 
 func (l *DeptAddLogic) DeptAdd(in *sysPb.DeptForm) (*sysPb.SuccessResp, error) {
-	item := &model.SysDeptModel{}
+	item := model.SysDeptModel{}
 	if err := copier.Copy(&item, in); err != nil {
 		return nil, err
 	}

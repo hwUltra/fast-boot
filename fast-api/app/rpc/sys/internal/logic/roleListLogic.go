@@ -50,8 +50,7 @@ func (l *RoleListLogic) RoleList(in *sysPb.RoleListReq) (*sysPb.RoleListResp, er
 		for _, item := range items {
 			var it sysPb.SysRole
 			_ = copier.Copy(&it, item)
-			it.CreatedAt = item.CreatedAt.String()
-			it.UpdatedAt = item.UpdatedAt.String()
+
 			list = append(list, &it)
 		}
 	}

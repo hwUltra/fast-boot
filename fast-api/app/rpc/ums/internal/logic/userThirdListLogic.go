@@ -49,7 +49,7 @@ func (l *UserThirdListLogic) UserThirdList(in *umsPb.ListReq) (*umsPb.UserThirdL
 		for _, item := range items {
 			var it umsPb.UserThird
 			_ = copier.Copy(&it, item)
-			it.CreatedAt = item.CreatedAt.String()
+
 			list = append(list, &it)
 		}
 	}
