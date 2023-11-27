@@ -15,7 +15,7 @@ type ReturnBean struct {
 }
 
 type ReturnDataBean struct {
-	Type     int8   `json:"type,default=0"`              //0: 发送广播 1:  私聊 2: 群聊
+	Type     string `json:"type,default=sendAll"`
 	FromPlat string `json:"fromPlat,default=0,optional"` //uid,cid
 	FromUid  int64  `json:"fromUid,default=0,optional"`  //谁发的
 	Msg      string `json:"msg"`

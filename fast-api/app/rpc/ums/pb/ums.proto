@@ -110,7 +110,7 @@ message User {
   string source = 11; //来源，APP H5
   int64 sourceUid = 12; //邀请uid
   string createdAt = 13; //createdAt
-  string updatedAt = 14; //updatedAt
+  repeated UserAddress addresses = 14;
 }
 
 message UserForm{

@@ -2,40 +2,41 @@ Name: sys.rpc
 ListenOn: 0.0.0.0:8080
 Etcd:
   Hosts:
-    - 127.0.0.1:2379
+    - 192.168.3.85:12379
   Key: sys.rpc
 
 Gorm:
+  SqlType: 0
   IsOpenReadDb: false   # 是否开启读写分离配置（true=开启、false=关闭），IsOpenReadDb=开启,Read 部分参数有效，否则Read部分参数直接忽略
   SlowThreshold: 30     # 慢 SQL 阈值(sql执行时间超过此时间单位（秒），就会触发系统日志记录)
   Write:
-    Host: "127.0.0.1"
-    DataBase: "boot"
-    Port: 3306
-    Prefix: ""
-    User: "root"
+    Host: 127.0.0.1
+    DataBase: mall-boot
+    Port: 13306
+    Prefix:
+    User: root
     Pass: "123456"
-    Charset: "utf8"
+    Charset: utf8
     SetMaxIdleConns: 10
     SetMaxOpenConns: 128
     SetConnMaxLifetime: 60     # 连接不活动时的最大生存时间(秒)
     #ReConnectInterval: 1      # 保留项,重连数据库间隔秒数
     #PingFailRetryTimes: 3     # 保留项,最大重连次数
   Read:
-    Host: "127.0.0.1"
-    DataBase: "boot"
-    Port: 3306                        #注意，非3306，请自行调整
-    Prefix: ""
-    User: "root"
+    Host: 127.0.0.1
+    DataBase: mall-boot
+    Port: 13306                        #注意，非3306，请自行调整
+    Prefix:
+    User: root
     Pass: "123456"
-    Charset: "utf8"
+    Charset: utf8
     SetMaxIdleConns: 10
     SetMaxOpenConns: 128
     SetConnMaxLifetime: 60
 
 
 RedisConf:
-  Host: 127.0.0.1:6379
+  Host: 127.0.0.1:16379
   Pass:
   Type: node
 

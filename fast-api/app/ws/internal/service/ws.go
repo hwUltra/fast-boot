@@ -32,7 +32,7 @@ func OnOpen(hub *core.Hub, rw http.ResponseWriter, r *http.Request, c config.Con
 		//uid := jwtx.GetUidByToken(c.JWT.AccessSecret, token)
 		//上线用上面
 		uid, _ := strconv.ParseInt(token, 10, 64)
-		fmt.Println("xlsx", token, uid)
+		fmt.Println("token", token, uid)
 		client.Uid = uid
 		if uid == 1 {
 			client.Role = "admin"

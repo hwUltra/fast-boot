@@ -48,8 +48,8 @@ func (l *UserUpdateLogic) UserUpdate(in *umsPb.UserForm) (*umsPb.SuccessResp, er
 	if len(in.Avatar) > 0 && (in.Avatar != info.Avatar) {
 		info.Avatar = in.Avatar
 	}
-	if len(in.IdCard) > 0 && (in.IdCard != info.IDCard) {
-		info.IDCard = in.IdCard
+	if len(in.IdCard) > 0 && (in.IdCard != info.IdCard) {
+		info.IdCard = in.IdCard
 	}
 	if len(in.Signature) > 0 && (in.Signature != info.Signature) {
 		info.Signature = in.Signature

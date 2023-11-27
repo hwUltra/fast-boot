@@ -20,18 +20,18 @@ func (g *Gateway) Handle(data []byte) {
 
 	if msgBean, err := core.GetMsgBean(data); err == nil {
 		switch msgBean.Type {
-		case 0: //群发
+		case "sendAll": //群发
 			g.sendToAll(msgBean)
-		case 1: //发送给指定用户
+		case "sendUid": //发送给指定用户
 			g.sendToUid(msgBean)
-		case 2: //发送给群组
+		case "sendGroup": //发送给群组
 			g.sendToGroup(msgBean)
-		case 3: //加入群
+		case "joinGroup": //加入群
 			g.joinGroup(msgBean)
-		case 4: //退出群
+		case "leaveGroup": //退出群
 			g.leaveGroup(msgBean)
-		case 90: //创建群
-			g.CreateGroup(uuid.New().String())
+		case "createGroup": //创建群
+			g.createGroup(uuid.New().String())
 		default:
 			g.shakeError()
 		}
@@ -43,27 +43,32 @@ func (g *Gateway) Handle(data []byte) {
 
 // 发送给所有人
 func (g *Gateway) sendToAll(msgBean *core.MsgBean) {
-	g.Ws.SendToAll(core.ReturnBeanSuccess(core.ReturnDataBean{Type: 0, Msg: msgBean.Data}))
+	g.Ws.SendToAll(core.ReturnBeanSuccess(core.ReturnDataBean{
+		Type:     "sendAll",
+		FromUid:  g.Ws.WsClient.Uid,
+		FromPlat: strconv.FormatInt(g.Ws.WsClient.Uid, 10),
+		Msg:      msgBean.Data,
+	}))
 }
 
 // 发送给指定用户
 func (g *Gateway) sendToUid(msgBean *core.MsgBean) {
 	uid, _ := strconv.ParseInt(msgBean.To, 10, 64)
 	g.Ws.SendToUid(uid, core.ReturnBeanSuccess(core.ReturnDataBean{
-		Type:     1,
-		Msg:      msgBean.Data,
-		FromPlat: strconv.FormatInt(g.Ws.WsClient.Uid, 10),
+		Type:     "sendUid",
 		FromUid:  g.Ws.WsClient.Uid,
+		FromPlat: strconv.FormatInt(g.Ws.WsClient.Uid, 10),
+		Msg:      msgBean.Data,
 	}))
 }
 
 // 发送给群组
 func (g *Gateway) sendToGroup(msgBean *core.MsgBean) {
 	g.Ws.SendToGroup(msgBean.To, core.ReturnBeanSuccess(core.ReturnDataBean{
-		Type:     2,
+		Type:     "sendGroup",
 		Msg:      msgBean.Data,
-		FromPlat: msgBean.To, //群组ID
 		FromUid:  g.Ws.WsClient.Uid,
+		FromPlat: msgBean.To, //群组ID
 	}))
 }
 
@@ -88,7 +93,7 @@ func (g *Gateway) leaveGroup(msgBean *core.MsgBean) {
 }
 
 // CreateGroup 创建群
-func (g *Gateway) CreateGroup(groupId string) {
+func (g *Gateway) createGroup(groupId string) {
 	err := g.Ws.CreateGroup(groupId)
 	msg := []byte(fmt.Sprintf("创建成功，群组ID：%s", groupId))
 	if err != nil {

@@ -1,8 +1,12 @@
 package gormV2
 
 import (
+	"errors"
 	"fmt"
 	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlserver"
+
 	"gorm.io/gorm"
 	gormLog "gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -11,11 +15,6 @@ import (
 )
 
 //gorm.io/plugin/soft_delete
-
-// GetOneMysqlClient 获取一个 mysql 客户端
-func GetOneMysqlClient(conf Conf) (*gorm.DB, error) {
-	return GetSqlDriver(conf)
-}
 
 func GetSqlDriver(conf Conf) (*gorm.DB, error) {
 	var dbDialector gorm.Dialector
@@ -38,7 +37,6 @@ func GetSqlDriver(conf Conf) (*gorm.DB, error) {
 	}
 
 	if conf.IsOpenReadDb {
-
 		if val, err := getDbDialector("r", conf); err == nil {
 			dbDialector = val
 		}
@@ -83,28 +81,47 @@ func GetSqlDriver(conf Conf) (*gorm.DB, error) {
 func getDbDialector(rw string, conf Conf) (gorm.Dialector, error) {
 	var dbDialector gorm.Dialector
 	dsn := getDsn(rw, conf)
-	dbDialector = mysql.Open(dsn)
+	fmt.Println("dsn:", conf.SqlType, dsn)
+	switch conf.SqlType {
+	case MysqlType:
+		dbDialector = mysql.Open(dsn)
+	case PostgresqlType:
+		dbDialector = postgres.Open(dsn)
+	case SqlServerType:
+		dbDialector = sqlserver.Open(dsn)
+	default:
+		return nil, errors.New("ErrorsDbDriverNotExists")
+	}
 	return dbDialector, nil
 }
 
 func getDsn(rw string, conf Conf) string {
+	Host, DataBase, User, Pass, Charset, Port := "127.0.0.1", "db", "root", "123123", "utf8", 3306
+
 	if rw == "r" {
-		return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=true&loc=Local",
-			conf.Read.User,
-			conf.Read.Pass,
-			conf.Read.Host,
-			conf.Read.Port,
-			conf.Read.DataBase,
-			conf.Read.Charset)
+		Host = conf.Read.Host
+		DataBase = conf.Read.DataBase
+		Port = conf.Read.Port
+		User = conf.Read.User
+		Pass = conf.Read.Pass
+		Charset = conf.Read.Charset
 	} else {
-		return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=true&loc=Local",
-			conf.Write.User,
-			conf.Write.Pass,
-			conf.Write.Host,
-			conf.Write.Port,
-			conf.Write.DataBase,
-			conf.Write.Charset)
+		Host = conf.Write.Host
+		DataBase = conf.Write.DataBase
+		Port = conf.Write.Port
+		User = conf.Write.User
+		Pass = conf.Write.Pass
+		Charset = conf.Write.Charset
 	}
+	switch conf.SqlType {
+	case MysqlType:
+		return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=false&loc=Local", User, Pass, Host, Port, DataBase, Charset)
+	case PostgresqlType:
+		return fmt.Sprintf("host=%s port=%d dbname=%s user=%s password=%s sslmode=disable TimeZone=Asia/Shanghai", Host, Port, DataBase, User, Pass)
+	case SqlServerType:
+		return fmt.Sprintf("server=%s;port=%d;database=%s;user id=%s;password=%s;encrypt=disable", Host, Port, DataBase, User, Pass)
+	}
+	return ""
 }
 
 // 创建自定义日志模块，对 gorm 日志进行拦截、

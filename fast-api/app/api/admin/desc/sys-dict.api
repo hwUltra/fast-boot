@@ -96,42 +96,76 @@ type (
     prefix: /sys/dict
 )
 service admin-api {
-
+    @doc(
+        summary: "TypeList"
+    )
     @handler TypeList
     get /typeList (SysDictTypeListReq) returns (SysDictTypeListResp)
 
+    @doc(
+        summary: "List"
+    )
     @handler List
     get /list (SysDictListReq) returns (SysDictListResp)
 
+    @doc(
+        summary: "Options"
+    )
     @handler Options
     get /options  returns (SysDictOptionsResp)
 
+    @doc(
+        summary: "TypeOptions"
+    )
     @handler TypeOptions
     get /:typeCode/options (SysTypeReq) returns (SysDictOptionsResp)
 
 
+    @doc(
+        summary: "Add"
+    )
     @handler Add
     post /add (SysDictForm) returns (IdResp)
 
+    @doc(
+        summary: "Update"
+    )
     @handler Update
     post /update (SysDictForm)
 
+    @doc(
+        summary: "Get"
+    )
     @handler Get
     get /:id (PathIdReq)  returns (SysDictItem)
 
+    @doc(
+        summary: "Del"
+    )
     @handler Del
     get /del/:ids (PathIdsReq)
 
-
+    @doc(
+        summary: "TypeAdd"
+    )
     @handler TypeAdd
     post /type/add (SysDictTypeForm) returns (IdResp)
 
+    @doc(
+        summary: "TypeUpdate"
+    )
     @handler TypeUpdate
     post /type/update (SysDictTypeForm)
 
+    @doc(
+        summary: "TypeGet"
+    )
     @handler TypeGet
     get /type/:id (PathIdReq)  returns (SysDictTypeItem)
 
+    @doc(
+        summary: "TypeDel"
+    )
     @handler TypeDel
     get /type/del/:ids (PathIdsReq)
 

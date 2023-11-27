@@ -41,6 +41,7 @@ func (l *UserListLogic) UserList(in *umsPb.ListReq) (*umsPb.UserListResp, error)
 	if total > 0 {
 		items := make([]*model.UserModel, 0)
 		l.svcCtx.GormConn.Model(userModel).
+			Preload("Addresses").
 			Scopes(
 				gormV2.Paginate(int(in.PageNum), int(in.PageSize)),
 				userModel.WithKeywords(in.Keywords)).
@@ -50,7 +51,6 @@ func (l *UserListLogic) UserList(in *umsPb.ListReq) (*umsPb.UserListResp, error)
 			var it umsPb.User
 			_ = copier.Copy(&it, item)
 			it.CreatedAt = item.CreatedAt.String()
-			it.UpdatedAt = item.UpdatedAt.String()
 			list = append(list, &it)
 		}
 	}
