@@ -1,53 +1,63 @@
 package test
 
 import (
+	"fast-boot/common/mqttx"
 	"fmt"
-	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"testing"
 	"time"
 )
 
-func TestMqtt(t *testing.T) {
-	var broker = "127.0.0.1" //地址
-	var port = 1883          // 端口
-	opts := mqtt.NewClientOptions()
-	opts.AddBroker(fmt.Sprintf("tcp://%s:%d", broker, port))
-	opts.SetClientID("go_mqtt_client111") //设备唯一id，正常应该是设备拿自己的设备id注册到服务器上。
-	opts.SetUsername("emqx")              //账号
-	opts.SetPassword("public")            //密码
-	opts.SetDefaultPublishHandler(func(client mqtt.Client, msg mqtt.Message) {
-		fmt.Printf("Received message: %s from topic: %s\n", msg.Payload(), msg.Topic())
+func TestMQTTX(t *testing.T) {
+	mt, err := mqttx.Create(mqttx.Conf{
+		Host:     "127.0.0.1",
+		Port:     1883,
+		Username: "user",
+		Password: "123123",
+	}, "go_mqtt_client111", func(msg mqttx.MqtMsg) {
+		fmt.Printf("defalut Sub: %s from topic: %s\n", msg.Payload, msg.Topic)
+	}, func() {
+		fmt.Println("on connection")
+	}, func(err error) {
+		fmt.Println("lost connection err", err)
 	})
-	opts.OnConnect = func(client mqtt.Client) {
-		fmt.Println("Connected")
+	if err != nil {
+		t.Errorf("mqttx CreateMqttX: %v", err)
 	}
-	opts.OnConnectionLost = func(client mqtt.Client, err error) {
-		fmt.Printf("Connect lost: %v", err)
-	}
-	client := mqtt.NewClient(opts)
-	if token := client.Connect(); token.Wait() && token.Error() != nil {
-		panic(token.Error())
-	}
+	topic := "topic/test"
+	mt.Sub(mqttx.MqtMsg{Topic: topic, Qos: 1}, func(msg mqttx.MqtMsg) {
+		fmt.Printf("TestMQTTX Sub: %s from topic: %s\n", msg.Payload, msg.Topic)
+	})
+	//mt.Sub(mqttx.MqtMsg{Topic: topic, Qos: 1}, nil)
 
-	sub(client)     //等待消息
-	publish(client) //发消息
-
-	client.Disconnect(250)
-}
-
-func publish(client mqtt.Client) {
-	num := 10
-	for i := 0; i < num; i++ {
+	for i := 0; i < 4; i++ {
 		text := fmt.Sprintf("Message %d", i)
-		token := client.Publish("topic/test", 0, false, text)
-		token.Wait()
+		mt.Publish(mqttx.MqtMsg{Topic: topic, Payload: []byte(text)})
 		time.Sleep(time.Second)
 	}
+
+	mt.Disconnect(250)
 }
 
-func sub(client mqtt.Client) {
+func TestMQTTXSal(t *testing.T) {
+	mt, err := mqttx.QuickCreate(mqttx.Conf{
+		Host:     "127.0.0.1",
+		Port:     1883,
+		Username: "user",
+		Password: "123123",
+	}, "go_mqtt_client111")
+	if err != nil {
+		t.Errorf("Quick CreateMqttX: %v", err)
+	}
 	topic := "topic/test"
-	token := client.Subscribe(topic, 1, nil) ////这里如果不指定方法，就用的上面的SetDefaultPublishHandler设置的方法
-	token.Wait()
-	fmt.Printf("Subscribed to topic: %s", topic)
+	mt.Sub(mqttx.MqtMsg{Topic: topic, Qos: 1}, func(msg mqttx.MqtMsg) {
+		fmt.Printf("Quick Sub: %s from topic: %s\n", msg.Payload, msg.Topic)
+	})
+
+	for i := 0; i < 4; i++ {
+		text := fmt.Sprintf("Quick Message %d", i)
+		mt.Publish(mqttx.MqtMsg{Topic: topic, Payload: []byte(text)})
+		time.Sleep(time.Second)
+	}
+
+	mt.Disconnect(250)
 }
