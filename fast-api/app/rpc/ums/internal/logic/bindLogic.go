@@ -31,8 +31,8 @@ func NewBindLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BindLogic {
 func (l *BindLogic) Bind(in *umsPb.BindReq) (*umsPb.UserInfoResp, error) {
 	userInfo := model.UserModel{}
 	userThirdInfo := model.UserThirdModel{}
-	l.svcCtx.GormConn.Where("`mobile` = ?", in.Mobile).First(&userInfo)
-	l.svcCtx.GormConn.Where("`platform` = 'wxapp' and `openid` = ?", in.OpenId).
+	l.svcCtx.GormConn.Where("mobile = ?", in.Mobile).First(&userInfo)
+	l.svcCtx.GormConn.Where("platform = 'wxapp' and openid = ?", in.OpenId).
 		First(&userThirdInfo)
 
 	if userInfo.Id == 0 {

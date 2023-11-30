@@ -34,6 +34,6 @@ func (l *UpdateLogic) Update(req *types.SysMenuForm) (resp *types.IdResp, err er
 	}
 
 	return &types.IdResp{
-		ID: req.Id,
+		Id: req.Id,
 	}, nil
 }

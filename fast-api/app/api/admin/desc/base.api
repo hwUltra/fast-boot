@@ -11,7 +11,7 @@ type IdReq {
 }
 
 type IdResp {
-	ID int64 `json:"id"`
+	Id int64 `json:"id"`
 }
 
 type ListReq{

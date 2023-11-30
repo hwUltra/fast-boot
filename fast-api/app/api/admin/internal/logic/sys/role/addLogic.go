@@ -25,18 +25,19 @@ func NewAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddLogic {
 }
 
 func (l *AddLogic) Add(req *types.SysRoleFormReq) (resp *types.IdResp, err error) {
-	if _, err = l.svcCtx.SysRpc.RoleAdd(l.ctx, &sysPb.RoleForm{
+	res, err := l.svcCtx.SysRpc.RoleAdd(l.ctx, &sysPb.RoleForm{
 		Name:      req.Name,
 		Code:      req.Code,
 		Sort:      req.Sort,
 		Status:    req.Status,
 		DataScope: req.DataScope,
-	}); err != nil {
+	})
+	if err != nil {
 		return nil, err
 	}
 
 	return &types.IdResp{
-		ID: req.Id,
+		Id: res.Id,
 	}, nil
 
 }

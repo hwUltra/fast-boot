@@ -32,7 +32,7 @@ func (l *DictListLogic) DictList(in *sysPb.DictListReq) (*sysPb.DictListResp, er
 	dictModel := model.SysDictModel{}
 	total := int64(0)
 	if err := l.svcCtx.GormConn.Model(dictModel).
-		Where("`type_code` = ?", in.TypeCode).
+		Where("type_code = ?", in.TypeCode).
 		Count(&total).Error; err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Failed to get  err : %v , in :%+v", err, in)
 	}
@@ -40,7 +40,7 @@ func (l *DictListLogic) DictList(in *sysPb.DictListReq) (*sysPb.DictListResp, er
 	if total > 0 {
 		items := make([]*model.SysDictModel, 0)
 		l.svcCtx.GormConn.Model(dictModel).
-			Where("`type_code` = ?", in.TypeCode).
+			Where("type_code = ?", in.TypeCode).
 			Scopes(gormV2.Paginate(int(in.PageNum), int(in.PageSize))).
 			Order("sort asc,id asc").Find(&items)
 

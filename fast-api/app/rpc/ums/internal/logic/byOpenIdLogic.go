@@ -29,7 +29,7 @@ func NewByOpenIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ByOpenId
 
 func (l *ByOpenIdLogic) ByOpenId(in *umsPb.OpenIdReq) (*umsPb.UserInfoResp, error) {
 	item := model.UserThirdModel{}
-	l.svcCtx.GormConn.Where("`platform` = 'wxapp' and `openid` = ?", in.OpenId).
+	l.svcCtx.GormConn.Where("platform = 'wxapp' and openid = ?", in.OpenId).
 		Preload("User").First(&item)
 
 	fmt.Println("item", item)

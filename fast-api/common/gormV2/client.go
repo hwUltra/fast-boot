@@ -81,7 +81,6 @@ func GetSqlDriver(conf Conf) (*gorm.DB, error) {
 func getDbDialector(rw string, conf Conf) (gorm.Dialector, error) {
 	var dbDialector gorm.Dialector
 	dsn := getDsn(rw, conf)
-	fmt.Println("dsn:", conf.SqlType, dsn)
 	switch conf.SqlType {
 	case MysqlType:
 		dbDialector = mysql.Open(dsn)

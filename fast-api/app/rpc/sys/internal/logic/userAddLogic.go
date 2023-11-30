@@ -29,7 +29,7 @@ func NewUserAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserAddLo
 
 func (l *UserAddLogic) UserAdd(in *sysPb.UserAddReq) (*sysPb.IdResp, error) {
 	user := model.SysUserModel{}
-	l.svcCtx.GormConn.Where("`username` = ?", in.Username).First(&user)
+	l.svcCtx.GormConn.Where("username = ?", in.Username).First(&user)
 	if user.Id > 0 {
 		return nil, status.Error(100, "该用户已存在")
 	}
@@ -39,7 +39,7 @@ func (l *UserAddLogic) UserAdd(in *sysPb.UserAddReq) (*sysPb.IdResp, error) {
 	if err := l.svcCtx.GormConn.Transaction(func(tx *gorm.DB) error {
 		user.Password = cryptx.PasswordEncrypt(l.svcCtx.Config.Salt, in.Password)
 		tx.Create(&user)
-		//tx.Delete(&model.SysUserRoleModel{}).Where("`user_id` = ?", user.Id)
+		//tx.Delete(&model.SysUserRoleModel{}).Where("user_id = ?", user.Id)
 		for _, roleId := range in.RoleIds {
 			tx.FirstOrCreate(&model.SysUserRoleModel{}, model.SysUserRoleModel{
 				RoleId: roleId,

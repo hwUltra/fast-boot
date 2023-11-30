@@ -30,7 +30,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 
 func (l *LoginLogic) Login(in *sysPb.LoginReq) (*sysPb.LoginResp, error) {
 	res := &model.SysUserModel{}
-	l.svcCtx.GormConn.Where("`username` = ?", in.Username).First(res)
+	l.svcCtx.GormConn.Where("username = ?", in.Username).First(res)
 
 	if res.Id == 0 {
 		logx.WithContext(l.ctx).Errorf("用户不存在Username: %s", in.Username)

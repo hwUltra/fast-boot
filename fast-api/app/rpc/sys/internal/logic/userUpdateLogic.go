@@ -37,7 +37,7 @@ func (l *UserUpdateLogic) UserUpdate(in *sysPb.UserUpdateReq) (*sysPb.SuccessRes
 	//校验用户名
 	if in.Username != "" && in.Username != user.Username {
 		oldUser := model.SysUserModel{}
-		l.svcCtx.GormConn.Where("`username` = ?", in.Username).First(&oldUser)
+		l.svcCtx.GormConn.Where("username = ?", in.Username).First(&oldUser)
 		if oldUser.Id != 0 {
 			return nil, status.Error(100, "用户名已存在")
 		}
@@ -71,7 +71,7 @@ func (l *UserUpdateLogic) UserUpdate(in *sysPb.UserUpdateReq) (*sysPb.SuccessRes
 		if err := tx.Save(&user).Error; err != nil {
 			return err
 		}
-		if err := tx.Where("`user_id` = ?", user.Id).Delete(&model.SysUserRoleModel{}).Error; err != nil {
+		if err := tx.Where("user_id = ?", user.Id).Delete(&model.SysUserRoleModel{}).Error; err != nil {
 			return err
 		}
 		for _, roleId := range in.RoleIds {

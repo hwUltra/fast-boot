@@ -30,9 +30,9 @@ func (l *DictTypeOptionsLogic) DictTypeOptions(in *sysPb.AnyReq) (*sysPb.DictTyp
 	var items []*sysPb.DictTypeOption
 
 	l.svcCtx.GormConn.Model(dictModel).
-		Select("`code` as `value`", "`name` as `label` ").
-		Where("`status` = 1").
-		Order("`id` asc ").
+		Select("code as value", "name as label ").
+		Where("status = 1").
+		Order("id asc ").
 		Scan(&items)
 
 	return &sysPb.DictTypeOptionsResp{Items: items}, nil

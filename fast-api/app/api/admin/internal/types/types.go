@@ -104,7 +104,7 @@ type IdReq struct {
 }
 
 type IdResp struct {
-	ID int64 `json:"id"`
+	Id int64 `json:"id"`
 }
 
 type ListReq struct {
@@ -411,26 +411,38 @@ type UserForm struct {
 	IdCard    string `json:"idCard,optional"`   //身份证号码
 	Gender    int64  `json:"gender,optional"`   //性别 0 未知 1男 2女
 	Signature string `json:"signature,optional"`
-	Birthday  string `json:"birthday,optional"`
+	Birthday  string `json:"birthday,,default=0000:01:01"`
 	Tags      string `json:"tags,optional"`
 	Source    string `json:"source,optional"`
 	SourceUid int64  `json:"sourceUid,optional"`
 }
 
 type UserInfo struct {
-	Id        int64  `json:"id"`
-	Mobile    string `json:"mobile"` //电话号码
-	Username  string `json:"username,optional"`
-	Nickname  string `json:"nickname"`        //昵称
-	Avatar    string `json:"avatar"`          //头像
-	IdCard    string `json:"idCard"`          //身份证号码
-	Gender    int8   `json:"gender,optional"` //性别 0 未知 1男 2女
-	Signature string `json:"signature"`       //签名
-	Birthday  string `json:"birthday"`        //生日
-	Tags      string `json:"tags"`            //tags
-	Source    string `json:"source"`          //来源，APP H5
-	SourceUid int64  `json:"sourceUid"`       //邀请uid
-	CreatedAt string `json:"created_at"`
+	Id        int64          `json:"id"`
+	Mobile    string         `json:"mobile"` //电话号码
+	Username  string         `json:"username,optional"`
+	Nickname  string         `json:"nickname"`        //昵称
+	Avatar    string         `json:"avatar"`          //头像
+	IdCard    string         `json:"idCard"`          //身份证号码
+	Gender    int8           `json:"gender,optional"` //性别 0 未知 1男 2女
+	Signature string         `json:"signature"`       //签名
+	Birthday  string         `json:"birthday"`        //生日
+	Tags      string         `json:"tags"`            //tags
+	Source    string         `json:"source"`          //来源，APP H5
+	SourceUid int64          `json:"sourceUid"`       //邀请uid
+	CreatedAt string         `json:"created_at"`
+	Addresses []*UserAddress `json:"addresses"`
+}
+
+type UserAddress struct {
+	ID        int64  `json:"id"`        // ID
+	ShopID    int64  `json:"shopId"`    // 店铺id
+	UiD       int64  `json:"uid"`       // 用户ID
+	Name      string `json:"name"`      // 联系人
+	Mobile    string `json:"mobile"`    // 手机号
+	Area      string `json:"area"`      // 学校地址
+	Info      string `json:"info"`      // 详细地址
+	IsDefault int8   `json:"isDefault"` // 是否默认
 }
 
 type UserListRsqp struct {
@@ -446,11 +458,251 @@ type UserThird struct {
 	Unionid   string `json:"unionid"`  // 小程序unionid
 	Nickname  string `json:"nickname"` // 第三方会员昵称
 	Avatar    string `json:"avatar"`   // 第三方会员头像
-	CreatedAt string `json:"created_at"`
+	CreatedAt string `json:"createdAt"`
 }
 
 type UserThirdListRsqp struct {
 	List  []*UserThird `json:"list"`
+	Total int64        `json:"total"`
+}
+
+type Shop struct {
+	Id              int64   `json:"id"`
+	Name            string  `json:"name"`
+	Tel             string  `json:"tel"`
+	Notice          string  `json:"notice"`
+	DistributionFee float64 `json:"distributionFee"`
+	Status          int64   `json:"status"`
+	CreatedAt       string  `json:"createdAt"`
+}
+
+type ShopForm struct {
+	Id              int64   `json:"id"`
+	Name            string  `json:"name"`
+	Tel             string  `json:"tel"`
+	Notice          string  `json:"notice"`
+	DistributionFee float64 `json:"distributionFee"`
+}
+
+type ShopListResp struct {
+	List  []*Shop `json:"list"`
+	Total int64   `json:"total"`
+}
+
+type PmsCategory struct {
+	Id        int64          `json:"id"`
+	ShopId    int64          `json:"shopId"`
+	ParentId  int64          `json:"parentId"`
+	Name      string         `json:"name"`
+	Icon      string         `json:"icon"`
+	Sort      int64          `json:"sort"`
+	Visible   int64          `json:"visible"`
+	CreatedAt string         `json:"createdAt"`
+	Children  []*PmsCategory `json:"children,omitempty"`
+}
+
+type PmsCategoryListReq struct {
+	Status   int64  `form:"status,default=-1"`
+	Keywords string `form:"keywords,omitempty,optional"`
+	ShopId   int64  `form:"shopId,default=1"` // shopID
+	PageNum  int64  `form:"pageNum,default=1"`
+	PageSize int64  `form:"pageSize,default=10"`
+}
+
+type PmsCategoryForm struct {
+	Id       int64  `json:"id"`
+	ShopId   int64  `json:"shopId"`
+	ParentId int64  `json:"parentId"`
+	Name     string `json:"name"`
+	Icon     string `json:"icon"`
+	Sort     int64  `json:"sort"`
+	Visible  int64  `json:"visible"`
+}
+
+type PmsCategoryListResp struct {
+	List []*PmsCategory `json:"list"`
+}
+
+type PmsCategoryAttribute struct {
+	Id         int64  `json:"id"`         // 主键
+	CategoryId int64  `json:"categoryId"` // 分类ID
+	Name       string `json:"name"`       // 属性名称
+	Type       int64  `json:"type"`       // 类型(1:规格;2:属性;)
+	CreatedAt  string `json:"createdAt"`  // 创建时间
+}
+
+type PmsCategoryAttributeForm struct {
+	CategoryId int64    `json:"categoryId"` // 分类ID
+	Attributes []string `json:"attributes"` // 属性名称
+	Type       int64    `json:"type"`       // 类型(1:规格;2:属性;)
+}
+
+type PmsCategoryAttributeListReq struct {
+	CategoryId int64 `form:"categoryId"` // 分类ID
+	Type       int64 `form:"type"`       // 类型(1:规格;2:属性;)
+}
+
+type PmsCategoryAttributeListResp struct {
+	List []*PmsCategoryAttribute `json:"list"`
+}
+
+type PmsBrand struct {
+	Id        int64  `json:"id"`     // 主键
+	ShopId    int64  `json:"shopId"` // shopID
+	Name      string `json:"name"`   // 品牌名称
+	Logo      string `json:"logo"`   // LOGO图片
+	Sort      int64  `json:"sort"`   // 排序
+	CreatedAt string `json:"createdAt"`
+}
+
+type BrandForm struct {
+	Id     int64  `json:"id"`     // 主键
+	ShopId int64  `json:"shopId"` // shopID
+	Name   string `json:"name"`   // 品牌名称
+	Logo   string `json:"logo"`   // LOGO图片
+	Sort   int64  `json:"sort"`   // 排序
+}
+
+type BrandListReq struct {
+	Keywords string `form:"keywords,omitempty,optional"`
+	ShopId   int64  `form:"shopId,default=1"` // shopID
+	PageNum  int64  `form:"pageNum,default=1"`
+	PageSize int64  `form:"pageSize,default=10"`
+}
+
+type BrandListResp struct {
+	List  []PmsBrand `json:"list"`
+	Total int64      `json:"total"`
+}
+
+type PmsGoods struct {
+	Id           int64               `json:"id"`          // 主键
+	ShopId       int64               `json:"shopId"`      // shopID
+	CategoryId   int64               `json:"categoryId"`  // 商品类型ID
+	BrandId      int64               `json:"brandId"`     // 商品品牌ID
+	Name         string              `json:"name"`        // 商品名称
+	OriginPrice  int64               `json:"originPrice"` // 原价【起】
+	Price        int64               `json:"price"`       // 现价【起】
+	Sales        int64               `json:"sales"`       // 销量
+	PicUrl       string              `json:"picUrl"`      // 商品主图
+	SubPicUrls   []string            `json:"subPicUrls"`  // 商品图册
+	Unit         string              `json:"unit"`        // 单位
+	Description  string              `json:"description"` // 商品简介
+	Detail       string              `json:"detail"`      // 商品详情
+	Status       int64               `json:"status"`      // 商品状态(0:下架 1:上架)
+	BrandName    string              `json:"brandName,omitempty,optional"`
+	CategoryName string              `json:"categoryName,omitempty,optional"`
+	SkuList      []PmsSku            `json:"skuList,omitempty,optional"`
+	AttrList     []PmsGoodsAttribute `json:"attrList,omitempty,optional"`
+	SpecList     []PmsGoodsAttribute `json:"specList,omitempty,optional"`
+	CreatedAt    string              `json:"createdAt"`
+}
+
+type PmsGoodsListReq struct {
+	ShopId     int64  `form:"shopId,default=-1"`
+	Keywords   string `form:"keywords,omitempty,optional"`
+	Status     int64  `form:"status,default=-1"`
+	PageNum    int64  `form:"pageNum,default=1"`
+	PageSize   int64  `form:"pageSize,default=10"`
+	CategoryId int64  `form:"categoryId,omitempty,optional"`
+}
+
+type PmsGoodsListRsqp struct {
+	List  []PmsGoods `json:"list"`
+	Total int64      `json:"total"`
+}
+
+type PmsGoodsAttribute struct {
+	Id          int64  `json:"id"`          // 主键
+	GoodsId     int64  `json:"goodsId"`     // goods ID
+	AttributeId int64  `json:"attributeId"` // 属性ID
+	Name        string `json:"name"`        // 属性名称
+	Value       string `json:"value"`       // 属性值
+	Type        int64  `json:"type"`        // 类型(1:规格;2:属性;)
+	PicUrl      string `json:"picUrl"`      // 规格图片
+	CreatedAt   string `json:"createdAt"`
+}
+
+type PmsSku struct {
+	Id          int64  `json:"id"`
+	GoodsId     int64  `json:"goodsId"`     // goods ID
+	SkuSn       string `json:"skuSn"`       // 商品编码
+	Name        string `json:"name"`        // 商品名称
+	SpecIds     string `json:"specIds"`     // 商品规格值，以英文逗号(,)分割
+	Price       int64  `json:"price"`       // 商品价格(单位：分)
+	Stock       int64  `json:"stock"`       // 库存数量
+	LockedStock int64  `json:"lockedStock"` // 库存锁定数量
+	PicUrl      string `json:"picUrl"`      // 商品图片地址
+	CreatedAt   string `json:"createdAt"`
+}
+
+type GoodsEditRep struct {
+	Id          int64                   `json:"id,optional"`
+	ShopId      int64                   `json:"shopId"`
+	CategoryId  int64                   `json:"categoryId"`
+	BrandId     int64                   `json:"brandId"`
+	Name        string                  `json:"name"`
+	OriginPrice int64                   `json:"originPrice"`
+	Price       int64                   `json:"price"`
+	PicUrl      string                  `json:"picUrl,optional"`
+	SubPicUrls  []string                `json:"subPicUrls,optional"`
+	Unit        string                  `json:"unit,default=个"`
+	Description string                  `json:"description"`
+	Detail      string                  `json:"detail"`
+	Status      int64                   `json:"status,default=1"`
+	SkuList     []PmsGoodsFormSku       `json:"skuList,optional"`
+	AttrList    []PmsGoodsFormAttribute `json:"attrList,optional"`
+	SpecList    []PmsGoodsFormAttribute `json:"specList,optional"`
+}
+
+type PmsGoodsFormAttribute struct {
+	Id      int64  `json:"id,optional,default=0"` // 主键
+	GoodsId int64  `json:"goodsId,optional"`
+	IdStr   string `json:"idStr,optional"`
+	Name    string `json:"name"`
+	Value   string `json:"value"`
+	Type    int64  `json:"type,optional"`
+	PicUrl  string `json:"picUrl,optional"`
+}
+
+type PmsGoodsFormSku struct {
+	Id          int64  `json:"id,optional"`
+	SkuSn       string `json:"skuSn"`                // 商品编码
+	Name        string `json:"name"`                 // 商品名称
+	SpecIds     string `json:"specIds"`              // 商品规格值，以英文逗号(,)分割
+	Price       int64  `json:"price,optional"`       // 商品价格(单位：分)
+	Stock       int64  `json:"stock,optional"`       // 库存数量
+	LockedStock int64  `json:"lockedStock,optional"` // 库存锁定数量
+	PicUrl      string `json:"picUrl,optional"`      // 商品图片地址
+}
+
+type OrderInfo struct {
+	Id               int64   `json:"id"`
+	ShopId           int64   `json:"shop_id"`           // 店铺ID
+	UserId           int64   `json:"user_id"`           // 用户ID
+	OrderNo          string  `json:"order_no"`          // 订单号
+	GoodsNumber      int64   `json:"goods_number"`      // 商品总数
+	PayAmount        float64 `json:"pay_amount"`        // 订单金额(商品价格+配送费-优惠金额)
+	GoodsAmount      float64 `json:"goods_amount"`      // 商品费用
+	FreightAmount    float64 `json:"freight_amount"`    // 运费
+	CouponAmount     float64 `json:"coupon_amount"`     // 优惠金费
+	CouponId         int64   `json:"coupon_id"`         // 用户优惠券id
+	ReceiverType     int64   `json:"receiver_type"`     // 地址类型0 配送 1自提点
+	ReceiverName     string  `json:"receiver_name"`     // 收货人姓名
+	ReceiverMobile   string  `json:"receiver_mobile"`   // 收货人电话
+	ReceiverAddress  string  `json:"receiver_address"`  // 收货人地址
+	DistributionId   int64   `json:"distribution_id"`   // 自提点ID
+	DistributionInfo string  `json:"distribution_info"` // 自提点ID详情
+	Remarks          string  `json:"remarks"`           // 备注
+	PayTime          int64   `json:"pay_time"`          // 支付时间
+	TradeNo          string  `json:"trade_no"`          // 支付单号
+	Status           int64   `json:"status"`            // 订单状态  -2退款 -1=已关闭/0待支付/1已支付/2已发货/5待取货/10完成
+	AppraiseStatus   int64   `json:"appraise_status"`   // 评价状态：0.待评价；1.已平价;
+	CreatedAt        string  `json:"created_at"`
+}
+
+type OrderListRsqp struct {
+	List  []*OrderInfo `json:"list"`
 	Total int64        `json:"total"`
 }
 

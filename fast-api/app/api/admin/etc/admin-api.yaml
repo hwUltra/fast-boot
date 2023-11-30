@@ -1,6 +1,6 @@
 Name: admin-api
 Host: 0.0.0.0
-Port: 8888
+Port: 18888
 MaxBytes: 10485760
 
 Auth:
@@ -13,28 +13,34 @@ Redis:
   Type: node
 
 MinioX:
-  MinIOAccessKeyID:
-  MinIOAccessSecretKey:
-  MinIOEndpoint:
+  MinIOAccessKeyID: asdDScnMJrTk9Briqwo4
+  MinIOAccessSecretKey: 9N6lxKhBA2qgRsTJQf4bjRxiGpk6mCndFjjok7ij
+  MinIOEndpoint: www.imguo.com:9000
   MinIOBucket: files
   MinIOSSLBool: false
   MinIOBucketLocation: cn-north-1
-  MinIOBasePath:
+  MinIOBasePath: https://img.imguo.com
 
 
 #系统
 SysRpc:
   Etcd:
     Hosts:
-      - 127.0.0.1:2379
+      - 192.168.3.85:12379
     Key: sys.rpc
 
 #用户
 UmsRpc:
   Etcd:
     Hosts:
-      - 127.0.0.1:2379
+      - 192.168.3.85:12379
     Key: ums.rpc
+
+PmsRpc:
+  Etcd:
+    Hosts:
+      - 192.168.3.85:12379
+    Key: pms.rpc
 
 Log:
   Mode: file

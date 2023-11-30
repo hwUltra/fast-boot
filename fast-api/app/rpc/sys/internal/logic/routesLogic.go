@@ -32,20 +32,20 @@ func (l *RoutesLogic) Routes(in *sysPb.RoutesReq) (*sysPb.RoutesResp, error) {
 		roleIds := make([]int64, 0)
 		gormDb.Model(&model.SysUserRoleModel{}).
 			Joins("JOIN sys_role on sys_role.id = sys_user_role.role_id").
-			Where("`sys_user_role`.user_id = ?", 1).
-			Where("`sys_role`.status = ?", 1).
-			Pluck("`sys_role`.id", &roleIds)
+			Where("sys_user_role.user_id = ?", 1).
+			Where("sys_role.status = ?", 1).
+			Pluck("sys_role.id", &roleIds)
 		//fmt.Print("roleIds = ", roleIds)
 
 		menuIds := make([]int64, 0)
 		gormDb.Model(&model.SysRoleMenuModel{}).
 			Joins("JOIN sys_menu on sys_menu.id = sys_role_menu.menu_id").
-			Where("`sys_role_menu`.role_id IN ?", roleIds).
-			Pluck("`sys_role_menu`.menu_id", &menuIds)
+			Where("sys_role_menu.role_id IN ?", roleIds).
+			Pluck("sys_role_menu.menu_id", &menuIds)
 
 		if len(in.Types) > 0 {
 			gormDb.Model(&model.SysMenuModel{}).
-				Where("`id` IN ? and `type` in ?", menuIds, in.Types).
+				Where("id IN ? and type in ?", menuIds, in.Types).
 				Order("sort asc,id asc").Preload("Roles", "status = ?", 1).Find(&items)
 		} else {
 			gormDb.Model(&model.SysMenuModel{}).Where("id IN ?", menuIds).
@@ -55,7 +55,7 @@ func (l *RoutesLogic) Routes(in *sysPb.RoutesReq) (*sysPb.RoutesResp, error) {
 	} else {
 		if len(in.Types) > 0 {
 			gormDb.Model(&model.SysMenuModel{}).
-				Where("`type` in ?", in.Types).
+				Where("type in ?", in.Types).
 				Order("sort asc,id asc").
 				Preload("Roles", "status = ?", 1).Find(&items)
 		} else {

@@ -101,3 +101,46 @@ func TestGormBuilder(t *testing.T) {
 	//}
 	//db.Debug().Create(&userInfo)
 }
+
+func TestGormGeo(t *testing.T) {
+	dsn := "root:123456@tcp(127.0.0.1:13306)/mall-boot?charset=utf8mb4&parseTime=True&loc=Local"
+	db, _ := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	result := make([]GeoModel, 0)
+	//
+	lon := "116.2939670643206"
+	lat := "40.04348155309347"
+	withDist := 6000
+	db.Model(GeoModel{}).
+		Debug().
+		Select(fmt.Sprintf("*,(st_distance(POINT(longitude,latitude), POINT( %s, %s ))* 111195) AS distance", lon, lat)).
+		Having("distance < ?", withDist).
+		Order("distance ASC").
+		Find(&result)
+
+	for _, item := range result {
+		fmt.Println("item = ", item.Distance, item)
+	}
+
+}
+
+type GeoModel struct {
+	Id        int64   `gorm:"primarykey" json:"id"`
+	Name      string  `gorm:"column:name" json:"name"`
+	Address   string  `gorm:"column:address" json:"address"`
+	Longitude string  `gorm:"column:longitude" json:"longitude"`
+	Latitude  string  `gorm:"column:latitude" json:"latitude"`
+	Distance  float64 `json:"distance"`
+}
+
+func (*GeoModel) TableName() string {
+	return "geo"
+}
+
+//SELECT
+//*,
+//	( st_distance ( POINT ( longitude, latitude ), POINT (116.3424590000, 40.0497810000))* 111195 / 1000 ) AS distance
+//FROM
+//geo
+//HAVING distance<50
+//ORDER BY
+//distance ASC

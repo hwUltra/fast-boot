@@ -30,7 +30,7 @@ func (l *DeptListLogic) DeptList(in *sysPb.DeptListReq) (*sysPb.DeptListResp, er
 		Scopes(
 			deptModel.WithStatus(in.Status),
 			deptModel.WithKeywords(in.Keywords)).
-		Order("`sort` asc, `id` asc ").
+		Order("sort asc, id asc ").
 		Scan(&items)
 
 	return &sysPb.DeptListResp{List: DeptListTree(items, 0)}, nil

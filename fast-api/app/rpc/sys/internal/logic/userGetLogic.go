@@ -46,9 +46,9 @@ func (l *UserGetLogic) UserGet(in *sysPb.IdReq) (*sysPb.UserGetResp, error) {
 	perms := make([]string, 0)
 	gormDb.Model(&model.SysMenuModel{}).
 		Joins("JOIN sys_role_menu on sys_menu.id = sys_role_menu.menu_id").
-		Where("`sys_role_menu`.`role_id` IN ?", roleIds).
-		Where("`sys_menu`.`type` = 4").
-		Pluck("`sys_menu`.`perm`", &perms)
+		Where("sys_role_menu.role_id IN ?", roleIds).
+		Where("sys_menu.type = 4").
+		Pluck("sys_menu.perm", &perms)
 
 	return &sysPb.UserGetResp{
 		Id:       userInfo.Id,

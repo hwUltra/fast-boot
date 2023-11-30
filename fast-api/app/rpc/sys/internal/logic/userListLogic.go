@@ -8,6 +8,7 @@ import (
 	"fast-boot/common/gormV2"
 	"fast-boot/common/static"
 	"fast-boot/common/xerr"
+	"fmt"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 
@@ -32,21 +33,23 @@ func NewUserListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserList
 func (l *UserListLogic) UserList(in *sysPb.UserListReq) (*sysPb.UserListResp, error) {
 
 	userModel := model.SysUserModel{}
-	//total
 	total := int64(0)
-	//l.svcCtx.GormConn.Model(userModel).
-	//	Scopes(userModel.WithStatus(in.Status),
-	//		userModel.WithCreatedAt(in.StartTime, in.EndTime),
-	//		userModel.WithKeywords(in.Keywords)).
-	//	Joins("left join sys_dept on sys_user.dept_id = sys_dept.id").
-	//	Where("concat(',',concat(d.tree_path,',',d.id),',') like concat('%,',?,',%')", in.DeptId)
+
+	//适配Postgresql
+	deptIdWhere := ""
+	if l.svcCtx.Config.Gorm.SqlType == gormV2.PostgresqlType {
+		deptIdWhere = fmt.Sprint("concat(',',concat(d.tree_path::text,',',d.id::int),',') like concat('%,',?::int,',%')")
+	} else {
+		deptIdWhere = fmt.Sprint("concat(',',concat(d.tree_path,',',d.id),',') like concat('%,',?,',%')")
+	}
+
 	if err := l.svcCtx.GormConn.Model(userModel).
-		Joins("left join `sys_dept` as d on `sys_user`.dept_id = d.id").
+		Joins("left join sys_dept as d on sys_user.dept_id = d.id").
 		Scopes(
 			userModel.WithStatus(in.Status),
 			userModel.WithCreatedAt(in.StartTime, in.EndTime),
 			userModel.WithKeywords(in.Keywords)).
-		Where("concat(',',concat(d.tree_path,',',d.id),',') like concat('%,',?,',%')", in.DeptId).
+		Where(deptIdWhere, in.DeptId).
 		Count(&total).Error; err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Failed to get  err : %v , in :%+v", err, in)
 	}
@@ -56,7 +59,7 @@ func (l *UserListLogic) UserList(in *sysPb.UserListReq) (*sysPb.UserListResp, er
 	if total > 0 {
 		items := make([]*model.SysUserModel, 0)
 		l.svcCtx.GormConn.Model(userModel).
-			Joins("left join `sys_dept` as d on `sys_user`.dept_id = d.id").
+			Joins("left join sys_dept as d on sys_user.dept_id = d.id").
 			Preload("Dept", "status = 1").
 			Preload("Roles", "status = 1").
 			Scopes(
@@ -64,7 +67,7 @@ func (l *UserListLogic) UserList(in *sysPb.UserListReq) (*sysPb.UserListResp, er
 				userModel.WithStatus(in.Status),
 				userModel.WithCreatedAt(in.StartTime, in.EndTime),
 				userModel.WithKeywords(in.Keywords)).
-			Where("concat(',',concat(d.tree_path,',',d.id),',') like concat('%,',?,',%')", in.DeptId).
+			Where(deptIdWhere, in.DeptId).
 			Order("id asc").Find(&items)
 
 		for _, item := range items {

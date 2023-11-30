@@ -8,15 +8,15 @@ import (
 type Base struct {
 	//*gorm.DB  `gorm:"-" json:"-"`
 	Id        int64  `gorm:"primarykey" json:"id"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
+	CreatedAt string `gorm:"created_at" json:"created_at"`
+	UpdatedAt string `gorm:"updated_at" json:"updated_at"`
 }
 
 type BaseDel struct {
 	//*gorm.DB  `gorm:"-" json:"-"`
 	Id        int64                 `gorm:"primarykey" json:"id"`
-	CreatedAt string                `json:"created_at"`
-	UpdatedAt string                `json:"updated_at"`
+	CreatedAt string                `gorm:"created_at" json:"created_at"`
+	UpdatedAt string                `gorm:"updated_at" json:"updated_at"`
 	DeletedAt soft_delete.DeletedAt `gorm:"delete_at" json:"-"`
 }
 

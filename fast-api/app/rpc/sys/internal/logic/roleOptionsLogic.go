@@ -31,9 +31,9 @@ func (l *RoleOptionsLogic) RoleOptions(in *sysPb.AnyReq) (*sysPb.RoleOptionsResp
 	var items []*sysPb.RoleOption
 
 	l.svcCtx.GormConn.Model(roleModel).
-		Select("`id` as `value`", "`name` as `label` ").
-		Where("`status` = 1").
-		Order("`sort` asc, `id` asc ").
+		Select("id as value", "name as label ").
+		Where("status = 1").
+		Order("sort asc, id asc ").
 		Scan(&items)
 
 	return &sysPb.RoleOptionsResp{Items: items}, nil

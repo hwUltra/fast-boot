@@ -35,6 +35,7 @@ func (l *ListLogic) List(req *types.ListReq) (resp *types.UserListRsqp, err erro
 		return nil, err
 	}
 	list := make([]*types.UserInfo, 0)
+
 	_ = copier.Copy(&list, result.List)
 
 	return &types.UserListRsqp{

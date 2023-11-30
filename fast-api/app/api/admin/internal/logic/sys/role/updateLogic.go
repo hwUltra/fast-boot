@@ -37,7 +37,7 @@ func (l *UpdateLogic) Update(req *types.SysRoleFormReq) (resp *types.IdResp, err
 	}
 
 	return &types.IdResp{
-		ID: req.Id,
+		Id: req.Id,
 	}, nil
 
 }

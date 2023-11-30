@@ -30,9 +30,9 @@ func (l *DictOptionsLogic) DictOptions(in *sysPb.TypeReq) (*sysPb.DictOptionsRes
 	var items []*sysPb.DictOption
 
 	l.svcCtx.GormConn.Model(dictModel).
-		Select("`value`", "`name` as `label` ").
-		Where("`type_code` = ?", in.TypeCode).
-		Order("`id` asc ").
+		Select("value", "name as label ").
+		Where("type_code = ?", in.TypeCode).
+		Order("id asc ").
 		Scan(&items)
 
 	return &sysPb.DictOptionsResp{Items: items}, nil

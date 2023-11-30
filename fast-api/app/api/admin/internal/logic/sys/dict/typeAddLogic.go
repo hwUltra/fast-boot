@@ -34,6 +34,6 @@ func (l *TypeAddLogic) TypeAdd(req *types.SysDictTypeForm) (resp *types.IdResp, 
 	}
 
 	return &types.IdResp{
-		ID: req.Id,
+		Id: req.Id,
 	}, nil
 }

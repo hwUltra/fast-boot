@@ -29,7 +29,7 @@ func (l *RoleSetMenuIdsLogic) RoleSetMenuIds(in *sysPb.RoleSetMenuIdsReq) (*sysP
 
 	if err := l.svcCtx.GormConn.Transaction(func(tx *gorm.DB) error {
 		//删除
-		if err := tx.Where("`role_id` = ?", in.RoleId).Delete(&model.SysRoleMenuModel{}).Error; err != nil {
+		if err := tx.Where("role_id = ?", in.RoleId).Delete(&model.SysRoleMenuModel{}).Error; err != nil {
 			return err
 		}
 		for _, menuId := range in.MenuIds {

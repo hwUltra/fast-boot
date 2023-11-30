@@ -86,7 +86,7 @@ func TestRedisSetBuilder(t *testing.T) {
 }
 
 func TestRedisZSetBuilder(t *testing.T) {
-	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:6379", Type: "node"})
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:16379", Type: "node"})
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -114,5 +114,83 @@ func TestRedisZSetBuilder(t *testing.T) {
 		return
 	}
 	fmt.Println("strings", strings)
+
+}
+
+func TestGeoAdd(t *testing.T) {
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:16379", Type: "node"})
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	key := "address"
+	gens := []*redis.GeoLocation{
+		{Name: "shanghai", Latitude: 38.115557, Longitude: 120.361389},
+		{Name: "beijing", Latitude: 37.502668, Longitude: 133.613893},
+	}
+	geoAdd, err := redisClient.GeoAdd(key, gens...)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(geoAdd)
+}
+
+func TestGeoFind(t *testing.T) {
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:16379", Type: "node"})
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	key := "address"
+
+	geoPos, err := redisClient.GeoPos(key, "shanghai")
+	if err != nil {
+		return
+	}
+	fmt.Println("geoPos", geoPos[0].Latitude)
+
+}
+
+func TestGeoDist(t *testing.T) {
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:16379", Type: "node"})
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	key := "address"
+
+	dist, err := redisClient.GeoDist(key, "shanghai", "beijing", "km")
+	if err != nil {
+		return
+	}
+	fmt.Println("dist", dist)
+	//GEORADIUS address 120 38 199 km
+}
+
+func TestGeoRadius(t *testing.T) {
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:16379", Type: "node"})
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	key := "address"
+	radius, err := redisClient.GeoRadius(key, 120.313, 38.115557, &redis.GeoRadiusQuery{
+		Radius:   2000,
+		WithDist: true,
+		Unit:     "km",
+		Sort:     "ASC",
+	})
+	if err != nil {
+		return
+	}
+	fmt.Println("radius", radius)
+
+	//Radius float64
+	//// Can be m, km, ft, or mi. Default is km.
+	//Unit        string
+	//WithCoord   bool
+	//WithDist    bool
+	//WithGeoHash bool
+	//Count       int
+	//// Can be ASC or DESC. Default is no sort order.
+	//Sort      string
+	//Store     string
+	//StoreDist string
 
 }

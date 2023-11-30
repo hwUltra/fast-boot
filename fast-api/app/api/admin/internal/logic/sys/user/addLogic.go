@@ -34,6 +34,6 @@ func (l *AddLogic) Add(req *types.SysUserFormReq) (resp *types.IdResp, err error
 		return nil, err
 	}
 	return &types.IdResp{
-		ID: res.Id,
+		Id: res.Id,
 	}, nil
 }

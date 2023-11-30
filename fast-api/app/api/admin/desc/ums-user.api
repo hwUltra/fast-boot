@@ -17,7 +17,7 @@ type (
 		IdCard    string `json:"idCard,optional"`         //身份证号码
 		Gender    int64  `json:"gender,optional"`              //性别 0 未知 1男 2女
 		Signature string `json:"signature,optional"`
-		Birthday  string `json:"birthday,optional"`
+		Birthday  string `json:"birthday,,default=0000:01:01"`
 		Tags      string `json:"tags,optional"`
 		Source    string `json:"source,optional"`
 		SourceUid int64  `json:"sourceUid,optional"`

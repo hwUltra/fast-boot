@@ -35,6 +35,5 @@ func (l *RoleAddLogic) RoleAdd(in *sysPb.RoleForm) (*sysPb.IdResp, error) {
 	if result.Error != nil {
 		return nil, result.Error
 	}
-
 	return &sysPb.IdResp{Id: item.Id}, nil
 }

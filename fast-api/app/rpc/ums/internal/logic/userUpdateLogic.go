@@ -2,14 +2,11 @@ package logic
 
 import (
 	"context"
-	"database/sql"
 	"fast-boot/app/rpc/model"
-	"fast-boot/common/xerr"
-	"github.com/pkg/errors"
-	"time"
-
 	"fast-boot/app/rpc/ums/internal/svc"
 	"fast-boot/app/rpc/ums/umsPb"
+	"fast-boot/common/xerr"
+	"github.com/pkg/errors"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -31,7 +28,7 @@ func NewUserUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserUp
 // UserUpdate  修改用户
 func (l *UserUpdateLogic) UserUpdate(in *umsPb.UserForm) (*umsPb.SuccessResp, error) {
 	info := model.UserModel{}
-	l.svcCtx.GormConn.Where("`id` = ?", in.Id).First(&info)
+	l.svcCtx.GormConn.Where("id = ?", in.Id).First(&info)
 	if info.Id == 0 {
 		return nil, errors.Wrapf(xerr.NewErrMsg("用户不存在"), "用户不存在：%d ", in.Id)
 	}
@@ -55,8 +52,9 @@ func (l *UserUpdateLogic) UserUpdate(in *umsPb.UserForm) (*umsPb.SuccessResp, er
 		info.Signature = in.Signature
 	}
 	if len(in.Birthday) > 0 {
-		t, _ := time.ParseInLocation("2006-01-02", in.Birthday, time.Local) //这里按照当前时区转
-		info.Birthday = sql.NullTime{Time: t, Valid: true}
+		info.Birthday = in.Birthday
+		//t, _ := time.ParseInLocation("2006-01-02", in.Birthday, time.Local) //这里按照当前时区转
+		//info.Birthday = sql.NullTime{Time: t, Valid: true}
 	}
 	if len(in.Tags) > 0 && (in.Tags != info.Tags) {
 		info.Tags = in.Tags

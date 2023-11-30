@@ -34,7 +34,7 @@ func (l *AddLogic) Add(req *types.SysMenuForm) (resp *types.IdResp, err error) {
 	}
 
 	return &types.IdResp{
-		ID: req.Id,
+		Id: req.Id,
 	}, nil
 
 }

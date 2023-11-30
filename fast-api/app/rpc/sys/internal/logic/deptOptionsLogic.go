@@ -26,8 +26,8 @@ func (l *DeptOptionsLogic) DeptOptions(in *sysPb.AnyReq) (*sysPb.DeptOptionResp,
 	deptModel := model.SysDeptModel{}
 	var items []*model.SysDeptModel
 	l.svcCtx.GormConn.Model(deptModel).
-		Where("`status` = 1").
-		Order("`sort` asc, `id` asc ").
+		Where("status = 1").
+		Order("sort asc, id asc ").
 		Scan(&items)
 
 	return &sysPb.DeptOptionResp{Items: GetTree(items, 0)}, nil
