@@ -22,6 +22,12 @@
         <router-link to="/">
           <el-dropdown-item>{{ $t("navbar.dashboard") }}</el-dropdown-item>
         </router-link>
+        <a target="_blank" href="https://github.com/AnakinXY/fast-boot">
+          <el-dropdown-item>Github</el-dropdown-item>
+        </a>
+        <a target="_blank" href="https://gitee.com/skywalker">
+          <el-dropdown-item>{{ $t("navbar.gitee") }}</el-dropdown-item>
+        </a>
         <el-dropdown-item divided @click="logout">
           {{ $t("navbar.logout") }}
         </el-dropdown-item>
@@ -92,8 +98,7 @@ function logout() {
 
 .avatar-container {
   display: flex;
-  align-items: center;
-  justify-items: center;
+  place-items: center center;
   margin: 0 5px;
   cursor: pointer;
 

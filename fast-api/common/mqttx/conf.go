@@ -5,7 +5,8 @@ type Conf struct {
 	Port     int    `json:"port"`
 	Username string `json:"username"`
 	Password string `json:"password"`
-	//Qos      int    `json:"qos"`
+	ClientId string `json:"clientId"`
+	//Qos      byte   `json:"qos"`
 	//Tls      bool   `json:"tls"`
 	//Action   string `json:"action"`
 	//Topic    string `json:"topic"`

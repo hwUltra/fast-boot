@@ -18,10 +18,8 @@
       class="z-1 !border-none w-100 !bg-transparent !rounded-4% <sm:w-83"
     >
       <div class="text-center relative">
-        <h2>{{ defaultSettings.title }}</h2>
-        <el-tag class="ml-2 absolute top-0 right-0">{{
-          defaultSettings.version
-        }}</el-tag>
+        <h2>{{ title }}</h2>
+        <el-tag class="ml-2 absolute top-0 right-0">{{ version }}</el-tag>
       </div>
       <el-form
         ref="loginFormRef"
@@ -78,21 +76,16 @@
           @click.prevent="handleLogin"
           >{{ $t("login.login") }}
         </el-button>
-
-        <!-- 账号密码提示 -->
-        <div class="mt-10 text-sm">
-          <span>{{ $t("login.username") }}: {{ loginData.username }}</span>
-          <span class="ml-4">
-            {{ $t("login.password") }}: {{ loginData.password }}</span
-          >
-        </div>
       </el-form>
     </el-card>
 
     <!-- ICP备案 -->
-    <div class="absolute bottom-1 text-[10px] text-center">
-      <p>Copyright © 2023 - 2024 kyle All Rights Reserved. 版权所有</p>
-      <p>ICP备案号:鄂ICP备xxxxx号-1</p>
+    <div
+      class="absolute bottom-1 text-[10px] text-center"
+      v-show="useAppStore().device == 'desktop'"
+    >
+      <p>Copyright © 2021 - 2023 kyle.tech All Rights Reserved.</p>
+      <p>鄂ICP备xxxxx号-1</p>
     </div>
   </div>
 </template>
@@ -113,41 +106,40 @@ import { useAppStore } from "@/store/modules/app";
 // API依赖
 import { LocationQuery, LocationQueryValue, useRoute } from "vue-router";
 import { LoginData } from "@/api/auth/types";
-import defaultSettings from "@/settings";
 
-const appStore = useAppStore();
 const settingsStore = useSettingsStore();
-const userStore = useUserStore();
-const route = useRoute();
 
+const { title, version } = settingsStore;
+/**
+ * 明亮/暗黑主题切换
+ */
 const isDark = ref<boolean>(settingsStore.theme === "dark");
-
-function handleThemeChange(isDark: boolean) {
-  console.log("登录页面主题切换", isDark);
+const handleThemeChange = (isDark: any) => {
   useToggle(isDark);
   settingsStore.changeSetting({
     key: "theme",
     value: isDark ? "dark" : "light",
   });
-}
+};
 
 /**
- * 按钮loading
+ * 根据屏幕宽度切换设备模式
  */
-const loading = ref(false);
-/**
- * 是否大写锁定
- */
-const isCapslock = ref(false);
-/**
- * 密码是否可见
- */
-const passwordVisible = ref(false);
+const appStore = useAppStore();
+const WIDTH = 992; // 响应式布局容器固定宽度  大屏（>=1200px） 中屏（>=992px） 小屏（>=768px）
+const { width } = useWindowSize();
+watchEffect(() => {
+  if (width.value < WIDTH) {
+    appStore.toggleDevice("mobile");
+  } else {
+    appStore.toggleDevice("desktop");
+  }
+});
 
-/**
- * 登录表单引用
- */
-const loginFormRef = ref(ElForm);
+const loading = ref(false); // 按钮loading
+const isCapslock = ref(false); // 是否大写锁定
+const passwordVisible = ref(false); // 密码是否可见
+const loginFormRef = ref(ElForm); // 登录表单ref
 
 const loginData = ref<LoginData>({
   username: "kyle",
@@ -155,7 +147,6 @@ const loginData = ref<LoginData>({
 });
 
 const { t } = useI18n();
-
 const loginRules = computed(() => {
   const prefix = appStore.language === "en" ? "Please enter " : "请输入";
   return {
@@ -170,23 +161,18 @@ const loginRules = computed(() => {
       {
         required: true,
         trigger: "blur",
-        validator: passwordValidator,
+        validator: (rule: any, value: any, callback: any) => {
+          if (value.length < 6) {
+            callback(new Error("The password can not be less than 6 digits"));
+          } else {
+            callback();
+          }
+        },
         message: `${prefix}${t("login.password")}`,
       },
     ],
   };
 });
-
-/**
- * 密码校验器
- */
-function passwordValidator(rule: any, value: any, callback: any) {
-  if (value.length < 6) {
-    callback(new Error("The password can not be less than 6 digits"));
-  } else {
-    callback();
-  }
-}
 
 /**
  * 检查输入大小写状态
@@ -199,6 +185,8 @@ function checkCapslock(e: any) {
 /**
  * 登录
  */
+const route = useRoute();
+const userStore = useUserStore();
 function handleLogin() {
   loginFormRef.value.validate((valid: boolean) => {
     if (valid) {
@@ -223,6 +211,7 @@ function handleLogin() {
           router.push({ path: redirect, query: otherQueryParams });
         })
         .catch(() => {
+          // 验证失败，重新生成验证码
           loading.value = false;
         })
         .finally(() => {
@@ -299,7 +288,7 @@ onMounted(() => {
     }
 
     input:-webkit-autofill {
-      transition: background-color 5000s ease-in-out 0s; /* 通过延时渲染背景色变相去除背景颜色 */
+      transition: background-color 1000s ease-in-out 0s; /* 通过延时渲染背景色变相去除背景颜色 */
     }
   }
 }

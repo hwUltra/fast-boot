@@ -142,3 +142,22 @@ func ArrayIntersection[T any](arrs1, arrs2 []T) []T {
 
 	return ret
 }
+
+func RemoveElements[t any](arr []t, targets []t) []t {
+	result := make([]t, 0)
+	for _, num := range arr {
+		if !Contains(targets, num) {
+			result = append(result, num)
+		}
+	}
+	return result
+}
+
+func Contains[t any](targets []t, target t) bool {
+	for _, num := range targets {
+		if reflect.ValueOf(num).Interface() == reflect.ValueOf(target).Interface() {
+			return true
+		}
+	}
+	return false
+}
