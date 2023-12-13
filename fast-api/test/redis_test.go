@@ -2,6 +2,7 @@ package test
 
 import (
 	"encoding/json"
+	"fast-boot/common/redisx"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"testing"
@@ -192,5 +193,20 @@ func TestGeoRadius(t *testing.T) {
 	//Sort      string
 	//Store     string
 	//StoreDist string
+
+}
+
+func TestScanDel(t *testing.T) {
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "192.168.3.85:16379", Type: "node"})
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+
+	//redisClient.Set("x:1", "x1")
+	//redisClient.Set("x:2", "x2")
+	//redisClient.Set("x:3", "x3")
+	//redisClient.Set("x:4", "x4")
+
+	redisx.DelPrefix(redisClient, "x:*")
 
 }

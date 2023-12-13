@@ -68,7 +68,7 @@ func TestMqttQuick(t *testing.T) {
 func TestMqttPublish(t *testing.T) {
 	clientId := "go_mqtt_client222"
 	mt, err := mqttx.QuickCreate(mqttx.Conf{
-		Host:     "127.0.0.1",
+		Host:     "192.168.3.85",
 		Port:     11883,
 		Username: "user",
 		Password: "123123",
@@ -89,7 +89,7 @@ func TestMqttPublish(t *testing.T) {
 func TestMqttSub(t *testing.T) {
 	clientId := "go_mqtt_client_01"
 	mt, err := mqttx.Create(mqttx.Conf{
-		Host:     "127.0.0.1",
+		Host:     "192.168.3.85",
 		Port:     11883,
 		Username: "user",
 		Password: "123123",

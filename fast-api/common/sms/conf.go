@@ -1,19 +1,30 @@
 package sms
 
-// Conf 短信
-type Conf struct {
-	AliYun struct {
-		RegionId        string
-		AccessKeyID     string
-		AccessKeySecret string
-		SignName        string
-	}
+type VCodeTypeEnum int
+
+const (
+	AliYun = iota
+	QCloud
+)
+
+type VCodeConf struct {
+	AliConf   AliConf
+	Type      VCodeTypeEnum
 	Debug     bool
 	Length    int
 	Life      int
 	MagicCode string
 	TestUsers []string
-	Template  struct {
-		Reg string
-	}
+	Template  Template
+}
+
+type AliConf struct {
+	RegionId     string
+	AccessKeyId  string
+	AccessSecret string
+	SignName     string
+}
+
+type Template struct {
+	Reg string
 }

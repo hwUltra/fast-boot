@@ -12,31 +12,30 @@ import (
 )
 
 type VCode struct {
-	Template    string
-	Mobile      string
-	Config      Conf
+	Config      VCodeConf
 	RedisClient *redis.Redis
 	AliSms      *AliSms
 }
 
-func NewVCode(Template string, Mobile string, Config Conf, RedisClient *redis.Redis, AliSms *AliSms) *VCode {
-	return &VCode{Template, Mobile, Config, RedisClient, AliSms}
+func NewVCode(config VCodeConf, redisClient *redis.Redis) *VCode {
+	aliSms := NewAliSms(config.AliConf)
+	return &VCode{config, redisClient, aliSms}
 }
 
 // Send 发送
-func (v *VCode) Send() error {
+func (v *VCode) Send(template string, mobile string) error {
 	//debug 状态不发送不校验
 	if v.Config.Debug {
 		return nil
 	}
 	//testUsers 不发送不校验
 	for _, item := range v.Config.TestUsers {
-		if v.Mobile == item {
+		if mobile == item {
 			return nil
 		}
 	}
 
-	key := v.getKey()
+	key := v.getKey(template, mobile)
 	isExists, _ := v.RedisClient.Exists(key)
 	if isExists {
 		return errors.New("验证码已发送，请勿重复请求")
@@ -49,18 +48,18 @@ func (v *VCode) Send() error {
 	}
 	//发送短信
 	aliSms := AliSms{}
-	return aliSms.SendCode(v.Template, v.Mobile, code)
+	return aliSms.SendCode(template, mobile, code)
 }
 
 // Check 验证
-func (v *VCode) Check(code string) error {
+func (v *VCode) Check(template string, mobile string, code string) error {
 	//debug 状态不发送不校验
 	if v.Config.Debug {
 		return nil
 	}
 	//testUsers 不发送不校验
 	for _, item := range v.Config.TestUsers {
-		if v.Mobile == item {
+		if mobile == item {
 			return nil
 		}
 	}
@@ -69,7 +68,7 @@ func (v *VCode) Check(code string) error {
 		return nil
 	}
 	// 正常校验
-	key := v.getKey()
+	key := v.getKey(template, mobile)
 
 	vCode, err := v.RedisClient.Get(key)
 	if err != nil {
@@ -82,8 +81,8 @@ func (v *VCode) Check(code string) error {
 	return nil
 }
 
-func (v *VCode) getKey() string {
-	return v.Template + "_validate_code_" + v.Mobile
+func (v *VCode) getKey(template string, mobile string) string {
+	return template + "_validate_code_" + mobile
 }
 
 // RandCode 生成随机数
