@@ -1,13 +1,13 @@
 ## fast-boot
 
 ### 一、前言
-> 项目地址：[https://github.com/AnakinXY/fast-boot](https://github.com/AnakinXY/fast-boot)
+> 项目地址：[https://github.com/hwUltra/fast-boot](https://github.com/hwUltra/fast-boot)
 
 `fast-boot`：go-zero + vue3 前后端分离的项目快速开发脚手架
 
 #### 后端技术栈
 
-1. go-zero 1.6.0
+1. go-zero 1.7.0
 2. Gorm 2.3
 3. MySQL 8.0
 4. Redis 6.0.8
