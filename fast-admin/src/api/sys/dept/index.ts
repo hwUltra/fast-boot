@@ -18,7 +18,7 @@ export function listDepts(queryParams?: DeptQuery): AxiosPromise<DeptVO[]> {
 /**
  * 部门下拉列表
  */
-export function getDeptOptions(): AxiosPromise<OptionList> {
+export function getDeptOptions(): AxiosPromise<OptionType[]> {
   return request({
     url: "/sys/dept/options",
     method: "get",

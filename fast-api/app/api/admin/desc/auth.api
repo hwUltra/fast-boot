@@ -3,6 +3,8 @@ type (
     LoginReq {
         UserName string `json:"username"`
         Password string `json:"password"`
+        CaptchaCode string `json:"captchaCode"`
+        CaptchaKey string `json:"captchaKey"`
     }
 
     // 用户信息

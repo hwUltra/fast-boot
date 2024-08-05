@@ -1,12 +1,13 @@
-info(
-	title: "小程序端 api"
-	desc: "小程序端 api"
+info (
+	title:  "小程序端 api"
+	desc:   "小程序端 api"
 	author: "kyle"
-	email: "skywalkerwei@gmail.com"
+	email:  "skywalkerwei@gmail.com"
 )
 
-import(
+import (
 	"auth.api"
 	"carts.api"
 	"other.api"
 )
+

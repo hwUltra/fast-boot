@@ -4,7 +4,6 @@ info(
     email: "skywalkerwei@gmail.com"
 )
 
-import "base.api"
 
 
 type (
@@ -38,9 +37,6 @@ type (
         Children []*SysDeptItem `json:"children,omitempty"`
     }
 
-    SysDeptListResp  {
-        List []*SysDeptItem `json:"list"`
-    }
 
     SysDeptFormReq {
         Id  int64 `json:"id,optional"`
@@ -59,8 +55,16 @@ type (
         Children []*SysDeptOption `json:"children,omitempty"`
     }
 
-    SysDeptOptionsResp {
-        List []*SysDeptOption `json:"list"`
+    SysDeptAddResp {
+        Id int64 `json:"id"`
+    }
+
+    SysDeptGetReq {
+        Id int64 `path:"id"`
+    }
+
+    SysDeptDelReq {
+        Ids string `path:"ids"`
     }
 
 )
@@ -72,26 +76,26 @@ type (
 )
 service admin-api {
     @doc "部门分页列表"
-    @handler List
-    get /list (SysDeptListReq) returns (SysDeptListResp)
+    @handler SysDeptList
+    get /list (SysDeptListReq) returns ([]SysDeptItem)
 
     @doc "新增部门"
-    @handler Add
-    post /add (SysDeptFormReq) returns (IdResp)
+    @handler SysDeptAdd
+    post /add (SysDeptFormReq) returns (SysDeptAddResp)
 
     @doc "获取部门"
-    @handler Get
-    get /:id (PathIdReq)  returns (SysDeptInfo)
+    @handler SysDeptGet
+    get /:id (SysDeptGetReq)  returns (SysDeptInfo)
 
     @doc "部门下拉列表"
-    @handler Options
-    get /options  returns (SysDeptOptionsResp)
+    @handler SysDeptOptions
+    get /options  returns ([]SysDeptOption)
 
     @doc "修改部门"
-    @handler Update
-    post /update (SysDeptFormReq) returns (IdResp)
+    @handler SysDeptUpdate
+    post /update (SysDeptFormReq)
 
     @doc "删除部门"
-    @handler Del
-    get /del/:ids (PathIdsReq)
+    @handler SysDeptDel
+    get /del/:ids (SysDeptDelReq)
 }

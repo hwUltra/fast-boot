@@ -24,7 +24,7 @@ func NewBrandDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BrandDel
 	}
 }
 
-func (l *BrandDelLogic) BrandDel(req *types.PathIdsReq) error {
+func (l *BrandDelLogic) BrandDel(req *types.BrandDelReq) error {
 	if _, err := l.svcCtx.PmsRpc.PmsBrandDel(l.ctx, &pmsPb.IdsReq{Ids: req.Ids}); err != nil {
 		return err
 	}

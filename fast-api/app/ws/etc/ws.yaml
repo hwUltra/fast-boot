@@ -1,11 +1,11 @@
 Name: ws
 Host: 0.0.0.0
-Port: 7300
+Port: 7777
 Timeout: 0
 Cpu: 500
 
 Redis:
-  Host: 127.0.0.1:16379
+  Host: 192.168.3.88:16379
   Pass:
   Type: node
 
@@ -17,3 +17,9 @@ Log:
   ServiceName: ws
   Mode: file
   Path: ../../../logs/ws
+
+#Prometheus:
+#  Host: 0.0.0.0
+#  Port: 7399
+#  Path: /metrics
+

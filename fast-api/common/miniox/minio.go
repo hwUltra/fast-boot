@@ -43,18 +43,21 @@ func (m *MinioX) MinIOUpload(r *http.Request) (*UploadInfo, error) {
 		return nil, err
 	}
 
+	//fmt.Println("err01", err)
 	// // 获取文件信息
 	file, fileHeader, err := r.FormFile("file")
 	if err != nil {
 		return nil, err
 	}
+
+	//fmt.Println("err02", err)
 	ext := path.Ext(fileHeader.Filename)
 	objectName := fmt.Sprintf("%02d/%02d/%02d/",
 		time.Now().Year(), time.Now().Month(), time.Now().Day()) + uuid.New().String() + ext
 
 	info, err := minioClient.PutObject(context.Background(), m.Conf.MinIOBucket, objectName, file, fileHeader.Size,
 		minio.PutObjectOptions{ContentType: "binary/octet-stream"})
-
+	//fmt.Println("err03", err)
 	return &UploadInfo{
 		Path: info.Bucket + "/" + info.Key,
 		Name: objectName,

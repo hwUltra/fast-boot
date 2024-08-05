@@ -80,7 +80,7 @@ export function deleteDictTypes(ids: string) {
  *
  * @param typeCode 字典类型编码
  */
-export function getDictOptions(typeCode: string): AxiosPromise<OptionList> {
+export function getDictOptions(typeCode: string): AxiosPromise<OptionType[]> {
   return request({
     url: "/sys/dict/" + typeCode + "/options",
     method: "get",

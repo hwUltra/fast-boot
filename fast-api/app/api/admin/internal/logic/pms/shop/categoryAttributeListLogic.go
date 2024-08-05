@@ -24,7 +24,7 @@ func NewCategoryAttributeListLogic(ctx context.Context, svcCtx *svc.ServiceConte
 	}
 }
 
-func (l *CategoryAttributeListLogic) CategoryAttributeList(req *types.PmsCategoryAttributeListReq) (resp *types.PmsCategoryAttributeListResp, err error) {
+func (l *CategoryAttributeListLogic) CategoryAttributeList(req *types.PmsCategoryAttributeListReq) (resp []types.PmsCategoryAttribute, err error) {
 	res, err := l.svcCtx.PmsRpc.PmsCategoryAttributeList(l.ctx, &pmsPb.PmsCategoryAttributeListReq{
 		CategoryId: req.CategoryId,
 		Type:       req.Type,
@@ -32,9 +32,9 @@ func (l *CategoryAttributeListLogic) CategoryAttributeList(req *types.PmsCategor
 	if err != nil {
 		return nil, err
 	}
-	list := make([]*types.PmsCategoryAttribute, 0)
+	list := make([]types.PmsCategoryAttribute, 0)
 
 	_ = copier.Copy(&list, res.List)
-	return &types.PmsCategoryAttributeListResp{List: list}, nil
+	return list, nil
 
 }

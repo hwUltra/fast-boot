@@ -25,7 +25,7 @@ func NewCategoryOptionsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 	}
 }
 
-func (l *CategoryOptionsLogic) CategoryOptions(req *types.PathIdReq) (resp *types.OptionsResp, err error) {
+func (l *CategoryOptionsLogic) CategoryOptions(req *types.CategoryOptionsReq) (resp []*types.OptionItem, err error) {
 
 	options, err := l.svcCtx.PmsRpc.PmsCategoryOptions(l.ctx, &pmsPb.IdReq{Id: req.Id})
 	if err != nil {
@@ -35,6 +35,6 @@ func (l *CategoryOptionsLogic) CategoryOptions(req *types.PathIdReq) (resp *type
 	list := make([]*types.OptionItem, 0)
 	_ = copier.Copy(&list, options.Items)
 
-	return &types.OptionsResp{List: list}, nil
+	return list, nil
 
 }

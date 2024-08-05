@@ -5,8 +5,6 @@ info(
 	email: "skywalkerwei@gmail.com"
 )
 
-import "base.api"
-
 
 type (
 	//--------------------------------商品表--------------------------------
@@ -115,6 +113,18 @@ type (
 		LockedStock  int64 `json:"lockedStock,optional"`  // 库存锁定数量
 		PicUrl  string `json:"picUrl,optional"`  // 商品图片地址
 	}
+
+	GoodsDelReq{
+		Ids string `path:"ids"`
+	}
+
+	GoodsGetReq{
+		Id int64 `path:"id"`
+	}
+
+	GoodsEditResp{
+		Id int64 `json:"id"`
+	}
 )
 
 
@@ -125,20 +135,20 @@ type (
 )
 service admin-api {
 	@doc "获取商品"
-	@handler Get
-	get /:id (PathIdReq)  returns (PmsGoods)
+	@handler GoodsGet
+	get /:id (GoodsGetReq)  returns (PmsGoods)
 
 	@doc "商品列表"
-	@handler List
+	@handler GoodsList
 	get /list(PmsGoodsListReq)  returns (PmsGoodsListRsqp)
 
 	@doc "新增商品"
-	@handler Edit
-	post /edit (GoodsEditRep) returns (IdResp)
+	@handler GoodsEdit
+	post /edit (GoodsEditRep) returns (GoodsEditResp)
 
 	@doc "删除"
-	@handler Del
-	get /del/:ids (PathIdsReq)
+	@handler GoodsDel
+	get /del/:ids (GoodsDelReq)
 
 //
 //	@doc "修改商品"

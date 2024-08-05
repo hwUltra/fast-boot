@@ -5,8 +5,6 @@ info(
 	email: "skywalkerwei@gmail.com"
 )
 
-import "base.api"
-
 
 type (
 	Shop {
@@ -52,6 +50,10 @@ type (
 		PageSize int64 `form:"pageSize,default=10"`
 	}
 
+	PmsCategoryListResp  {
+		List []*PmsCategory `json:"list"`
+	}
+
 	PmsCategoryForm{
 		Id  int64 `json:"id"`
 		ShopId  int64 `json:"shopId"`
@@ -62,9 +64,6 @@ type (
 		Visible  int64 `json:"visible"`
 	}
 
-	PmsCategoryListResp  {
-		List []*PmsCategory `json:"list"`
-	}
 
 	PmsCategoryAttribute {
 		Id  int64 `json:"id"`  // 主键
@@ -85,9 +84,6 @@ type (
 		Type  int64 `form:"type"`  // 类型(1:规格;2:属性;)
 	}
 
-	PmsCategoryAttributeListResp{
-		List []*PmsCategoryAttribute `json:"list"`
-	}
 
 	//--------------------------------商品品牌表--------------------------------
 	PmsBrand {
@@ -119,7 +115,67 @@ type (
 		Total  int64 `json:"total"`
 	}
 
+	ShopAddResp {
+		Id  int64 `json:"id"`
+	}
+
+
+	ShopGetReq{
+		Id int64 `path:"id"`
+	}
+
+	ShopListReq{
+		Keywords string `form:"keywords,omitempty,optional"`
+		Status int64 `form:"status,default=-1"`
+		PageNum int64 `form:"pageNum,default=1"`
+		PageSize int64 `form:"pageSize,default=10"`
+	}
+
+	ShopDelReq{
+		Ids string `path:"ids"`
+	}
+
+	CategoryAddResp {
+		Id  int64 `json:"id"`
+	}
+
+	CategoryOptionsReq{
+		Id int64 `path:"id"`
+	}
+
+	CategoryGetReq{
+		Id int64 `path:"id"`
+	}
+
+	CategoryDelReq{
+		Ids string `path:"ids"`
+	}
+
+	BrandAddResp {
+		Id  int64 `json:"id"`
+	}
+
+	BrandOptionsReq{
+		Id int64 `path:"id"`
+	}
+
+	BrandGetReq{
+		Id int64 `path:"id"`
+	}
+
+	BrandDelReq{
+		Ids string `path:"ids"`
+	}
+
+	 OptionItem {
+		Label string `json:"label"`
+		Value int64 `json:"value"`
+		Children []*OptionItem `json:"children,omitempty"`
+	}
+
 )
+
+
 
 
 @server(
@@ -130,33 +186,33 @@ type (
 service admin-api {
 	//--------Shop------------
 	@doc "新增类型"
-	@handler Add
-	post /add (ShopForm) returns (IdResp)
+	@handler ShopAdd
+	post /add (ShopForm) returns (ShopAddResp)
 
 	@doc "修改类型"
-	@handler Update
+	@handler ShopUpdate
 	post /update (ShopForm)
 
 	@doc "店铺下拉列表"
-	@handler Options
-	get /options  returns (OptionsResp)
+	@handler ShopOptions
+	get /options  returns ([]OptionItem)
 
 	@doc "获取店铺"
-	@handler Get
-	get /:id (PathIdReq)  returns (Shop)
+	@handler ShopGet
+	get /:id (ShopGetReq)  returns (Shop)
 
 	@doc "店铺列表"
-	@handler List
-	get /list(ListReq)  returns (ShopListResp)
+	@handler ShopList
+	get /list(ShopListReq)  returns (ShopListResp)
 
 	@doc "删除"
-	@handler Del
-	get /del/:ids (PathIdsReq)
+	@handler ShopDel
+	get /del/:ids (ShopDelReq)
 
 	//--------PmsCategory------------
 	@doc "新增类型"
 	@handler CategoryAdd
-	post /category/add (PmsCategoryForm) returns (IdResp)
+	post /category/add (PmsCategoryForm) returns (CategoryAddResp)
 
 	@doc "修改类型"
 	@handler CategoryUpdate
@@ -164,11 +220,11 @@ service admin-api {
 
 	@doc "类型下拉列表"
 	@handler CategoryOptions
-	get /category/options/:id (PathIdReq)   returns (OptionsResp)
+	get /category/options/:id (CategoryOptionsReq)   returns  ([]OptionItem)
 
 	@doc "获取店铺"
 	@handler CategoryGet
-	get /category/:id (PathIdReq)  returns (PmsCategory)
+	get /category/:id (CategoryGetReq)  returns (PmsCategory)
 
 	@doc "类型列表"
 	@handler CategoryList
@@ -176,7 +232,7 @@ service admin-api {
 
 	@doc "删除类型"
 	@handler CategoryDel
-	get /category/del/:ids (PathIdsReq)
+	get /category/del/:ids (CategoryDelReq)
 
 	@doc "新增类型-属性"
 	@handler CategoryAttributeAdd
@@ -184,13 +240,13 @@ service admin-api {
 
 	@doc "新增类型-属性"
 	@handler CategoryAttributeList
-	get /category/attribute/list(PmsCategoryAttributeListReq) returns(PmsCategoryAttributeListResp)
+	get /category/attribute/list(PmsCategoryAttributeListReq) returns([]PmsCategoryAttribute)
 
 
 	//--------pms_brand------------
 	@doc "新增Brand"
 	@handler BrandAdd
-	post /brand/add (BrandForm) returns (IdResp)
+	post /brand/add (BrandForm) returns (BrandAddResp)
 
 	@doc "修改Brand"
 	@handler BrandUpdate
@@ -198,11 +254,11 @@ service admin-api {
 
 	@doc "Brand下拉列表"
 	@handler BrandOptions
-	get /brand/options/:id (PathIdReq)   returns (OptionsResp)
+	get /brand/options/:id (BrandOptionsReq)   returns ([]OptionItem)
 
 	@doc "获取Brand"
 	@handler BrandGet
-	get /brand/:id (PathIdReq)  returns (PmsBrand)
+	get /brand/:id (BrandGetReq)  returns (PmsBrand)
 
 	@doc "Brand列表"
 	@handler BrandList
@@ -210,7 +266,7 @@ service admin-api {
 
 	@doc "删除"
 	@handler BrandDel
-	get /brand/del/:ids (PathIdsReq)
+	get /brand/del/:ids (BrandDelReq)
 
 }
 

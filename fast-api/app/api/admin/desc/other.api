@@ -6,6 +6,11 @@ type (
         Size int64  `json:"size,optional"`
         Path string `json:"path,optional"`
     }
+
+    CaptchaResp{
+        CaptchaBase64 string `json:"captchaBase64"`
+        CaptchaKey string `json:"captchaKey"`
+    }
 )
 
 @server(
@@ -19,6 +24,12 @@ service admin-api {
     )
     @handler FileUpload
     post /upload returns (FileUpload)
+
+    @doc(
+        summary: "验证码"
+    )
+    @handler Captcha
+    get /captcha returns (CaptchaResp)
 }
 
 

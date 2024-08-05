@@ -6,6 +6,8 @@ import (
 	"fast-boot/app/api/wxapp/internal/types"
 	"fast-boot/common/sms"
 	"fast-boot/common/xerr"
+	"fmt"
+	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -23,22 +25,16 @@ func NewSendSmsLogic(ctx context.Context, svcCtx *svc.ServiceContext) SendSmsLog
 	}
 }
 
-func (l *SendSmsLogic) SendSms(req types.SendSmsReq) (resp *types.SendSmsResp, err error) {
+func (l *SendSmsLogic) SendSms(req types.SendSmsReq) (err error) {
+	fmt.Println("sendSms req: ", req)
 
-	var smsConf = l.svcCtx.Config.SmsConf
-
-	var aliSms = sms.NewAliSms(
-		smsConf.AliYun.RegionId,
-		smsConf.AliYun.AccessKeyID,
-		smsConf.AliYun.AccessKeySecret,
-		smsConf.AliYun.SignName)
-	err = aliSms.SendCode(smsConf.Template.Reg, "18086635700", "123213")
+	var aliSms = sms.NewAliSms(l.svcCtx.Config.Sms.AliConf)
+	err = aliSms.SendCode(l.svcCtx.Config.Sms.Template.Reg, req.Mobile, "123213")
 
 	if err != nil {
-		//return nil, errors.Wrapf(xerr.NewErrMsg(err.Error()), "sendSms fail req: %+v , err : %v ", req, err)
-		return nil, xerr.NewErrMsg(err.Error())
+		return errors.Wrapf(xerr.NewErrMsg(err.Error()), "sendSms fail req: %+v , err : %v ", req, err)
 
 	}
 
-	return
+	return nil
 }

@@ -5,10 +5,24 @@ type AuthCodeReq struct {
 	Code string `json:"code"`
 }
 
+type BindReq struct {
+	OpenId        string `json:"openId"`
+	EncryptedData string `json:"encryptedData"`
+	Iv            string `json:"iv"`
+}
+
 type DecryptReq struct {
 	OpenId        string `json:"openId"`
 	EncryptedData string `json:"encryptedData"`
 	Iv            string `json:"iv"`
+}
+
+type FileUploadResp struct {
+	Hash string `json:"hash"`
+	Name string `json:"name"`
+	Ext  string `json:"ext"`
+	Size int64  `json:"size"`
+	Path string `json:"path"`
 }
 
 type MobileResp struct {
@@ -16,15 +30,21 @@ type MobileResp struct {
 	PurePhoneNumber string `json:"purePhoneNumber"`
 }
 
-type BindReq struct {
-	OpenId        string `json:"openId"`
-	EncryptedData string `json:"encryptedData"`
-	Iv            string `json:"iv"`
+type SendSmsReq struct {
+	Type   string `path:"type"`
+	Mobile string `path:"mobile"`
 }
 
 type TokenResp struct {
 	OpenID string `json:"openID"`
 	Token  string `json:"token"`
+}
+
+type WxPayCallBackReq struct {
+}
+
+type WxPayCallBackResp struct {
+	ReturnCode string `json:"return_code"`
 }
 
 type UserInfo struct {
@@ -40,25 +60,4 @@ type UserInfo struct {
 	Tags      string `json:"tags"`      //tags
 	Source    string `json:"source"`    //来源，APP H5
 	SourceUid int64  `json:"sourceUid"` //邀请uid
-}
-
-type SendSmsReq struct {
-}
-
-type SendSmsResp struct {
-}
-
-type WxPayCallBackReq struct {
-}
-
-type WxPayCallBackResp struct {
-	ReturnCode string `json:"return_code"`
-}
-
-type FileUploadResp struct {
-	Hash string `json:"hash"`
-	Name string `json:"name"`
-	Ext  string `json:"ext"`
-	Size int64  `json:"size"`
-	Path string `json:"path"`
 }

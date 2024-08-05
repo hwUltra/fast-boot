@@ -4,9 +4,6 @@ info(
     email: "skywalkerwei@gmail.com"
 )
 
-import "base.api"
-
-
 type (
     SysUserInfo {
         Id  int64 `json:"id"`
@@ -78,6 +75,18 @@ type (
         Status  string `json:"status"`
     }
 
+    SysUserGetReq{
+        Id int64 `path:"id"`
+    }
+
+    SysUserDelReq{
+        Ids string `path:"ids"`
+    }
+
+    SysUserAddResp{
+        Id int64 `json:"id"`
+    }
+
 )
 
 @server(
@@ -87,31 +96,31 @@ type (
 )
 service admin-api {
     @doc "用户分页列表"
-    @handler List
+    @handler SysUserList
     get /list (SysUserListReq) returns (SysUserListResp)
 
     @doc "新增用户"
-    @handler Add
-    post /add (SysUserFormReq) returns (IdResp)
+    @handler SysUserAdd
+    post /add (SysUserFormReq) returns (SysUserAddResp)
 
     @doc "获取用户"
-    @handler Get
-    get /:id (PathIdReq) returns (SysUserGet)
+    @handler SysUserGet
+    get /:id (SysUserGetReq) returns (SysUserGet)
 
     @doc "修改用户"
-    @handler Update
+    @handler SysUserUpdate
     post /update (SysUserFormReq)
 
     @doc "删除多个用户"
-    @handler Del
-    get /del/:ids (PathIdsReq)
+    @handler SysUserDel
+    get /del/:ids (SysUserDelReq)
 
     @doc "修改用户密码"
-    @handler ChangePwd
+    @handler SysUserChangePwd
     post /changePwd (SysUserChangePwdReq)
 
     @doc "修改用户状态"
-    @handler ChangeStatus
+    @handler SysUserChangeStatus
     post /changeStatus (SysUserChangeStatusReq)
 
 }

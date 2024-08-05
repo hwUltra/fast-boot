@@ -68,7 +68,7 @@ function handleQuery() {
   loading.value = true;
   listMenus(queryParams)
     .then(({ data }) => {
-      menuList.value = data.list;
+      menuList.value = data;
     })
     .then(() => {
       loading.value = false;
@@ -95,9 +95,7 @@ function onRowClick(row: MenuVO) {
 function openDialog(parentId?: number, menuId?: number) {
   getMenuOptions()
     .then(({ data }) => {
-      menuOptions.value = [
-        { value: 0, label: "顶级菜单", children: data.list },
-      ];
+      menuOptions.value = [{ value: 0, label: "顶级菜单", children: data }];
     })
     .then(() => {
       dialog.visible = true;

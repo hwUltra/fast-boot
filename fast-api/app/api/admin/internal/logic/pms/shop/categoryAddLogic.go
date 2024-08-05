@@ -25,14 +25,14 @@ func NewCategoryAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Categ
 	}
 }
 
-func (l *CategoryAddLogic) CategoryAdd(req *types.PmsCategoryForm) (resp *types.IdResp, err error) {
+func (l *CategoryAddLogic) CategoryAdd(req *types.PmsCategoryForm) (resp *types.CategoryAddResp, err error) {
 	form := pmsPb.PmsCategoryForm{}
 	_ = copier.Copy(&form, req)
 	if _, err = l.svcCtx.PmsRpc.PmsCategoryAdd(l.ctx, &form); err != nil {
 		return nil, err
 	}
 
-	return &types.IdResp{
+	return &types.CategoryAddResp{
 		Id: req.Id,
 	}, nil
 }

@@ -10,7 +10,7 @@ import (
 var ct = captchaTool.NewCaptchaTool(captchaTool.CaptchaConf{
 	Type:      captchaTool.MathType,
 	Store:     captchaTool.RedisType,
-	RedisConf: redis.RedisConf{Host: "192.168.3.85:16379", Type: "node"},
+	RedisConf: redis.RedisConf{Host: "192.168.3.88:16379", Type: "node"},
 })
 
 func TestCaptcha(t *testing.T) {

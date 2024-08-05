@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fast-boot/app/rpc/sys/sysPb"
+	captchaTool "fast-boot/common/captcha"
 	"fast-boot/common/globalkey"
+	"fast-boot/common/xerr"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 
@@ -29,7 +31,15 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.TokenResp, err error) {
-
+	//checkCaptcha
+	var ct = captchaTool.NewCaptchaTool(captchaTool.CaptchaConf{
+		Type:      captchaTool.MathType,
+		Store:     captchaTool.RedisType,
+		RedisConf: l.svcCtx.Config.Redis,
+	})
+	if ok := ct.VerifyCaptcha(req.CaptchaKey, req.CaptchaCode, true); ok == false {
+		return nil, xerr.NewErrMsg("验证码错误")
+	}
 	res, err := l.svcCtx.SysRpc.Login(l.ctx,
 		&sysPb.LoginReq{Username: req.UserName, Password: req.Password})
 	if err != nil {

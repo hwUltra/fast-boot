@@ -11,7 +11,7 @@ import (
 
 func Test_Enqueue(t *testing.T) {
 	payload := map[string]interface{}{"OrderNo": "9999", "OrderMsg": "success ok"}
-	err := mq.DfSend("localhost:6379", "orderTask", payload)
+	err := mq.DfSend("localhost:16379", "orderTask", payload)
 	if err != nil {
 		t.Errorf("could not enqueue task: %v", err)
 		t.FailNow()
@@ -21,7 +21,7 @@ func Test_Enqueue(t *testing.T) {
 func Test_Enqueue_delay(t *testing.T) {
 
 	payload := map[string]interface{}{"OrderNo": "9999", "OrderMsg": "success ok"}
-	err := mq.DfSendAfter("localhost:6379", "orderTask", payload, 10*time.Second)
+	err := mq.DfSendAfter("localhost:16379", "orderTask", payload, 10*time.Second)
 	if err != nil {
 		t.Errorf("could not enqueue task: %v", err)
 		t.FailNow()
@@ -29,7 +29,7 @@ func Test_Enqueue_delay(t *testing.T) {
 }
 
 func Test_EnqueueOther(t *testing.T) {
-	client := asynq.NewClient(asynq.RedisClientOpt{Addr: "localhost:6379"})
+	client := asynq.NewClient(asynq.RedisClientOpt{Addr: "localhost:16379"})
 	payload := map[string]interface{}{"OrderNo": "6666", "OrderMsg": "success ok"}
 	b, _ := json.Marshal(payload)
 	task := asynq.NewTask("orderTask", b)

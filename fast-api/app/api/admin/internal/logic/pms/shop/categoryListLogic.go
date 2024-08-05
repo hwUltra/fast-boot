@@ -34,7 +34,7 @@ func (l *CategoryListLogic) CategoryList(req *types.PmsCategoryListReq) (resp *t
 		PageNum:  req.PageNum,
 	})
 	if err != nil {
-		return nil, err
+		return resp, err
 	}
 	list := make([]*types.PmsCategory, 0)
 	_ = copier.Copy(&list, res.List)

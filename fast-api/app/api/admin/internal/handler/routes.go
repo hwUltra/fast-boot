@@ -24,6 +24,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// 登录
 				Method:  http.MethodPost,
 				Path:    "/login",
 				Handler: auth.LoginHandler(serverCtx),
@@ -35,19 +36,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// 退出登录
 				Method:  http.MethodGet,
-				Path:    "/refreshToken",
-				Handler: auth.RefreshTokenHandler(serverCtx),
+				Path:    "/logout",
+				Handler: auth.LogoutHandler(serverCtx),
 			},
 			{
+				// 获取个人信息
 				Method:  http.MethodGet,
 				Path:    "/me",
 				Handler: auth.MeHandler(serverCtx),
 			},
 			{
+				// 刷新ToKen
 				Method:  http.MethodGet,
-				Path:    "/logout",
-				Handler: auth.LogoutHandler(serverCtx),
+				Path:    "/refreshToken",
+				Handler: auth.RefreshTokenHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
@@ -57,425 +61,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				Method:  http.MethodGet,
-				Path:    "/list",
-				Handler: sysuser.ListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/add",
-				Handler: sysuser.AddHandler(serverCtx),
-			},
-			{
+				// 获取订单
 				Method:  http.MethodGet,
 				Path:    "/:id",
-				Handler: sysuser.GetHandler(serverCtx),
+				Handler: omsorder.OrderGetHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPost,
-				Path:    "/update",
-				Handler: sysuser.UpdateHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/del/:ids",
-				Handler: sysuser.DelHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/changePwd",
-				Handler: sysuser.ChangePwdHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/changeStatus",
-				Handler: sysuser.ChangeStatusHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/sys/user"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/routes",
-				Handler: sysmenu.RoutesHandler(serverCtx),
-			},
-			{
+				// 订单列表
 				Method:  http.MethodGet,
 				Path:    "/list",
-				Handler: sysmenu.ListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/add",
-				Handler: sysmenu.AddHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/:id",
-				Handler: sysmenu.GetHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/options",
-				Handler: sysmenu.OptionsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/update",
-				Handler: sysmenu.UpdateHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/del/:ids",
-				Handler: sysmenu.DelHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/sys/menu"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/list",
-				Handler: sysrole.ListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/add",
-				Handler: sysrole.AddHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/:id",
-				Handler: sysrole.GetHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/options",
-				Handler: sysrole.OptionsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/update",
-				Handler: sysrole.UpdateHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/del/:ids",
-				Handler: sysrole.DelHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/menuIds/:id",
-				Handler: sysrole.MenuIdsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/setMenuIds",
-				Handler: sysrole.SetMenuIdsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/changeStatus",
-				Handler: sysrole.ChangeStatusHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/sys/role"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/list",
-				Handler: sysdept.ListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/add",
-				Handler: sysdept.AddHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/:id",
-				Handler: sysdept.GetHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/options",
-				Handler: sysdept.OptionsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/update",
-				Handler: sysdept.UpdateHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/del/:ids",
-				Handler: sysdept.DelHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/sys/dept"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/typeList",
-				Handler: sysdict.TypeListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list",
-				Handler: sysdict.ListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/options",
-				Handler: sysdict.OptionsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/:typeCode/options",
-				Handler: sysdict.TypeOptionsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/add",
-				Handler: sysdict.AddHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/update",
-				Handler: sysdict.UpdateHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/:id",
-				Handler: sysdict.GetHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/del/:ids",
-				Handler: sysdict.DelHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/type/add",
-				Handler: sysdict.TypeAddHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/type/update",
-				Handler: sysdict.TypeUpdateHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/type/:id",
-				Handler: sysdict.TypeGetHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/type/del/:ids",
-				Handler: sysdict.TypeDelHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/sys/dict"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/add",
-				Handler: umsuser.AddHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/update",
-				Handler: umsuser.UpdateHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/:id",
-				Handler: umsuser.GetHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list",
-				Handler: umsuser.ListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/del/:ids",
-				Handler: umsuser.DelHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/thirdList",
-				Handler: umsuser.ThirdlistHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/user"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/add",
-				Handler: pmsshop.AddHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/update",
-				Handler: pmsshop.UpdateHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/options",
-				Handler: pmsshop.OptionsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/:id",
-				Handler: pmsshop.GetHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list",
-				Handler: pmsshop.ListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/del/:ids",
-				Handler: pmsshop.DelHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/category/add",
-				Handler: pmsshop.CategoryAddHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/category/update",
-				Handler: pmsshop.CategoryUpdateHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/category/options/:id",
-				Handler: pmsshop.CategoryOptionsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/category/:id",
-				Handler: pmsshop.CategoryGetHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/category/list",
-				Handler: pmsshop.CategoryListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/category/del/:ids",
-				Handler: pmsshop.CategoryDelHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/category/attribute/add",
-				Handler: pmsshop.CategoryAttributeAddHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/category/attribute/list",
-				Handler: pmsshop.CategoryAttributeListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/brand/add",
-				Handler: pmsshop.BrandAddHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/brand/update",
-				Handler: pmsshop.BrandUpdateHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/brand/options/:id",
-				Handler: pmsshop.BrandOptionsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/brand/:id",
-				Handler: pmsshop.BrandGetHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/brand/list",
-				Handler: pmsshop.BrandListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/brand/del/:ids",
-				Handler: pmsshop.BrandDelHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/shop"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/:id",
-				Handler: pmsgoods.GetHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list",
-				Handler: pmsgoods.ListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/edit",
-				Handler: pmsgoods.EditHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/del/:ids",
-				Handler: pmsgoods.DelHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/goods"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/list",
-				Handler: omsorder.ListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/:id",
-				Handler: omsorder.GetHandler(serverCtx),
+				Handler: omsorder.OrderListHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
@@ -485,11 +80,500 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// 验证码
+				Method:  http.MethodGet,
+				Path:    "/captcha",
+				Handler: other.CaptchaHandler(serverCtx),
+			},
+			{
+				// 文件上传
 				Method:  http.MethodPost,
 				Path:    "/upload",
 				Handler: other.FileUploadHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/other"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取商品
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: pmsgoods.GoodsGetHandler(serverCtx),
+			},
+			{
+				// 删除
+				Method:  http.MethodGet,
+				Path:    "/del/:ids",
+				Handler: pmsgoods.GoodsDelHandler(serverCtx),
+			},
+			{
+				// 新增商品
+				Method:  http.MethodPost,
+				Path:    "/edit",
+				Handler: pmsgoods.GoodsEditHandler(serverCtx),
+			},
+			{
+				// 商品列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: pmsgoods.GoodsListHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/goods"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取店铺
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: pmsshop.ShopGetHandler(serverCtx),
+			},
+			{
+				// 新增类型
+				Method:  http.MethodPost,
+				Path:    "/add",
+				Handler: pmsshop.ShopAddHandler(serverCtx),
+			},
+			{
+				// 获取Brand
+				Method:  http.MethodGet,
+				Path:    "/brand/:id",
+				Handler: pmsshop.BrandGetHandler(serverCtx),
+			},
+			{
+				// 新增Brand
+				Method:  http.MethodPost,
+				Path:    "/brand/add",
+				Handler: pmsshop.BrandAddHandler(serverCtx),
+			},
+			{
+				// 删除
+				Method:  http.MethodGet,
+				Path:    "/brand/del/:ids",
+				Handler: pmsshop.BrandDelHandler(serverCtx),
+			},
+			{
+				// Brand列表
+				Method:  http.MethodGet,
+				Path:    "/brand/list",
+				Handler: pmsshop.BrandListHandler(serverCtx),
+			},
+			{
+				// Brand下拉列表
+				Method:  http.MethodGet,
+				Path:    "/brand/options/:id",
+				Handler: pmsshop.BrandOptionsHandler(serverCtx),
+			},
+			{
+				// 修改Brand
+				Method:  http.MethodPost,
+				Path:    "/brand/update",
+				Handler: pmsshop.BrandUpdateHandler(serverCtx),
+			},
+			{
+				// 获取店铺
+				Method:  http.MethodGet,
+				Path:    "/category/:id",
+				Handler: pmsshop.CategoryGetHandler(serverCtx),
+			},
+			{
+				// 新增类型
+				Method:  http.MethodPost,
+				Path:    "/category/add",
+				Handler: pmsshop.CategoryAddHandler(serverCtx),
+			},
+			{
+				// 新增类型-属性
+				Method:  http.MethodPost,
+				Path:    "/category/attribute/add",
+				Handler: pmsshop.CategoryAttributeAddHandler(serverCtx),
+			},
+			{
+				// 新增类型-属性
+				Method:  http.MethodGet,
+				Path:    "/category/attribute/list",
+				Handler: pmsshop.CategoryAttributeListHandler(serverCtx),
+			},
+			{
+				// 删除类型
+				Method:  http.MethodGet,
+				Path:    "/category/del/:ids",
+				Handler: pmsshop.CategoryDelHandler(serverCtx),
+			},
+			{
+				// 类型列表
+				Method:  http.MethodGet,
+				Path:    "/category/list",
+				Handler: pmsshop.CategoryListHandler(serverCtx),
+			},
+			{
+				// 类型下拉列表
+				Method:  http.MethodGet,
+				Path:    "/category/options/:id",
+				Handler: pmsshop.CategoryOptionsHandler(serverCtx),
+			},
+			{
+				// 修改类型
+				Method:  http.MethodPost,
+				Path:    "/category/update",
+				Handler: pmsshop.CategoryUpdateHandler(serverCtx),
+			},
+			{
+				// 删除
+				Method:  http.MethodGet,
+				Path:    "/del/:ids",
+				Handler: pmsshop.ShopDelHandler(serverCtx),
+			},
+			{
+				// 店铺列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: pmsshop.ShopListHandler(serverCtx),
+			},
+			{
+				// 店铺下拉列表
+				Method:  http.MethodGet,
+				Path:    "/options",
+				Handler: pmsshop.ShopOptionsHandler(serverCtx),
+			},
+			{
+				// 修改类型
+				Method:  http.MethodPost,
+				Path:    "/update",
+				Handler: pmsshop.ShopUpdateHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/shop"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取部门
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: sysdept.SysDeptGetHandler(serverCtx),
+			},
+			{
+				// 新增部门
+				Method:  http.MethodPost,
+				Path:    "/add",
+				Handler: sysdept.SysDeptAddHandler(serverCtx),
+			},
+			{
+				// 删除部门
+				Method:  http.MethodGet,
+				Path:    "/del/:ids",
+				Handler: sysdept.SysDeptDelHandler(serverCtx),
+			},
+			{
+				// 部门分页列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: sysdept.SysDeptListHandler(serverCtx),
+			},
+			{
+				// 部门下拉列表
+				Method:  http.MethodGet,
+				Path:    "/options",
+				Handler: sysdept.SysDeptOptionsHandler(serverCtx),
+			},
+			{
+				// 修改部门
+				Method:  http.MethodPost,
+				Path:    "/update",
+				Handler: sysdept.SysDeptUpdateHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/sys/dept"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// Get
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: sysdict.SysDictGetHandler(serverCtx),
+			},
+			{
+				// TypeOptions
+				Method:  http.MethodGet,
+				Path:    "/:typeCode/options",
+				Handler: sysdict.SysDictTypeOptionsHandler(serverCtx),
+			},
+			{
+				// Add
+				Method:  http.MethodPost,
+				Path:    "/add",
+				Handler: sysdict.SysDictAddHandler(serverCtx),
+			},
+			{
+				// Del
+				Method:  http.MethodGet,
+				Path:    "/del/:ids",
+				Handler: sysdict.SysDictDelHandler(serverCtx),
+			},
+			{
+				// List
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: sysdict.SysDictListHandler(serverCtx),
+			},
+			{
+				// Options
+				Method:  http.MethodGet,
+				Path:    "/options",
+				Handler: sysdict.SysDictOptionsHandler(serverCtx),
+			},
+			{
+				// TypeGet
+				Method:  http.MethodGet,
+				Path:    "/type/:id",
+				Handler: sysdict.SysDictTypeGetHandler(serverCtx),
+			},
+			{
+				// TypeAdd
+				Method:  http.MethodPost,
+				Path:    "/type/add",
+				Handler: sysdict.SysDictTypeAddHandler(serverCtx),
+			},
+			{
+				// TypeDel
+				Method:  http.MethodGet,
+				Path:    "/type/del/:ids",
+				Handler: sysdict.SysDictTypeDelHandler(serverCtx),
+			},
+			{
+				// TypeUpdate
+				Method:  http.MethodPost,
+				Path:    "/type/update",
+				Handler: sysdict.SysDictTypeUpdateHandler(serverCtx),
+			},
+			{
+				// TypeList
+				Method:  http.MethodGet,
+				Path:    "/typeList",
+				Handler: sysdict.SysDictTypeListHandler(serverCtx),
+			},
+			{
+				// Update
+				Method:  http.MethodPost,
+				Path:    "/update",
+				Handler: sysdict.SysDictUpdateHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/sys/dict"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取菜单
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: sysmenu.SysMenuGetHandler(serverCtx),
+			},
+			{
+				// 新增菜单
+				Method:  http.MethodPost,
+				Path:    "/add",
+				Handler: sysmenu.SysMenuAddHandler(serverCtx),
+			},
+			{
+				// 删除菜单
+				Method:  http.MethodGet,
+				Path:    "/del/:ids",
+				Handler: sysmenu.SysMenuDelHandler(serverCtx),
+			},
+			{
+				// 菜单列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: sysmenu.SysMenuListHandler(serverCtx),
+			},
+			{
+				// 菜单下拉列表
+				Method:  http.MethodGet,
+				Path:    "/options",
+				Handler: sysmenu.SysMenuOptionsHandler(serverCtx),
+			},
+			{
+				// 路由列表
+				Method:  http.MethodGet,
+				Path:    "/routes",
+				Handler: sysmenu.RoutesHandler(serverCtx),
+			},
+			{
+				// 修改菜单
+				Method:  http.MethodPost,
+				Path:    "/update",
+				Handler: sysmenu.SysMenuUpdateHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/sys/menu"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取角色
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: sysrole.SysRoleGetHandler(serverCtx),
+			},
+			{
+				// 新增角色
+				Method:  http.MethodPost,
+				Path:    "/add",
+				Handler: sysrole.SysRoleAddHandler(serverCtx),
+			},
+			{
+				// 修改用户状态
+				Method:  http.MethodPost,
+				Path:    "/changeStatus",
+				Handler: sysrole.SysRoleChangeStatusHandler(serverCtx),
+			},
+			{
+				// 删除角色
+				Method:  http.MethodGet,
+				Path:    "/del/:ids",
+				Handler: sysrole.SysRoleDelHandler(serverCtx),
+			},
+			{
+				// 角色分页列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: sysrole.SysRoleListHandler(serverCtx),
+			},
+			{
+				// 获取角色的菜单ID集合
+				Method:  http.MethodGet,
+				Path:    "/menuIds/:id",
+				Handler: sysrole.SysRoleMenuIdsHandler(serverCtx),
+			},
+			{
+				// 角色下拉列表
+				Method:  http.MethodGet,
+				Path:    "/options",
+				Handler: sysrole.SysRoleOptionsHandler(serverCtx),
+			},
+			{
+				// 分配菜单权限给角色
+				Method:  http.MethodPost,
+				Path:    "/setMenuIds",
+				Handler: sysrole.SysRoleSetMenuIdsHandler(serverCtx),
+			},
+			{
+				// 修改角色
+				Method:  http.MethodPost,
+				Path:    "/update",
+				Handler: sysrole.SysRoleUpdateHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/sys/role"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取用户
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: sysuser.SysUserGetHandler(serverCtx),
+			},
+			{
+				// 新增用户
+				Method:  http.MethodPost,
+				Path:    "/add",
+				Handler: sysuser.SysUserAddHandler(serverCtx),
+			},
+			{
+				// 修改用户密码
+				Method:  http.MethodPost,
+				Path:    "/changePwd",
+				Handler: sysuser.SysUserChangePwdHandler(serverCtx),
+			},
+			{
+				// 修改用户状态
+				Method:  http.MethodPost,
+				Path:    "/changeStatus",
+				Handler: sysuser.SysUserChangeStatusHandler(serverCtx),
+			},
+			{
+				// 删除多个用户
+				Method:  http.MethodGet,
+				Path:    "/del/:ids",
+				Handler: sysuser.SysUserDelHandler(serverCtx),
+			},
+			{
+				// 用户分页列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: sysuser.SysUserListHandler(serverCtx),
+			},
+			{
+				// 修改用户
+				Method:  http.MethodPost,
+				Path:    "/update",
+				Handler: sysuser.SysUserUpdateHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/sys/user"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 获取用户信息
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: umsuser.UmsUserGetHandler(serverCtx),
+			},
+			{
+				// 添加用户
+				Method:  http.MethodPost,
+				Path:    "/add",
+				Handler: umsuser.UmsUserAddHandler(serverCtx),
+			},
+			{
+				// 删除用户
+				Method:  http.MethodGet,
+				Path:    "/del/:ids",
+				Handler: umsuser.UmsUserDelHandler(serverCtx),
+			},
+			{
+				// 获取用户列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: umsuser.UmsUserListHandler(serverCtx),
+			},
+			{
+				// 获取第三方用户列表
+				Method:  http.MethodGet,
+				Path:    "/thirdList",
+				Handler: umsuser.UmsUserThirdlistHandler(serverCtx),
+			},
+			{
+				// 修改用户信息
+				Method:  http.MethodPost,
+				Path:    "/update",
+				Handler: umsuser.UmsUserUpdateHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/user"),
 	)
 }

@@ -45,7 +45,7 @@ const rules = reactive({
 function handleQuery() {
   loading.value = true;
   listDepts(queryParams).then(({ data }) => {
-    deptList.value = data.list;
+    deptList.value = data;
     loading.value = false;
   });
 }
@@ -68,7 +68,7 @@ async function loadDeptOptions() {
       {
         value: 0,
         label: "顶级部门",
-        children: response.data.list,
+        children: response.data,
       },
     ];
   });

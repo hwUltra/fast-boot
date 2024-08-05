@@ -17,6 +17,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
+				Path:    "/auth/bind",
+				Handler: auth.BindHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/auth/code",
 				Handler: auth.CodeHandler(serverCtx),
 			},
@@ -24,11 +29,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/auth/getMobile",
 				Handler: auth.GetMobileHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/auth/bind",
-				Handler: auth.BindHandler(serverCtx),
 			},
 		},
 	)
@@ -48,13 +48,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/SendSms",
-				Handler: other.SendSmsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/upload",
-				Handler: other.FileUploadHandler(serverCtx),
+				Path:    "/callBack/wxPay",
+				Handler: callBack.WxPayHandler(serverCtx),
 			},
 		},
 	)
@@ -62,9 +57,14 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				Method:  http.MethodGet,
+				Path:    "/sendSms/:type/:mobile",
+				Handler: other.SendSmsHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodPost,
-				Path:    "/callBack/wxPay",
-				Handler: callBack.WxPayHandler(serverCtx),
+				Path:    "/upload",
+				Handler: other.FileUploadHandler(serverCtx),
 			},
 		},
 	)

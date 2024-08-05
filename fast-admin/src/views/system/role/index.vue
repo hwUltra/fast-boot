@@ -176,7 +176,7 @@ function openMenuDialog(row: RolePageVO) {
 
     // 获取所有的菜单
     getMenuOptions().then((response) => {
-      menuList.value = response.data.list;
+      menuList.value = response.data;
       // 回显角色已拥有的菜单
       getRoleMenuIds(roleId)
         .then(({ data }) => {

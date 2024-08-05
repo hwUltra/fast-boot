@@ -23,7 +23,7 @@ func NewCategoryDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Categ
 	}
 }
 
-func (l *CategoryDelLogic) CategoryDel(req *types.PathIdsReq) error {
+func (l *CategoryDelLogic) CategoryDel(req *types.CategoryDelReq) error {
 	if _, err := l.svcCtx.PmsRpc.PmsCategoryDel(l.ctx, &pmsPb.IdsReq{Ids: req.Ids}); err != nil {
 		return err
 	}

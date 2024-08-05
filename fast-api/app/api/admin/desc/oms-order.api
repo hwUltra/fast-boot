@@ -5,8 +5,6 @@ info(
 	email: "skywalkerwei@gmail.com"
 )
 
-import "base.api"
-
 
 type (
 	OrderInfo{
@@ -34,10 +32,22 @@ type (
 		CreatedAt  string `json:"created_at"`
 	}
 
+	OrderListReq{
+		Keywords string `form:"keywords,omitempty,optional"`
+		Status int64 `form:"status,default=-1"`
+		PageNum int64 `form:"pageNum,default=1"`
+		PageSize int64 `form:"pageSize,default=10"`
+	}
+
 	OrderListRsqp{
 		List []*OrderInfo `json:"list"`
 		Total  int64 `json:"total"`
 	}
+
+	OrderGetReq{
+		Id int64 `path:"id"`
+	}
+
 )
 
 @server(
@@ -47,10 +57,10 @@ type (
 )
 service admin-api {
 	@doc "订单列表"
-	@handler List
-	get /list(ListReq)  returns (OrderListRsqp)
+	@handler OrderList
+	get /list(OrderListReq)  returns (OrderListRsqp)
 
 	@doc "获取订单"
-	@handler Get
-	get /:id (PathIdReq)  returns (OrderInfo)
+	@handler OrderGet
+	get /:id (OrderGetReq)  returns (OrderInfo)
 }

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/xlog"
 	"github.com/go-pay/gopay/wechat/v3"
 	"net/http"
 	"time"
@@ -23,7 +22,6 @@ func GetWxClient(conf WxConf) (*WxPayTool, error) {
 	fmt.Println(client)
 	err = client.AutoVerifySign()
 	if err != nil {
-		xlog.Error(err)
 		return nil, err
 	}
 	// 自定义配置http请求接收返回结果body大小，默认 10MB
@@ -56,14 +54,11 @@ func (p *WxPayTool) WxJsPay(ctx context.Context, openId string, total int64, tra
 
 	wxRsp, err := p.Client.V3TransactionJsapi(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
 		return nil, err
 	}
 	if wxRsp.Code == 200 {
-		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
 		return nil, err
 	}
-	xlog.Errorf("wxRsp:%s", wxRsp.Error)
 	return wxRsp, nil
 }
 
@@ -71,7 +66,7 @@ func (p *WxPayTool) WxJsPay(ctx context.Context, openId string, total int64, tra
 func (p *WxPayTool) WxRefund(ctx context.Context, refund int64, total int64, transactionId string, refundNo string, reason string) (*wechat.RefundRsp, string) {
 
 	bm := make(gopay.BodyMap)
-	// 商户订单号（支付后返回的，一般是以42000开头）
+	// 商户订单号（支付后返回的，42000开头）
 	bm.Set("transaction_id", transactionId).
 		Set("sign_type", "MD5").
 		// 必填 退款订单号（程序员定义的）
@@ -113,7 +108,7 @@ func (p *WxPayTool) WxTestV3Query(no string) *wechat.QueryOrderRsp {
 	return wxRsp
 }
 
-func (p *WxPayTool) Notify(req *http.Request) (error, *wechat.V3DecryptResult) {
+func (p *WxPayTool) Notify(req *http.Request) (error, *wechat.V3DecryptBusifavorResult) {
 	fmt.Println("--------------------- WxPayNotify START ---------------------")
 	notifyReq, err := wechat.V3ParseNotify(req)
 	if err != nil {
@@ -128,7 +123,7 @@ func (p *WxPayTool) Notify(req *http.Request) (error, *wechat.V3DecryptResult) {
 		return err, nil
 	}
 	// 普通支付通知解密
-	result, err := notifyReq.DecryptCipherText(p.Conf.ApiV3Key)
+	result, err := notifyReq.DecryptBusifavorCipherText(p.Conf.ApiV3Key)
 	if err != nil {
 		fmt.Println("------ WxPayNotify DecryptCipherText Error ------", err.Error())
 		return err, nil

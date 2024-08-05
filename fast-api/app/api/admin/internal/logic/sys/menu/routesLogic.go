@@ -25,11 +25,11 @@ func NewRoutesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RoutesLogi
 	}
 }
 
-func (l *RoutesLogic) Routes() (resp *types.RoutesResp, err error) {
+func (l *RoutesLogic) Routes() ([]*types.RouteData, error) {
 	userId := jwtx.GetUid(l.ctx)
 	res, err := l.svcCtx.SysRpc.Routes(l.ctx, &sysPb.RoutesReq{Uid: userId, Types: []int64{1, 2, 3}})
 	if err != nil {
 		return nil, err
 	}
-	return &types.RoutesResp{List: GetRoutes(res.List, 0)}, nil
+	return GetRoutes(res.List, 0), nil
 }

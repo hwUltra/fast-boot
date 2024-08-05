@@ -8,7 +8,6 @@ import (
 	"github.com/zeromicro/go-zero/core/conf"
 	"net/http"
 
-	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest"
 )
 
@@ -16,9 +15,15 @@ var configFile = flag.String("f", "./etc/ws.yaml", "the config file")
 
 func main() {
 	flag.Parse()
-	logx.Disable()
+	//logx.Disable()
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
+
+	//log、prometheus、trace、metricsUrl.
+	if err := c.SetUp(); err != nil {
+		panic(err)
+	}
+
 	server := rest.MustNewServer(c.RestConf, rest.WithCors())
 	defer server.Stop()
 

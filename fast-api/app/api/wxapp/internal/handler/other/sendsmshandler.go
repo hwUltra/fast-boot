@@ -20,20 +20,7 @@ func SendSmsHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 
 		l := other.NewSendSmsLogic(r.Context(), svcCtx)
-		resp, err := l.SendSms(req)
-		result.HttpResult(r, w, resp, err)
-
-		//if err := httpx.Parse(r, &req); err != nil {
-		//	httpx.Error(w, err)
-		//	return
-		//}
-		//
-		//l := other.NewSendSmsLogic(r.Context(), svcCtx)
-		//resp, err := l.SendSms(req)
-		//if err != nil {
-		//	httpx.Error(w, err)
-		//} else {
-		//	httpx.OkJson(w, resp)
-		//}
+		err := l.SendSms(req)
+		result.HttpResult(r, w, nil, err)
 	}
 }

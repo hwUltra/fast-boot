@@ -4,7 +4,6 @@ info(
     email: "skywalkerwei@gmail.com"
 )
 
-import "base.api"
 
 
 type (
@@ -56,8 +55,20 @@ type (
         Value int64 `json:"value"`
     }
 
-    SysRoleOptionsResp {
-        List []*SysRoleOption `json:"list"`
+    SysRoleAddResp{
+        Id int64 `json:"id"`
+    }
+
+    SysRoleGetReq{
+        Id int64 `path:"id"`
+    }
+
+    SysRoleDelReq{
+        Ids string `path:"ids"`
+    }
+
+    SysRoleMenuIdsReq{
+        Id int64 `path:"id"`
     }
 
 )
@@ -69,38 +80,38 @@ type (
 )
 service admin-api {
     @doc "角色分页列表"
-    @handler List
+    @handler SysRoleList
     get /list (SysRoleListReq) returns (SysRoleListResp)
 
     @doc "新增角色"
-    @handler Add
-    post /add (SysRoleFormReq) returns (IdResp)
+    @handler SysRoleAdd
+    post /add (SysRoleFormReq) returns (SysRoleAddResp)
 
     @doc "获取角色"
-    @handler Get
-    get /:id (PathIdReq)  returns (SysRoleInfo)
+    @handler SysRoleGet
+    get /:id (SysRoleGetReq)  returns (SysRoleInfo)
 
     @doc "角色下拉列表"
-    @handler Options
-    get /options  returns (SysRoleOptionsResp)
+    @handler SysRoleOptions
+    get /options  returns ([]SysRoleOption)
 
     @doc "修改角色"
-    @handler Update
-    post /update (SysRoleFormReq) returns (IdResp)
+    @handler SysRoleUpdate
+    post /update (SysRoleFormReq)
 
     @doc "删除角色"
-    @handler Del
-    get /del/:ids (PathIdsReq)
+    @handler SysRoleDel
+    get /del/:ids (SysRoleDelReq)
 
     @doc "获取角色的菜单ID集合"
-    @handler MenuIds
-    get /menuIds/:id (PathIdReq)  returns (SysMenuIdsResp)
+    @handler SysRoleMenuIds
+    get /menuIds/:id (SysRoleMenuIdsReq)  returns (SysMenuIdsResp)
 
     @doc "分配菜单权限给角色"
-    @handler SetMenuIds
+    @handler SysRoleSetMenuIds
     post /setMenuIds (SysSetMenuIdsReq)
 
     @doc "修改用户状态"
-    @handler ChangeStatus
+    @handler SysRoleChangeStatus
     post /changeStatus (SysRoleChangeStatusReq)
 }

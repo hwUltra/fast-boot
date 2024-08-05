@@ -16,6 +16,7 @@ import (
 func createCustomGormLog(options ...Options) gormLog.Interface {
 	var (
 		infoStr      = "%s\n[info] "
+		
 		warnStr      = "%s\n[warn] "
 		errStr       = "%s\n[error] "
 		traceStr     = "%s\n[%.3fms] [rows:%v] %s"

@@ -15,7 +15,7 @@ type UserInfo struct {
 
 func TestRedisBuilder(t *testing.T) {
 
-	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:6379", Type: "node"})
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:16379", Type: "node"})
 
 	//userInfo := map[string]any{
 	//	"name": "kyle",
@@ -54,7 +54,7 @@ func TestRedisBuilder(t *testing.T) {
 
 func TestRedisDelBuilder(t *testing.T) {
 
-	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:6379", Type: "node"})
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:16379", Type: "node"})
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -66,7 +66,7 @@ func TestRedisDelBuilder(t *testing.T) {
 }
 
 func TestRedisSetBuilder(t *testing.T) {
-	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:6379", Type: "node"})
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:16379", Type: "node"})
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -87,7 +87,7 @@ func TestRedisSetBuilder(t *testing.T) {
 }
 
 func TestRedisZSetBuilder(t *testing.T) {
-	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:16379", Type: "node"})
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:116379", Type: "node"})
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -119,7 +119,7 @@ func TestRedisZSetBuilder(t *testing.T) {
 }
 
 func TestGeoAdd(t *testing.T) {
-	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:16379", Type: "node"})
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:116379", Type: "node"})
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -136,7 +136,7 @@ func TestGeoAdd(t *testing.T) {
 }
 
 func TestGeoFind(t *testing.T) {
-	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:16379", Type: "node"})
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:116379", Type: "node"})
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -151,7 +151,7 @@ func TestGeoFind(t *testing.T) {
 }
 
 func TestGeoDist(t *testing.T) {
-	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:16379", Type: "node"})
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:116379", Type: "node"})
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -166,7 +166,7 @@ func TestGeoDist(t *testing.T) {
 }
 
 func TestGeoRadius(t *testing.T) {
-	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:16379", Type: "node"})
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "127.0.0.1:116379", Type: "node"})
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -197,7 +197,7 @@ func TestGeoRadius(t *testing.T) {
 }
 
 func TestScanDel(t *testing.T) {
-	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "192.168.3.85:16379", Type: "node"})
+	redisClient, err := redis.NewRedis(redis.RedisConf{Host: "192.168.3.88:16379", Type: "node"})
 	if err != nil {
 		fmt.Println("err:", err)
 	}

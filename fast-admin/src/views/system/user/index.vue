@@ -143,7 +143,7 @@ async function loadRoleOptions() {
 /** 加载部门下拉数据源 */
 async function loadDeptOptions() {
   getDeptOptions().then((response) => {
-    deptList.value = response.data.list;
+    deptList.value = response.data;
   });
 }
 

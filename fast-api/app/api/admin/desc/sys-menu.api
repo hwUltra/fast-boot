@@ -4,14 +4,8 @@ info(
     email: "skywalkerwei@gmail.com"
 )
 
-import "base.api"
-
 
 type (
-    RoutesResp{
-        List []*RouteData `json:"list"`
-    }
-
     RouteMetaData {
         Title string `json:"title"`
         Icon string `json:"icon,omitempty"`
@@ -83,10 +77,6 @@ type (
         Children []*SysMenuItem `json:"children,omitempty"`
     }
 
-    SysMenuListResp  {
-        List []*SysMenuItem `json:"list"`
-    }
-
     SysMenuChangeVisibleReq{
         MenuId  int64 `json:"menuId"`
         Visible  int64 `json:"visible"`
@@ -95,15 +85,20 @@ type (
     SysMenuOption {
         Label string `json:"label"`
         Value int64 `json:"value"`
-        Children []*SysMenuOption `json:"children,omitempty"`
+        Children []SysMenuOption `json:"children,omitempty"`
     }
 
-    SysMenuOptionsResp {
-        List []*SysMenuOption `json:"list"`
+    SysMenuAddResp {
+        Id int64 `json:"id"`
     }
 
+    SysMenuGetReq {
+        Id int64 `path:"id"`
+    }
 
-
+    SysMenuDelReq {
+        Ids string `path:"ids"`
+    }
 
 )
 
@@ -115,30 +110,30 @@ type (
 service admin-api {
     @doc "路由列表"
     @handler Routes
-    get /routes returns (RoutesResp)
+    get /routes returns ([]RouteData)
 
     @doc "菜单列表"
-    @handler List
-    get /list (SysMenuListReq) returns (SysMenuListResp)
+    @handler SysMenuList
+    get /list (SysMenuListReq) returns ([]SysMenuItem)
 
     @doc "新增菜单"
-    @handler Add
-    post /add (SysMenuForm) returns (IdResp)
+    @handler SysMenuAdd
+    post /add (SysMenuForm) returns (SysMenuAddResp)
 
     @doc "获取菜单"
-    @handler Get
-    get /:id (PathIdReq)  returns (SysMenuInfo)
+    @handler SysMenuGet
+    get /:id (SysMenuGetReq)  returns (SysMenuInfo)
 
     @doc "菜单下拉列表"
-    @handler Options
-    get /options  returns (SysMenuOptionsResp)
+    @handler SysMenuOptions
+    get /options  returns ([]SysMenuOption)
 
     @doc "修改菜单"
-    @handler Update
-    post /update (SysMenuForm) returns (IdResp)
+    @handler SysMenuUpdate
+    post /update (SysMenuForm)
 
     @doc "删除菜单"
-    @handler Del
-    get /del/:ids (PathIdsReq)
+    @handler SysMenuDel
+    get /del/:ids (SysMenuDelReq)
 
 }

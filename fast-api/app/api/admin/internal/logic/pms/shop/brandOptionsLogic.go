@@ -25,7 +25,7 @@ func NewBrandOptionsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Bran
 	}
 }
 
-func (l *BrandOptionsLogic) BrandOptions(req *types.PathIdReq) (resp *types.OptionsResp, err error) {
+func (l *BrandOptionsLogic) BrandOptions(req *types.BrandOptionsReq) (resp []*types.OptionItem, err error) {
 	options, err := l.svcCtx.PmsRpc.PmsBrandOptions(l.ctx, &pmsPb.IdReq{Id: req.Id})
 	if err != nil {
 		return nil, err
@@ -34,5 +34,5 @@ func (l *BrandOptionsLogic) BrandOptions(req *types.PathIdReq) (resp *types.Opti
 	list := make([]*types.OptionItem, 0)
 	_ = copier.Copy(&list, options.Items)
 
-	return &types.OptionsResp{List: list}, nil
+	return list, nil
 }

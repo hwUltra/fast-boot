@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package omsPb;
+
+option go_package = "./omsPb";
+
+// ------------------------------------
+// Common Message
+// ------------------------------------
+message IdReq {
+  int64 id = 1;
+}
+
+message IdsReq {
+  string ids = 1;
+}
+
+message AnyReq {
+}
+
+message IdResp {
+  int64 id = 1;
+}
+
+message SuccessResp {
+}
+
+message SuccessIdResp {
+  int64 id = 1;
+}
+
+message  ListReq{
+  string keywords = 1;
+  int64 status = 2;
+  int64 pageNum = 3;
+  int64 pageSize = 4;
+}
+
+
+message  Order{
+
+}
+
+message OrderInfo{
+
+}
+
+message OrderListReq{
+  string keywords = 1;
+  int64 shopId = 2;
+  int64 status = 3;
+  string startTime = 4;
+  string endTime = 5;
+  int64 pageNum = 6;
+  int64 pageSize = 7;
+}
+
+message OrderListResp{
+  repeated OrderInfo list = 1;
+  int64 total = 2;
+}
+
+message OrderAddReq{
+
+}
+
+message OrderUpdateReq{
+
+}
+
+message CartListReq{
+
+}
+
+message CartListResp{
+
+}
+
+message CartAddReq{
+
+}
+
+message CartUpdateReq{
+
+}
+
+service oms{
+  //购物车
+  rpc CartList(CartListReq) returns (CartListResp);
+  rpc CartAdd(CartAddReq) returns(SuccessResp);
+  rpc CartUpdate(CartUpdateReq) returns(SuccessResp);
+  rpc CartDel(IdsReq) returns(SuccessResp);
+
+  //订单
+  rpc OrderGet(IdReq) returns (OrderInfo);
+  rpc OrderList(OrderListReq) returns (OrderListResp);
+  rpc OrderAdd(OrderAddReq) returns(SuccessIdResp);
+  rpc OrderUpdate(OrderUpdateReq) returns(SuccessResp);
+
+}

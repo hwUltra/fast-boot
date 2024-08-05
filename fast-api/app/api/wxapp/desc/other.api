@@ -7,9 +7,10 @@ info(
 
 type (
 	SendSmsReq {
+		Type   string `path:"type"`
+		Mobile string `path:"mobile"`
 	}
-	SendSmsResp {
-	}
+
 
 	WxPayCallBackReq {
 	}
@@ -35,7 +36,7 @@ service WxApp {
 		summary: "发送短信"
 	)
 	@handler SendSms
-	post /SendSms(SendSmsReq) returns (SendSmsResp)
+	get /sendSms/:type/:mobile (SendSmsReq)
 
 	@doc(
 		summary: "文件上传"

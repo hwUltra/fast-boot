@@ -4,8 +4,6 @@ info(
     email: "skywalkerwei@gmail.com"
 )
 
-import "base.api"
-
 
 type (
 
@@ -80,13 +78,33 @@ type (
     SysDictOption {
         Label string `json:"label"`
         Value string `json:"value"`
-        Children []*SysDictOption `json:"children,omitempty"`
+        Children []SysDictOption `json:"children,omitempty"`
     }
 
-    SysDictOptionsResp {
-        List []*SysDictOption `json:"list"`
+
+    SysDictAddResp {
+        Id  int64 `json:"id"`
     }
 
+    SysDictGetReq {
+        Id int64 `path:"id"`
+    }
+
+    SysDictDelReq {
+        Ids string `path:"ids"`
+    }
+
+    SysDictTypeAddResp {
+        Id  int64 `json:"id"`
+    }
+
+    SysDictTypeGetReq{
+        Id int64 `path:"id"`
+    }
+
+    SysDictTypeDelReq{
+        Ids string `path:"ids"`
+    }
 
 )
 
@@ -99,74 +117,74 @@ service admin-api {
     @doc(
         summary: "TypeList"
     )
-    @handler TypeList
+    @handler SysDictTypeList
     get /typeList (SysDictTypeListReq) returns (SysDictTypeListResp)
 
     @doc(
         summary: "List"
     )
-    @handler List
+    @handler SysDictList
     get /list (SysDictListReq) returns (SysDictListResp)
 
     @doc(
         summary: "Options"
     )
-    @handler Options
-    get /options  returns (SysDictOptionsResp)
+    @handler SysDictOptions
+    get /options  returns ([]SysDictOption)
 
     @doc(
         summary: "TypeOptions"
     )
-    @handler TypeOptions
-    get /:typeCode/options (SysTypeReq) returns (SysDictOptionsResp)
+    @handler SysDictTypeOptions
+    get /:typeCode/options (SysTypeReq) returns ([]SysDictOption)
 
 
     @doc(
         summary: "Add"
     )
-    @handler Add
-    post /add (SysDictForm) returns (IdResp)
+    @handler SysDictAdd
+    post /add (SysDictForm) returns (SysDictAddResp)
 
     @doc(
         summary: "Update"
     )
-    @handler Update
+    @handler SysDictUpdate
     post /update (SysDictForm)
 
     @doc(
         summary: "Get"
     )
-    @handler Get
-    get /:id (PathIdReq)  returns (SysDictItem)
+    @handler SysDictGet
+    get /:id (SysDictGetReq)  returns (SysDictItem)
 
     @doc(
         summary: "Del"
     )
-    @handler Del
-    get /del/:ids (PathIdsReq)
+    @handler SysDictDel
+    get /del/:ids (SysDictDelReq)
 
     @doc(
         summary: "TypeAdd"
     )
-    @handler TypeAdd
-    post /type/add (SysDictTypeForm) returns (IdResp)
+    @handler SysDictTypeAdd
+    post /type/add (SysDictTypeForm) returns (SysDictTypeAddResp)
 
     @doc(
         summary: "TypeUpdate"
     )
-    @handler TypeUpdate
+    @handler SysDictTypeUpdate
     post /type/update (SysDictTypeForm)
 
     @doc(
         summary: "TypeGet"
     )
-    @handler TypeGet
-    get /type/:id (PathIdReq)  returns (SysDictTypeItem)
+    @handler SysDictTypeGet
+    get /type/:id (SysDictTypeGetReq)  returns (SysDictTypeItem)
 
     @doc(
         summary: "TypeDel"
     )
-    @handler TypeDel
-    get /type/del/:ids (PathIdsReq)
+    @handler SysDictTypeDel
+    get /type/del/:ids (SysDictTypeDelReq)
 
 }
