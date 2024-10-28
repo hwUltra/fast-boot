@@ -2,7 +2,7 @@ package svc
 
 import (
 	"fast-boot/app/rpc/pms/internal/config"
-	"fast-boot/common/gormV2"
+	"github.com/hwUltra/fb-tools/gormV2"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"gorm.io/gorm"
 )

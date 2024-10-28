@@ -1,16 +1,9 @@
 <script setup lang="ts">
-import {
-  getCategoryList,
-  getCategoryOptions,
-  categoryAdd,
-  categoryUpdate,
-  categoryDel,
-} from "@/api/pms/category";
-import {
+import CategoryApi, {
   CategoryQuery,
   CategoryVO,
   CategoryForm,
-} from "@/api/pms/category/types";
+} from "@/api/pms/category";
 
 const props = defineProps({
   shopId: {
@@ -74,7 +67,7 @@ function handleQuery() {
   console.log("Category shopId", props.shopId);
   queryParams.shopId = props.shopId;
   loading.value = true;
-  getCategoryList(queryParams)
+  CategoryApi.getCategoryList(queryParams)
     .then(({ data }) => {
       pageList.value = data.list;
     })
@@ -106,7 +99,7 @@ function handleDelete(id?: number) {
     type: "warning",
   })
     .then(function () {
-      categoryDel(ids).then(() => {
+      CategoryApi.categoryDel(ids).then(() => {
         ElMessage.success("删除成功");
         resetQuery();
       });
@@ -115,12 +108,12 @@ function handleDelete(id?: number) {
 }
 
 async function loadOptions() {
-  getCategoryOptions(props.shopId).then((response) => {
+  CategoryApi.getCategoryOptions(props.shopId).then((data) => {
     categoryOptionsData.value = [
       {
         value: 0,
         label: "顶级部门",
-        children: response.data,
+        children: data,
       },
     ];
   });
@@ -159,7 +152,7 @@ function handleSubmit() {
       formData.shopId = props.shopId;
 
       if (formData.id) {
-        categoryUpdate(formData)
+        CategoryApi.categoryUpdate(formData)
           .then(() => {
             ElMessage.success("修改成功");
             closeDialog();
@@ -167,7 +160,7 @@ function handleSubmit() {
           })
           .finally(() => (loading.value = false));
       } else {
-        categoryAdd(formData)
+        CategoryApi.categoryAdd(formData)
           .then(() => {
             ElMessage.success("新增成功");
             closeDialog();
@@ -192,10 +185,14 @@ function handleSubmit() {
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleQuery"
-            ><i-ep-search />搜索</el-button
-          >
-          <el-button @click="resetQuery"> <i-ep-refresh />重置</el-button>
+          <el-button type="primary" @click="handleQuery">
+            <i-ep-search />
+            搜索
+          </el-button>
+          <el-button @click="resetQuery">
+            <i-ep-refresh />
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
 
@@ -204,15 +201,18 @@ function handleSubmit() {
         <template #header>
           <div class="flex justify-between">
             <div>
-              <el-button type="success" @click="openDialog(0)"
-                ><i-ep-plus />新增</el-button
-              >
+              <el-button type="success" @click="openDialog(0)">
+                <i-ep-plus />
+                新增
+              </el-button>
               <el-button
                 type="danger"
                 :disabled="removeIds.length === 0"
                 @click="handleDelete()"
-                ><i-ep-delete />删除</el-button
               >
+                <i-ep-delete />
+                删除
+              </el-button>
             </div>
           </div>
         </template>
@@ -246,9 +246,9 @@ function handleSubmit() {
           </el-table-column>
           <el-table-column label="状态" align="center" prop="visible">
             <template #default="scope">
-              <el-tag :type="scope.row.visible == 1 ? 'success' : 'info'">{{
-                scope.row.visible == 1 ? "显示" : "隐藏"
-              }}</el-tag>
+              <el-tag :type="scope.row.visible == 1 ? 'success' : 'info'">
+                {{ scope.row.visible == 1 ? "显示" : "隐藏" }}
+              </el-tag>
             </template>
           </el-table-column>
 
@@ -259,15 +259,19 @@ function handleSubmit() {
                 size="small"
                 link
                 @click="handleDelete(scope.row.id)"
-                ><i-ep-refresh-left />删除</el-button
               >
+                <i-ep-refresh-left />
+                删除
+              </el-button>
               <el-button
                 type="primary"
                 link
                 size="small"
                 @click="openDialog(scope.row.id, scope.row)"
-                ><i-ep-edit />编辑</el-button
               >
+                <i-ep-edit />
+                编辑
+              </el-button>
             </template>
           </el-table-column>
         </el-table>

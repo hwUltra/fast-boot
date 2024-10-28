@@ -1,0 +1,211 @@
+info(
+	title: "oms-order-api"
+	desc: "oms-order-api"
+	author: "kyle"
+	email: "skywalkerwei@gmail.com"
+)
+
+import "../base.api"
+
+type (
+	Shop {
+		Id  int64 `json:"id"`
+		Name  string `json:"name"`
+		Tel  string `json:"tel"`
+		Notice  string `json:"notice"`
+		DistributionFee  float64 `json:"distributionFee"`
+		Status  int64 `json:"status"`
+		CreatedAt  string `json:"createdAt"`
+	}
+
+	ShopForm {
+		Id  int64 `path:"id,optional"`
+		Name  string `json:"name"`
+		Tel  string `json:"tel"`
+		Notice  string `json:"notice"`
+		DistributionFee  float64 `json:"distributionFee"`
+	}
+
+	ShopPageResp  {
+		Total int64 `json:"total"`
+		List []*Shop `json:"list"`
+	}
+
+	PmsCategory {
+		Id  int64 `json:"id"`
+		ShopId  int64 `json:"shopId"`
+		ParentId  int64 `json:"parentId"`
+		Name  string `json:"name"`
+		Icon  string `json:"icon"`
+		Sort  int64 `json:"sort"`
+		Visible  int64 `json:"visible"`
+		CreatedAt  string `json:"createdAt"`
+		Children []*PmsCategory `json:"children,omitempty"`
+	}
+
+	PmsCategoryListReq{
+		Status int64 `form:"status,default=-1"`
+		Keywords string `form:"keywords,omitempty,optional"`
+		ShopId  int64 `form:"shopId,default=1"`  // shopID
+		PageNum int64 `form:"pageNum,default=1"`
+		PageSize int64 `form:"pageSize,default=10"`
+	}
+
+
+	PmsCategoryForm{
+		Id  int64 `path:"id,optional"`
+		ShopId  int64 `json:"shopId"`
+		ParentId  int64 `json:"parentId"`
+		Name  string `json:"name"`
+		Icon  string `json:"icon"`
+		Sort  int64 `json:"sort"`
+		Visible  int64 `json:"visible"`
+	}
+
+	PmsCategoryAttribute {
+		Id  int64 `json:"id"`  // 主键
+		CategoryId  int64 `json:"categoryId"`  // 分类ID
+		Name  string `json:"name"`  // 属性名称
+		Type  int64 `json:"type"`  // 类型(1:规格;2:属性;)
+		CreatedAt  string `json:"createdAt"`  // 创建时间
+	}
+
+	PmsCategoryAttributeForm{
+		CategoryId  int64 `json:"categoryId"`  // 分类ID
+		Attributes  []string `json:"attributes"`  // 属性名称
+		Type  int64 `json:"type"`  // 类型(1:规格;2:属性;)
+	}
+
+	PmsCategoryAttributeListReq{
+		CategoryId  int64 `form:"categoryId"`  // 分类ID
+		Type  int64 `form:"type"`  // 类型(1:规格;2:属性;)
+	}
+
+
+	//--------------------------------商品品牌表--------------------------------
+	PmsBrand {
+		Id  int64 `json:"id"`  // 主键
+		ShopId  int64 `json:"shopId"`  // shopID
+		Name  string `json:"name"`  // 品牌名称
+		Logo  string `json:"logo"`  // LOGO图片
+		Sort  int64 `json:"sort"`  // 排序
+		CreatedAt  string `json:"createdAt"`
+	}
+
+	BrandForm {
+		Id  int64 `path:"id,optional"`
+		ShopId  int64 `json:"shopId"`  // shopID
+		Name  string `json:"name"`  // 品牌名称
+		Logo  string `json:"logo"`  // LOGO图片
+		Sort  int64 `json:"sort"`  // 排序
+	}
+
+    BrandPageReq{
+		Keywords string `form:"keywords,omitempty,optional"`
+		ShopId  int64 `form:"shopId,default=1"`  // shopID
+		PageNum int64 `form:"pageNum,default=1"`
+		PageSize int64 `form:"pageSize,default=10"`
+	}
+
+	BrandPageResp {
+		List []PmsBrand `json:"list"`
+		Total  int64 `json:"total"`
+	}
+
+)
+
+
+
+
+@server(
+	jwt: Auth
+	group: pms/shop
+	prefix: /shop
+)
+service admin {
+	//--------Shop------------
+	@doc "新增类型"
+	@handler Add
+	post / (ShopForm) returns (IdResp)
+
+	@doc "修改类型"
+	@handler Update
+	put /:id (ShopForm) returns (NullResp)
+
+	@doc "删除"
+	@handler Del
+	delete /:ids (PathIdsReq) returns (NullResp)
+
+	@doc "获取店铺"
+	@handler Get
+	get /:id (PathIdReq)  returns (Shop)
+
+	@doc "店铺列表"
+	@handler Page
+	get /(PageReq)  returns (ShopPageResp)
+
+	@doc "店铺下拉列表"
+	@handler Options
+	get /options  returns ([]OptionItem)
+
+	//--------PmsCategory------------
+	@doc "新增类型"
+	@handler CategoryAdd
+	post /category (PmsCategoryForm) returns (IdResp)
+
+	@doc "修改类型"
+	@handler CategoryUpdate
+	put /category/:id (PmsCategoryForm) returns (NullResp)
+
+	@doc "删除类型"
+	@handler CategoryDel
+	delete /category/:ids (PathIdsReq) returns (NullResp)
+
+	@doc "获取店铺"
+	@handler CategoryGet
+	get /category/:id (PathIdReq)  returns (PmsCategory)
+
+	@doc "类型列表"
+	@handler CategoryList
+	get /category (PmsCategoryListReq)  returns ([]*PmsCategory)
+
+	@doc "类型下拉列表"
+	@handler CategoryOptions
+	get /category/options/:id (PathIdReq)   returns  ([]*OptionItem)
+
+	@doc "新增类型-属性"
+	@handler CategoryAttributeAdd
+	post /category/attribute (PmsCategoryAttributeForm) returns (NullResp)
+
+	@doc "新增类型-属性"
+	@handler CategoryAttributeList
+	get /category/attribute (PmsCategoryAttributeListReq) returns([]PmsCategoryAttribute)
+
+	//--------pms_brand------------
+	@doc "新增Brand"
+	@handler BrandAdd
+	post /brand (BrandForm) returns (IdResp)
+
+	@doc "修改Brand"
+	@handler BrandUpdate
+	put /brand (BrandForm) returns (NullResp)
+
+	@doc "删除"
+	@handler BrandDel
+	delete /brand/:ids (PathIdsReq) returns (NullResp)
+
+	@doc "获取Brand"
+	@handler BrandGet
+	get /brand/:id (PathIdReq)  returns (PmsBrand)
+
+	@doc "Brand列表"
+	@handler BrandPage
+	get /brand (BrandPageReq)  returns (BrandPageResp)
+
+	@doc "Brand下拉列表"
+	@handler BrandOptions
+	get /brand/options/:id (PathIdReq)   returns ([]*OptionItem)
+
+}
+
+

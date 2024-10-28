@@ -1,13 +1,14 @@
 package auth
 
 import (
-	"fast-boot/common/result"
+	"github.com/hwUltra/fb-tools/result"
 	"net/http"
 
 	"fast-boot/app/api/admin/internal/logic/auth"
 	"fast-boot/app/api/admin/internal/svc"
 )
 
+// 获取个人信息
 func MeHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		l := auth.NewMeLogic(r.Context(), svcCtx)

@@ -2,10 +2,11 @@ package auth
 
 import (
 	"context"
+	"fast-boot/app/rpc/sys/sysPb"
+	"github.com/hwUltra/fb-tools/jwtx"
+
 	"fast-boot/app/api/admin/internal/svc"
 	"fast-boot/app/api/admin/internal/types"
-	"fast-boot/app/rpc/sys/sysPb"
-	"fast-boot/common/jwtx"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -16,6 +17,7 @@ type MeLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 获取个人信息
 func NewMeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *MeLogic {
 	return &MeLogic{
 		Logger: logx.WithContext(ctx),

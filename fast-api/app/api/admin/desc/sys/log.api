@@ -1,0 +1,94 @@
+info(
+    desc: "log"
+    author: "kyle"
+    email: "skywalkerwei@gmail.com"
+)
+
+import "../base.api"
+
+type (
+
+    SysLog {
+        Id  int64 `json:"id"`  // 主键
+        Module  string `json:"module"`  // 日志模块
+        Content  string `json:"content"`  // 日志内容
+        RequestUri  string `json:"request_uri"`  // 请求路径
+        Ip  string `json:"ip"`  // IP地址
+        Province  string `json:"province"`  // 省份
+        City  string `json:"city"`  // 城市
+        ExecutionTime  int64 `json:"execution_time"`  // 执行时间(ms)
+        Browser  string `json:"browser"`  // 浏览器
+        BrowserVersion  string `json:"browser_version"`  // 浏览器版本
+        Os  string `json:"os"`  // 终端系统
+        CreatedAt  string `json:"created_at,optional"`
+        UpdatedAt  string `json:"updated_at,optional"`
+    }
+
+    SysLogFormReq {
+//        ID int64  `path:"id,optional"`
+        Module  string `json:"module"`
+        Content  string `json:"content" validate:"min=2,max=255"`
+        RequestUri  string `json:"request_uri" validate:"min=2,max=255"`
+        Ip  string `json:"ip" validate:"min=2,max=45"`
+        Province  string `json:"province" validate:"min=2,max=100"`
+        City  string `json:"city" validate:"min=2,max=100"`
+        ExecutionTime  int64 `json:"execution_time,default=0"`
+        Browser  string `json:"browser" validate:"min=2,max=100"`
+        BrowserVersion  string `json:"browser_version" validate:"min=2,max=100"`
+        Os  string `json:"os" validate:"min=2,max=100"`
+        CreateBy  int64 `json:"create_by"`
+    }
+
+    SysLogListReq  {
+        Status int64 `form:"status,omitempty,optional,default=-1"`
+        PageNum int64 `form:"pageNum,omitempty,optional,default=1"`
+        PageSize int64 `form:"pageSize,omitempty,optional,default=10"`
+    }
+
+    SysLogListResp  {
+        Total int64 `json:"total"`
+        List []*SysLog `json:"list"`
+    }
+
+    VisitStatsItem {
+        Type  string `json:"type"`
+        Title  string `json:"title"`
+        TodayCount int64  `json:"todayCount"`
+        TotalCount int64  `json:"totalCount"`
+        GrowthRate  float64 `json:"growthRate"`
+        GranularityLabel  string `json:"granularityLabel"`
+    }
+
+    VisitTrendReq{
+
+    }
+
+    VisitTrendResp{
+        Dates  []string `json:"dates"`
+        PvList []int64 `json:"pvList"`
+        UvList []int64 `json:"uvList"`
+        IpList []int64 `json:"ipList"`
+    }
+
+)
+
+
+
+@server(
+    jwt: Auth
+    group: sys/logs
+    prefix: /sys/logs
+)
+service admin {
+    @handler Add
+    post / (SysLogFormReq)  returns(IdResp)
+
+    @handler List
+    get / (SysLogListReq) returns(SysLogListResp)
+
+    @handler visitStats
+    get /visit-stats (NullReq) returns([]*VisitStatsItem)
+
+    @handler visitTrend
+    get /visit-trend (VisitTrendReq) returns(VisitTrendResp)
+}

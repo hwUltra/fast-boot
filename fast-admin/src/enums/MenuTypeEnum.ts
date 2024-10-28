@@ -1,19 +1,22 @@
-export enum MenuTypeEnum {
+/**
+ * 菜单类型枚举
+ */
+export const enum MenuTypeEnum {
   /**
    * 目录
    */
-  CATALOG = "CATALOG",
+  CATALOG = 2,
   /**
    * 菜单
    */
-  MENU = "MENU",
+  MENU = 1,
 
   /**
    * 按钮
    */
-  BUTTON = "BUTTON",
+  BUTTON = 4,
   /**
    * 外链
    */
-  EXTLINK = "EXTLINK",
+  EXTLINK = 3,
 }

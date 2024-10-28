@@ -1,13 +1,14 @@
 package model
 
 import (
-	"fast-boot/common/gormV2"
+	"github.com/hwUltra/fb-tools/gormV2"
 	"gorm.io/gorm"
 )
 
 type SysDeptModel struct {
 	gormV2.BaseDel
-	Name     string `gorm:"column:name;not null" json:"name"`               // 部门名称
+	Name     string `gorm:"column:name;not null" json:"name"` // 部门名称
+	Code     string `gorm:"column:code;not null" json:"code"`
 	ParentID int64  `gorm:"column:parent_id;not null" json:"parent_id"`     // 父节点id
 	TreePath string `gorm:"column:tree_path;not null" json:"tree_path"`     // 父节点id路径
 	Sort     int64  `gorm:"column:sort;not null" json:"sort"`               // 显示顺序

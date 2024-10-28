@@ -104,8 +104,8 @@ func parseApiColumn(s *SchemaApi, msg *Tab, col Column) error {
 	case "char", "varchar", "text", "longtext", "mediumtext", "tinytext":
 		fieldType = "string"
 	case "enum", "set":
-		enumList := regexp.MustCompile(`[enum|set]\((.+?)\)`).FindStringSubmatch(col.ColumnType)
-		enums := strings.FieldsFunc(enumList[1], func(c rune) bool {
+		enumPage := regexp.MustCompile(`[enum|set]\((.+?)\)`).FindStringSubmatch(col.ColumnType)
+		enums := strings.FieldsFunc(enumPage[1], func(c rune) bool {
 			cs := string(c)
 			return cs == "," || cs == "'"
 		})
@@ -213,8 +213,8 @@ func (s *SchemaApi) String() string {
 		buf.WriteString("service " + s.ServiceName + "-api{")
 		buf.WriteString("\n")
 
-		buf.WriteString("   @handler List \n")
-		buf.WriteString(fmt.Sprintf("   get /%s (%sListReq) returns(%sListResp)\n\n", tab.TableName, tab.Name, tab.Name))
+		buf.WriteString("   @handler Page \n")
+		buf.WriteString(fmt.Sprintf("   get /%s (%sPageReq) returns(%sPageResp)\n\n", tab.TableName, tab.Name, tab.Name))
 
 		buf.WriteString("   @handler Get \n")
 		buf.WriteString(fmt.Sprintf("   get /%s/:id (IDReq) returns(%sInfoResp)\n\n", tab.TableName, tab.Name))
@@ -252,7 +252,7 @@ func (tab Tab) genDefault(buf *bytes.Buffer, s *SchemaApi) {
 }
 
 func (tab Tab) genGetAll(buf *bytes.Buffer, s *SchemaApi) {
-	buf.WriteString("" + tab.Name + "ListReq {\n")
+	buf.WriteString("" + tab.Name + "PageReq {\n")
 	for _, field := range tab.Fields {
 
 		if isInSlice(s.pconf.IgnoreColumns, field.Name) {
@@ -271,7 +271,7 @@ func (tab Tab) genGetAll(buf *bytes.Buffer, s *SchemaApi) {
 	buf.WriteString("      Page  uint `form:\"page,optional,default=1\"`\n")
 	buf.WriteString("      Limit uint `form:\"limit,optional,default=10\"`\n")
 	buf.WriteString("   }\n\n")
-	buf.WriteString("   " + tab.Name + "ListResp {\n")
+	buf.WriteString("   " + tab.Name + "PageResp {\n")
 	buf.WriteString(fmt.Sprintf("      Items   []%s `form:\"items\"`\n", tab.Name))
 	buf.WriteString("      Total uint  `form:\"total\"`\n")
 	buf.WriteString("   }\n\n")

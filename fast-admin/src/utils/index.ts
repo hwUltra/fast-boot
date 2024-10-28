@@ -30,6 +30,8 @@ export function removeClass(ele: HTMLElement, cls: string) {
 }
 
 /**
+ * 判断是否是外部链接
+ *
  * @param {string} path
  * @returns {Boolean}
  */

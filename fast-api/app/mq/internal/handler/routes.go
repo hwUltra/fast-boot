@@ -16,17 +16,17 @@ func Mqs(c config.Config) []service.Service {
 
 	var services []service.Service
 
-	services = append(services, AsynqMqs(ctx, svcContext)...)
+	services = append(services, AsyncMqs(ctx, svcContext)...)
 
 	return services
 }
 
-// AsynqMqs  异步队列
-func AsynqMqs(ctx context.Context, svcContext *svc.ServiceContext) []service.Service {
+// AsyncMqs  异步队列
+func AsyncMqs(ctx context.Context, svcContext *svc.ServiceContext) []service.Service {
 
 	return []service.Service{
 		//监听延迟队列
-		NewAsynqJob(ctx, svcContext),
+		NewAsyncJob(ctx, svcContext),
 		//监听定时任务
 		NewSchedulerJob(ctx, svcContext),
 	}

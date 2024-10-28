@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
-	"fast-boot/common/gormV2"
 	"fast-boot/common/xerr"
+	"github.com/hwUltra/fb-tools/gormV2"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 

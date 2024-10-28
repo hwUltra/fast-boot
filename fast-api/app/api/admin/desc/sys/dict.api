@@ -1,0 +1,213 @@
+info(
+    desc: "字典"
+    author: "kyle"
+    email: "skywalkerwei@gmail.com"
+)
+
+import "../base.api"
+
+type (
+    SysDictItem {
+        Id  int64 `json:"id"`
+        Code  string `json:"code"`
+        Name  string `json:"name"`
+        Status  int64 `json:"status"`
+        Remark  string `json:"remark,optional"`
+        CreatedAt  string `json:"created_at,optional"`
+        UpdatedAt  string `json:"updated_at,optional"`
+    }
+
+    SysDictDataItem {
+        Id  int64 `json:"id"`
+        DictId  int64 `json:"dictId"`
+        Value  string `json:"value"`
+        Label  string `json:"label"`
+        Status  int64 `json:"status"`
+        Tag  string `json:"tag"`
+        Sort  int64 `json:"sort,default=1"`
+        Remark  string `json:"remark,optional"`
+        CreatedAt  string `json:"created_at,optional"`
+        UpdatedAt  string `json:"updated_at,optional"`
+    }
+
+    SysDictForm {
+        Id  int64 `path:"id,optional"`
+        Code  string `json:"code"`
+        Name  string `json:"name"`
+        Status  int64 `json:"status"`
+        Remark  string `json:"remark,optional"`
+    }
+
+    SysDictDataForm {
+        Id  int64 `json:"id,optional"`
+        DictId  int64 `json:"dictId"`
+        Value  string `json:"value"`
+        Label  string `json:"label"`
+        Status  int64 `json:"status"`
+        Tag  string `json:"tag"`
+        Sort  int64 `json:"sort,default=1"`
+        Remark  string `json:"remark,optional"`
+    }
+
+    SysSimDict{
+        Name  string `json:"name"`
+        DictCode  string `json:"dictCode"`
+        DictDataList []*SysSimDictData `json:"dictDataList"`
+    }
+
+    SysSimDictData{
+        Value  string `json:"value"`
+        Label  string `json:"label"`
+        TagType  string `json:"tagType"`
+    }
+
+    SysDictPageReq  {
+        Keywords string `form:"keywords,omitempty,optional"`
+        PageNum int64 `form:"pageNum,omitempty,optional,default=1"`
+        PageSize int64 `form:"pageSize,omitempty,optional,default=10"`
+    }
+
+    SysDictPageResp{
+        Total int64 `json:"total"`
+        List []*SysDictItem `json:"list"`
+    }
+
+    SysDictDataPageReq  {
+        DictId  int64 `form:"dictId"`
+        Keywords string `form:"keywords,omitempty,optional"`
+        PageNum int64 `form:"pageNum,omitempty,optional,default=1"`
+        PageSize int64 `form:"pageSize,omitempty,optional,default=10"`
+    }
+
+    SysDictDataPageResp  {
+        Total int64 `json:"total"`
+        List []*SysDictDataItem `json:"list"`
+    }
+//
+//    SysTypeReq{
+//        TypeCode string `path:"typeCode"`
+//    }
+//
+//    SysDictOption {
+//        Label string `json:"label"`
+//        Value string `json:"value"`
+//        Children []SysDictOption `json:"children,omitempty"`
+//    }
+
+
+)
+
+@server(
+    jwt: Auth
+    group: sys/dict
+    prefix: /sys/dict
+)
+service admin {
+    @handler SimList
+    get /simlist (NullReq) returns ([]SysSimDict)
+
+    //-----dict------
+    @handler Add
+    post / (SysDictForm) returns (IdResp)
+
+    @handler Update
+    put /:id (SysDictForm) returns (NullResp)
+
+    @handler Del
+    delete /:ids (PathIdsReq) returns (NullResp)
+
+    @handler Get
+    get /:id (PathIdReq) returns (SysDictItem)
+
+    @handler Page
+    get / (SysDictPageReq) returns (SysDictPageResp)
+
+    //----dictdata-----
+    @handler DataAdd
+    post /data (SysDictDataForm) returns (IdResp)
+
+    @handler DataUpdate
+    put /data/:id (SysDictDataForm) returns (NullResp)
+
+    @handler DataDel
+    delete /data/:ids (PathIdsReq) returns (NullResp)
+
+    @handler DataGet
+    get /data/:id (PathIdReq) returns (SysDictDataItem)
+
+    @handler DataPage
+    get /data (SysDictDataPageReq) returns (SysDictDataPageResp)
+
+
+//    @doc(
+//        summary: "Add"
+//    )
+//    @handler Add
+//    post / (SysDictForm) returns (IdResp)
+//
+//    @doc(
+//        summary: "Update"
+//    )
+//    @handler Update
+//    put /:id (SysDictForm)  returns (NullResp)
+//
+//    @doc(
+//        summary: "Get"
+//    )
+//    @handler Get
+//    get /:id (PathIdReq)  returns (SysDictItem)
+//
+
+//
+//    @doc(
+//        summary: "Options"
+//    )
+//    @handler Options
+//    get /options  returns ([]SysDictOption)
+//
+//    @doc(
+//        summary: "Del"
+//    )
+//    @handler Del
+//    delete /:ids (PathIdsReq)  returns (NullResp)
+//
+//    //-------type----------------
+//
+//    @doc(
+//        summary: "TypeAdd"
+//    )
+//    @handler TypeAdd
+//    post /type (SysDictTypeForm) returns (IdResp)
+//
+//    @doc(
+//        summary: "TypeUpdate"
+//    )
+//    @handler TypeUpdate
+//    put /type (SysDictTypeForm) returns (NullResp)
+//
+//    @doc(
+//        summary: "TypeGet"
+//    )
+//    @handler TypeGet
+//    get /type/:id (PathIdReq)  returns (SysDictTypeItem)
+//
+//    @doc(
+//        summary: "TypeList"
+//    )
+//    @handler TypeList
+//    get /type (SysDictTypeListReq) returns (SysDictTypeListResp)
+//
+//    @doc(
+//        summary: "TypeDel"
+//    )
+//    @handler TypeDel
+//    delete /type/:ids (PathIdsReq) returns (NullResp)
+//
+//    @doc(
+//        summary: "TypeOptions"
+//    )
+//    @handler TypeOptions
+//    get /:typeCode/options (SysTypeReq) returns ([]SysDictOption)
+
+
+}

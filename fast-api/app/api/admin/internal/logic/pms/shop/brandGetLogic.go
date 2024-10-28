@@ -17,6 +17,7 @@ type BrandGetLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 获取Brand
 func NewBrandGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BrandGetLogic {
 	return &BrandGetLogic{
 		Logger: logx.WithContext(ctx),
@@ -25,7 +26,7 @@ func NewBrandGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BrandGet
 	}
 }
 
-func (l *BrandGetLogic) BrandGet(req *types.BrandGetReq) (resp *types.PmsBrand, err error) {
+func (l *BrandGetLogic) BrandGet(req *types.PathIdReq) (resp *types.PmsBrand, err error) {
 	res, err := l.svcCtx.PmsRpc.PmsBrandGet(l.ctx, &pmsPb.IdReq{Id: req.Id})
 	if err != nil {
 		return nil, err

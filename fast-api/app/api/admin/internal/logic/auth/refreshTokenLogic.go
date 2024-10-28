@@ -3,14 +3,16 @@ package auth
 import (
 	"context"
 	"encoding/json"
-	"fast-boot/app/api/admin/internal/svc"
-	"fast-boot/app/api/admin/internal/types"
 	"fast-boot/app/rpc/sys/sysPb"
 	"fast-boot/common/globalkey"
-	"fast-boot/common/jwtx"
 	"fast-boot/common/xerr"
 	"fmt"
+	"github.com/hwUltra/fb-tools/jwtx"
+	"github.com/hwUltra/fb-tools/result"
 	"time"
+
+	"fast-boot/app/api/admin/internal/svc"
+	"fast-boot/app/api/admin/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -21,6 +23,7 @@ type RefreshTokenLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 刷新ToKen
 func NewRefreshTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RefreshTokenLogic {
 	return &RefreshTokenLogic{
 		Logger: logx.WithContext(ctx),
@@ -60,5 +63,5 @@ func (l *RefreshTokenLogic) RefreshToken() (resp *types.TokenResp, err error) {
 		}
 
 	}
-	return nil, xerr.NewErrMsg("token已过期")
+	return nil, result.NewErrCodeMsg(10001, "token已过期")
 }

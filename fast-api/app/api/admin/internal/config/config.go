@@ -1,7 +1,7 @@
 package config
 
 import (
-	"fast-boot/common/miniox"
+	"github.com/hwUltra/fb-tools/miniox"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
@@ -17,6 +17,9 @@ type Config struct {
 		AccessSecret string
 		AccessExpire int64
 	}
-	Redis  redis.RedisConf
-	MinioX miniox.Conf
+	Redis     redis.RedisConf
+	MinioX    miniox.Conf
+	WebSocket struct {
+		Path string
+	}
 }

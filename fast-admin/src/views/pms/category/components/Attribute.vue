@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getAttributeList, saveAttributeBatch } from "@/api/pms/attribute";
+import { listAttributes, saveAttributeBatch } from "@/api/pms/attribute";
 
 const props = defineProps({
   attributeType: {
@@ -57,7 +57,7 @@ watch(
   () => {
     const categoryId = props.category.id;
     if (categoryId) {
-      getAttributeList({
+      listAttributes({
         categoryId: categoryId,
         type: props.attributeType,
       }).then((response) => {
@@ -117,15 +117,19 @@ function submitForm() {
     <el-card class="box-card" shadow="always">
       <el-row>
         <el-col :span="12">
-          <el-tag v-if="category && category.name" type="success"
-            >{{ category.name }} {{ attributeTypeName }}
+          <el-tag v-if="category && category.name" type="success">
+            {{ category.name }} {{ attributeTypeName }}
           </el-tag>
-          <el-tag v-else type="info"><i-ep-infoFilled /> 请选择商品分类</el-tag>
+          <el-tag v-else type="info">
+            <i-ep-infoFilled />
+            请选择商品分类
+          </el-tag>
         </el-col>
         <el-col :span="12" style="text-align: right">
-          <el-button type="primary" @click="submitForm"
-            ><i-ep-check />提交</el-button
-          >
+          <el-button type="primary" @click="submitForm">
+            <i-ep-check />
+            提交
+          </el-button>
         </el-col>
       </el-row>
 
@@ -152,8 +156,9 @@ function submitForm() {
               plain
               style="margin-left: 15px"
               @click.prevent="handleAdd()"
-              ><i-ep-plus
-            /></el-button>
+            >
+              <i-ep-plus />
+            </el-button>
 
             <el-button
               type="danger"
@@ -161,8 +166,9 @@ function submitForm() {
               circle
               style="margin-left: 15px"
               @click.prevent="handleDelete(index)"
-              ><i-ep-delete
-            /></el-button>
+            >
+              <i-ep-delete />
+            </el-button>
           </el-form-item>
         </el-form>
       </el-row>

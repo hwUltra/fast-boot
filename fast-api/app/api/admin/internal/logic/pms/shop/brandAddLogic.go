@@ -17,6 +17,7 @@ type BrandAddLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 新增Brand
 func NewBrandAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BrandAddLogic {
 	return &BrandAddLogic{
 		Logger: logx.WithContext(ctx),
@@ -25,14 +26,14 @@ func NewBrandAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BrandAdd
 	}
 }
 
-func (l *BrandAddLogic) BrandAdd(req *types.BrandForm) (resp *types.BrandAddResp, err error) {
+func (l *BrandAddLogic) BrandAdd(req *types.BrandForm) (resp *types.IdResp, err error) {
 	form := pmsPb.PmsBrandForm{}
 	_ = copier.Copy(&form, req)
 	if _, err = l.svcCtx.PmsRpc.PmsBrandAdd(l.ctx, &form); err != nil {
 		return nil, err
 	}
 
-	return &types.BrandAddResp{
+	return &types.IdResp{
 		Id: req.Id,
 	}, nil
 }

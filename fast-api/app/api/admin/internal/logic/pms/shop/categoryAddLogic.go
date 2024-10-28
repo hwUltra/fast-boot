@@ -17,6 +17,7 @@ type CategoryAddLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 新增类型
 func NewCategoryAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CategoryAddLogic {
 	return &CategoryAddLogic{
 		Logger: logx.WithContext(ctx),
@@ -25,14 +26,14 @@ func NewCategoryAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Categ
 	}
 }
 
-func (l *CategoryAddLogic) CategoryAdd(req *types.PmsCategoryForm) (resp *types.CategoryAddResp, err error) {
+func (l *CategoryAddLogic) CategoryAdd(req *types.PmsCategoryForm) (resp *types.IdResp, err error) {
 	form := pmsPb.PmsCategoryForm{}
 	_ = copier.Copy(&form, req)
 	if _, err = l.svcCtx.PmsRpc.PmsCategoryAdd(l.ctx, &form); err != nil {
 		return nil, err
 	}
 
-	return &types.CategoryAddResp{
+	return &types.IdResp{
 		Id: req.Id,
 	}, nil
 }

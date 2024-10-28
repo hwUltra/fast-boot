@@ -1,20 +1,16 @@
 dbType: mysql
-host: localhost
-port: 3306
+host: 192.168.3.88
+port: 13306
 user: root
 password: 123456
-schema: boot
+schema: mall-boot
 tables:
-  - pms_brand
-  - pms_category
-  - pms_category_attribute
-  - pms_goods
-  - pms_goods_attribute
-  - pms_sku
-serviceName: pms
-packageName: pms
-goPackageName: ./pms
-outFile: ./data/pd/pms.proto
+  - sys_log
+  - sys_notice
+serviceName: sys
+packageName: sys
+goPackageName: ./sys
+outFile: ./data/pd/sys.proto
 ignoreTables:  
 ignoreColumns: 
   - deleted_at 

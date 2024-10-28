@@ -2,10 +2,11 @@ package shop
 
 import (
 	"context"
-	"fast-boot/app/api/admin/internal/svc"
-	"fast-boot/app/api/admin/internal/types"
 	"fast-boot/app/rpc/pms/pmsPb"
 	"github.com/jinzhu/copier"
+
+	"fast-boot/app/api/admin/internal/svc"
+	"fast-boot/app/api/admin/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -16,6 +17,7 @@ type CategoryAttributeListLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 新增类型-属性
 func NewCategoryAttributeListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CategoryAttributeListLogic {
 	return &CategoryAttributeListLogic{
 		Logger: logx.WithContext(ctx),
@@ -24,7 +26,7 @@ func NewCategoryAttributeListLogic(ctx context.Context, svcCtx *svc.ServiceConte
 	}
 }
 
-func (l *CategoryAttributeListLogic) CategoryAttributeList(req *types.PmsCategoryAttributeListReq) (resp []types.PmsCategoryAttribute, err error) {
+func (l *CategoryAttributeListLogic) CategoryAttributeList(req *types.PmsCategoryAttributeListReq) (resp []*types.PmsCategoryAttribute, err error) {
 	res, err := l.svcCtx.PmsRpc.PmsCategoryAttributeList(l.ctx, &pmsPb.PmsCategoryAttributeListReq{
 		CategoryId: req.CategoryId,
 		Type:       req.Type,
@@ -32,9 +34,8 @@ func (l *CategoryAttributeListLogic) CategoryAttributeList(req *types.PmsCategor
 	if err != nil {
 		return nil, err
 	}
-	list := make([]types.PmsCategoryAttribute, 0)
+	list := make([]*types.PmsCategoryAttribute, 0)
 
 	_ = copier.Copy(&list, res.List)
 	return list, nil
-
 }

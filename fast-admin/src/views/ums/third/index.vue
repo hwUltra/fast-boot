@@ -10,13 +10,14 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleQuery"
-            ><template #icon><i-ep-search /></template>搜索</el-button
-          >
+          <el-button type="primary" @click="handleQuery">
+            <template #icon><i-ep-search /></template>
+            搜索
+          </el-button>
           <el-button @click="resetQuery">
             <template #icon><i-ep-refresh /></template>
-            重置</el-button
-          >
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
 
@@ -54,8 +55,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getThirdList } from "@/api/ums/user";
-import { UserQuery, UserThirdPageVO } from "@/api/ums/user/types";
+import UserAPI, { UserQuery, UserThirdPageVO } from "@/api/ums/user";
 
 const loading = ref(false);
 const total = ref(0);
@@ -75,8 +75,8 @@ onMounted(() => {
 function handleQuery() {
   // 重置父组件
   loading.value = true;
-  getThirdList(queryParams)
-    .then(({ data }) => {
+  UserAPI.getThirdList(queryParams)
+    .then((data) => {
       pageData.value = data.list;
       total.value = data.total;
     })

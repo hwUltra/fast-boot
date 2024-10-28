@@ -17,6 +17,7 @@ type CategoryGetLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 获取店铺
 func NewCategoryGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CategoryGetLogic {
 	return &CategoryGetLogic{
 		Logger: logx.WithContext(ctx),
@@ -25,7 +26,7 @@ func NewCategoryGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Categ
 	}
 }
 
-func (l *CategoryGetLogic) CategoryGet(req *types.CategoryGetReq) (resp *types.PmsCategory, err error) {
+func (l *CategoryGetLogic) CategoryGet(req *types.PathIdReq) (resp *types.PmsCategory, err error) {
 	res, err := l.svcCtx.PmsRpc.PmsCategoryGet(l.ctx, &pmsPb.IdReq{Id: req.Id})
 	if err != nil {
 		return nil, err

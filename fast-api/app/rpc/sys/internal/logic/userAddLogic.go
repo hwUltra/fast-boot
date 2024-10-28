@@ -5,7 +5,7 @@ import (
 	"fast-boot/app/rpc/model"
 	"fast-boot/app/rpc/sys/internal/svc"
 	"fast-boot/app/rpc/sys/sysPb"
-	"fast-boot/common/cryptx"
+	"github.com/hwUltra/fb-tools/utils"
 	"github.com/jinzhu/copier"
 	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
@@ -37,7 +37,7 @@ func (l *UserAddLogic) UserAdd(in *sysPb.UserAddReq) (*sysPb.IdResp, error) {
 		return nil, err
 	}
 	if err := l.svcCtx.GormConn.Transaction(func(tx *gorm.DB) error {
-		user.Password = cryptx.PasswordEncrypt(l.svcCtx.Config.Salt, in.Password)
+		user.Password = utils.PasswordEncrypt(l.svcCtx.Config.Salt, in.Password)
 		tx.Create(&user)
 		//tx.Delete(&model.SysUserRoleModel{}).Where("user_id = ?", user.Id)
 		for _, roleId := range in.RoleIds {

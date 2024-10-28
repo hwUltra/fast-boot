@@ -1,0 +1,94 @@
+info(
+    desc: "部门"
+    author: "kyle"
+    email: "skywalkerwei@gmail.com"
+)
+
+import "../base.api"
+
+type (
+    SysDeptInfo {
+        Id  int64 `json:"id"`
+        Name  string `json:"name"`
+        Code  string `json:"code"`
+        ParentId  int64 `json:"parent_id"`
+        TreePath  string `json:"tree_path"`
+        Sort  int64 `json:"sort"`
+        Status  int64 `json:"status"`
+        CreateBy  int64 `json:"create_by"`
+        UpdateBy  int64 `json:"update_by"`
+        CreatedAt  string `json:"created_at"`
+        UpdatedAt  string `json:"updated_at"`
+    }
+
+    SysDeptListReq  {
+        Keywords string `json:"keywords,omitempty,optional"`
+        Status int64 `json:"status,omitempty,optional,default=-1"`
+    }
+
+    SysDeptItem {
+        Id  int64 `json:"id"`
+        Name  string `json:"name"`
+        Code  string `json:"code"`
+        ParentId  int64 `json:"parent_id"`
+        TreePath  string `json:"tree_path"`
+        Sort  int64 `json:"sort"`
+        Status  int64 `json:"status"`
+        CreateBy  int64 `json:"create_by"`
+        UpdateBy  int64 `json:"update_by"`
+        Children []*SysDeptItem `json:"children,omitempty"`
+    }
+
+
+    SysDeptFormReq {
+        Id  int64 `path:"id,optional"`
+        Name  string `json:"name"`
+        Code  string `json:"code"`
+        ParentId  int64 `json:"parent_id"`
+        TreePath  string `json:"tree_path"`
+        Sort  int64 `json:"sort"`
+        Status  int64 `json:"status"`
+        CreateBy  int64 `json:"create_by"`
+        UpdateBy  int64 `json:"update_by"`
+    }
+
+    SysDeptOption {
+        Label string `json:"label"`
+        Value int64 `json:"value"`
+        Children []*SysDeptOption `json:"children,omitempty"`
+    }
+
+
+)
+
+@server(
+    jwt: Auth
+    group: sys/dept
+    prefix: /sys/dept
+)
+service admin {
+    @doc "新增部门"
+    @handler Add
+    post / (SysDeptFormReq) returns (IdResp)
+
+    @doc "修改部门"
+    @handler Update
+    put /:id (SysDeptFormReq) returns (NullResp)
+
+    @doc "删除部门"
+    @handler Del
+    delete /:ids (PathIdsReq) returns (NullResp)
+
+    @doc "获取部门"
+    @handler Get
+    get /:id (PathIdReq)  returns (SysDeptInfo)
+
+    @doc "部门分页列表"
+    @handler List
+    get / (SysDeptListReq) returns ([]SysDeptItem)
+
+    @doc "部门下拉列表"
+    @handler Options
+    get /options  returns ([]SysDeptOption)
+
+}

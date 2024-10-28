@@ -5,7 +5,7 @@ import (
 	"fast-boot/app/rpc/model"
 	"fast-boot/app/rpc/pms/internal/svc"
 	"fast-boot/app/rpc/pms/pmsPb"
-	"fast-boot/common/gormV2/types"
+	"github.com/hwUltra/fb-tools/gormV2/types"
 	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/status"

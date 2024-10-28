@@ -1,0 +1,70 @@
+Name: admin-api
+Host: 0.0.0.0
+Port: 7770
+MaxBytes: 10485760
+
+WebSocket:
+  Path: "/ws"
+
+Auth:
+  AccessSecret: ad879037-c7a4-4063-9236-6bfc35d54b7d
+  AccessExpire: 86400
+
+Redis:
+  Host: 192.168.3.88:16379
+  Pass:
+  Type: node
+
+MinioX:
+  MinIOAccessKeyID: c4h0z6z3GxY8UXJkb7Fd
+  MinIOAccessSecretKey: 2ej0kOfnNNxt5Jlz6pIw98aGuqUOSOg0BGqyV5L2
+  MinIOEndpoint: 192.168.3.88:9000
+  MinIOBucket: files
+  MinIOSSLBool: false
+  MinIOBucketLocation: cn-north-12
+  MinIOBasePath: http://192.168.3.88:9000
+
+
+#系统
+SysRpc:
+  Etcd:
+    Hosts:
+      - 192.168.3.88:12379
+    Key: sys.rpc
+#  Endpoints:
+#    - 127.0.0.1:7001
+
+UmsRpc:
+  Etcd:
+    Hosts:
+    - 192.168.3.88:12379
+    Key: ums.rpc
+#  Endpoints:
+#    - 127.0.0.1:7002
+
+PmsRpc:
+  Etcd:
+    Hosts:
+    - 192.168.3.88:12379
+    Key: pms.rpc
+#  Endpoints:
+#    - 127.0.0.1:7003
+
+Log:
+  Mode: file
+  Encoding: json
+  Path: ../../../logs/api-admin
+#  Mode: console
+#  Encoding: plain
+
+
+#Prometheus:
+#  Host: 0.0.0.0
+#  Port: 11101
+#  Path: /metrics
+
+#Telemetry:
+#  Name: admin.api
+#  Endpoint: http://192.168.3.88:14268/api/traces
+#  Sampler: 1.0
+#  Batcher: jaeger

@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fast-boot/app/rpc/sys/sysPb"
-	captchaTool "fast-boot/common/captcha"
 	"fast-boot/common/globalkey"
 	"fast-boot/common/xerr"
 	"fmt"
+	captchaTool "github.com/hwUltra/fb-tools/captcha"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 
 	"fast-boot/app/api/admin/internal/svc"
@@ -22,6 +22,7 @@ type LoginLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 登录
 func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic {
 	return &LoginLogic{
 		Logger: logx.WithContext(ctx),

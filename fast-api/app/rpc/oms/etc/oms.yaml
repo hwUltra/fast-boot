@@ -1,0 +1,61 @@
+Name: oms.rpc
+ListenOn: 0.0.0.0:7004
+Etcd:
+  Hosts:
+    - 192.168.3.88:12379
+  Key: oms.rpc
+
+Gorm:
+  SqlType: PostgresqlType
+  IsOpenReadDb: false   # 是否开启读写分离配置（true=开启、false=关闭），IsOpenReadDb=开启,Read 部分参数有效，否则Read部分参数直接忽略
+  SlowThreshold: 30     # 慢 SQL 阈值(sql执行时间超过此时间单位（秒），就会触发系统日志记录)
+  Write:
+    Host: 192.168.3.88
+    DataBase: mall-boot
+    Port: 5432
+    Prefix:
+    User: kyle
+    Pass: kyle@2023
+    Charset: utf8
+    SetMaxIdleConns: 10
+    SetMaxOpenConns: 128
+    SetConnMaxLifetime: 60     # 连接不活动时的最大生存时间(秒)
+    #ReConnectInterval: 1      # 保留项,重连数据库间隔秒数
+    #PingFailRetryTimes: 3     # 保留项,最大重连次数
+  Read:
+    Host: 192.168.3.88
+    DataBase: mall-boot
+    Port: 5432                  #注意，非13306，请自行调整
+    Prefix:
+    User: kyle
+    Pass: kyle@2023
+    Charset: utf8
+    SetMaxIdleConns: 10
+    SetMaxOpenConns: 128
+    SetConnMaxLifetime: 60
+
+RedisConf:
+  Host: 192.168.3.88:16379
+  Pass:
+  Type: node
+
+Salt: H0VOFkGgPTrz9ICwd7qnJaZR9KQ2i8xe
+
+JWT:
+  AccessSecret: ad879038-c7a8-8063-9236-6bfc35d54b8d
+  AccessExpire: 864000
+
+Log:
+  Mode: file
+  Path: ../../../logs/rpc-user
+
+#Prometheus:
+#  Host: 0.0.0.0
+#  Port: 10104
+#  Path: /metrics
+
+#Telemetry:
+#  Name: oms.rpc
+#  Endpoint: http://192.168.3.88:14268/api/traces
+#  Sampler: 1.0
+#  Batcher: jaeger

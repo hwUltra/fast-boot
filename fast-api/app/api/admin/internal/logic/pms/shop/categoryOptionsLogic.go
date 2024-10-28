@@ -17,6 +17,7 @@ type CategoryOptionsLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 类型下拉列表
 func NewCategoryOptionsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CategoryOptionsLogic {
 	return &CategoryOptionsLogic{
 		Logger: logx.WithContext(ctx),
@@ -25,8 +26,7 @@ func NewCategoryOptionsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 	}
 }
 
-func (l *CategoryOptionsLogic) CategoryOptions(req *types.CategoryOptionsReq) (resp []*types.OptionItem, err error) {
-
+func (l *CategoryOptionsLogic) CategoryOptions(req *types.PathIdReq) (resp []*types.OptionItem, err error) {
 	options, err := l.svcCtx.PmsRpc.PmsCategoryOptions(l.ctx, &pmsPb.IdReq{Id: req.Id})
 	if err != nil {
 		return nil, err
@@ -36,5 +36,4 @@ func (l *CategoryOptionsLogic) CategoryOptions(req *types.CategoryOptionsReq) (r
 	_ = copier.Copy(&list, options.Items)
 
 	return list, nil
-
 }

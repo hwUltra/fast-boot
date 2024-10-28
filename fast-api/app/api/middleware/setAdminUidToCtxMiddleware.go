@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"context"
-	"fast-boot/common/jwtx"
+	"github.com/hwUltra/fb-tools/jwtx"
 	"net/http"
 	"strconv"
 )

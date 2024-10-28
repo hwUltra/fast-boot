@@ -1,62 +1,93 @@
-import { defineStore } from "pinia";
 import defaultSettings from "@/settings";
+import { ThemeEnum } from "@/enums/ThemeEnum";
+import { generateThemeColors, applyTheme, toggleDarkMode } from "@/utils/theme";
+
+type SettingsValue = boolean | string;
 
 export const useSettingsStore = defineStore("setting", () => {
-  const title = defaultSettings.title;
-  const version = defaultSettings.version;
-
+  // 基本设置
+  const settingsVisible = ref(false);
+  // 标签
   const tagsView = useStorage<boolean>("tagsView", defaultSettings.tagsView);
-
-  const showSettings = ref<boolean>(defaultSettings.showSettings);
-  const sidebarLogo = ref<boolean>(defaultSettings.sidebarLogo);
+  // 侧边栏 Logo
+  const sidebarLogo = useStorage<boolean>(
+    "sidebarLogo",
+    defaultSettings.sidebarLogo
+  );
+  // 固定头部
   const fixedHeader = useStorage<boolean>(
     "fixedHeader",
     defaultSettings.fixedHeader
   );
+  // 布局
   const layout = useStorage<string>("layout", defaultSettings.layout);
+  // 水印
+  const watermarkEnabled = useStorage<boolean>(
+    "watermarkEnabled",
+    defaultSettings.watermarkEnabled
+  );
+
+  // 主题
   const themeColor = useStorage<string>(
     "themeColor",
     defaultSettings.themeColor
   );
   const theme = useStorage<string>("theme", defaultSettings.theme);
 
-  // Whether to enable watermark
-  const watermark = useStorage<any>("watermark", defaultSettings.watermark);
-
-  const settingsMap: Record<string, Ref<any>> = {
-    showSettings,
+  // 监听主题变化
+  watch(
+    [theme, themeColor],
+    ([newTheme, newThemeColor]) => {
+      toggleDarkMode(newTheme === ThemeEnum.DARK);
+      const colors = generateThemeColors(newThemeColor);
+      applyTheme(colors);
+    },
+    { immediate: true }
+  );
+  // 设置更改函数
+  const settingsMap: Record<string, Ref<SettingsValue>> = {
     fixedHeader,
     tagsView,
     sidebarLogo,
     layout,
-    themeColor,
-    theme,
-    watermark: watermark.value,
+    watermarkEnabled,
   };
 
-  function changeSetting({ key, value }: { key: string; value: any }) {
+  function changeSetting({
+    key,
+    value,
+  }: {
+    key: string;
+    value: SettingsValue;
+  }) {
     const setting = settingsMap[key];
-    if (setting !== undefined) {
-      setting.value = value;
-      if (key === "theme" && value === "dark") {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    }
+    if (setting) setting.value = value;
+  }
+
+  function changeTheme(val: string) {
+    theme.value = val;
+  }
+
+  function changeThemeColor(color: string) {
+    themeColor.value = color;
+  }
+
+  function changeLayout(val: string) {
+    layout.value = val;
   }
 
   return {
-    title,
-    version,
-    showSettings,
+    settingsVisible,
     tagsView,
     fixedHeader,
     sidebarLogo,
     layout,
     themeColor,
-    changeSetting,
     theme,
-    watermark,
+    watermarkEnabled,
+    changeSetting,
+    changeTheme,
+    changeThemeColor,
+    changeLayout,
   };
 });

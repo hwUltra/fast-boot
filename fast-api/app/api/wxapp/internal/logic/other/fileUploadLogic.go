@@ -2,9 +2,9 @@ package other
 
 import (
 	"context"
-	"fast-boot/common/miniox"
 	"fast-boot/common/xerr"
 	"fmt"
+	"github.com/hwUltra/fb-tools/miniox"
 	"net/http"
 
 	"fast-boot/app/api/wxapp/internal/svc"

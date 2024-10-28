@@ -1,25 +1,33 @@
 package shop
 
 import (
-	"fast-boot/common/result"
+	"github.com/hwUltra/fb-tools/result"
 	"net/http"
+
+	"github.com/hwUltra/fb-tools/utils"
+	"github.com/zeromicro/go-zero/rest/httpx"
 
 	"fast-boot/app/api/admin/internal/logic/pms/shop"
 	"fast-boot/app/api/admin/internal/svc"
 	"fast-boot/app/api/admin/internal/types"
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
+// 删除
 func BrandDelHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.BrandDelReq
+		var req types.PathIdsReq
 		if err := httpx.Parse(r, &req); err != nil {
 			result.ParamErrorResult(r, w, err)
 			return
 		}
 
+		if err := utils.ValidatorCheck(r, &req); err != nil {
+			result.ParamErrorResult(r, w, err)
+			return
+		}
+
 		l := shop.NewBrandDelLogic(r.Context(), svcCtx)
-		err := l.BrandDel(&req)
-		result.HttpResult(r, w, nil, err)
+		resp, err := l.BrandDel(&req)
+		result.HttpResult(r, w, resp, err)
 	}
 }

@@ -1,23 +1,33 @@
 import vue from "@vitejs/plugin-vue";
-import { UserConfig, ConfigEnv, loadEnv, defineConfig } from "vite";
+import { type UserConfig, type ConfigEnv, loadEnv, defineConfig } from "vite";
 
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
-import Icons from "unplugin-icons/vite";
-import IconsResolver from "unplugin-icons/resolver";
-
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
-
-import { viteMockServe } from "vite-plugin-mock";
-import vueJsx from "@vitejs/plugin-vue-jsx";
+import mockDevServerPlugin from "vite-plugin-mock-dev-server";
 
 import UnoCSS from "unocss/vite";
 import { resolve } from "path";
+import {
+  name,
+  version,
+  engines,
+  dependencies,
+  devDependencies,
+} from "./package.json";
+
+// 平台的名称、版本、运行所需的`node`版本、依赖、构建时间的类型提示
+const __APP_INFO__ = {
+  pkg: { name, version, engines, dependencies, devDependencies },
+  buildTimestamp: Date.now(),
+};
 
 const pathSrc = resolve(__dirname, "src");
-//  https://cn.vitejs.dev/config
+/**
+ * Vite配置 @see https://cn.vitejs.dev/config
+ */
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, process.cwd());
   return {
@@ -32,6 +42,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         // 定义全局 SCSS 变量
         scss: {
           javascriptEnabled: true,
+          api: "modern-compiler",
           additionalData: `
             @use "@/styles/variables.scss" as *;
           `,
@@ -39,20 +50,14 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       },
     },
     server: {
-      // 允许IP访问
+      // 主机地址
       host: "0.0.0.0",
-      // 应用端口 (默认:3000)
-      port: Number(env.VITE_APP_PORT),
-      // 运行是否自动打开浏览器
+      // 端口号
+      port: +env.VITE_APP_PORT,
+      // 是否自动在浏览器中打开
       open: true,
       proxy: {
-        /**
-         * 反向代理解决跨域配置
-         * http://localhost:3000/dev-api/users (F12可见请求路径) => http://localhost:8989/users (实际请求后端 API 路径)
-         *
-         * env.VITE_APP_BASE_API: /dev-api
-         * env.VITE_APP_API_URL: http://localhost:8989
-         */
+        // 代理前缀为 /dev-api 的请求
         [env.VITE_APP_BASE_API]: {
           changeOrigin: true,
           target: env.VITE_APP_API_URL,
@@ -63,54 +68,51 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     plugins: [
       vue(),
-      vueJsx(),
+      // MOCK 服务
+      env.VITE_MOCK_DEV_SERVER === "true" ? mockDevServerPlugin() : null,
       UnoCSS({
         hmrTopLevelAwait: false,
       }),
-      // 自动导入参考： https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
+      /**
+       * 自动导入配置
+       *
+       * @see https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts1
+       */
       AutoImport({
         // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
-        imports: ["vue", "@vueuse/core"],
-        // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
-        resolvers: [ElementPlusResolver(), IconsResolver({})],
+        imports: ["vue", "@vueuse/core", "pinia", "vue-router", "vue-i18n"],
+        resolvers: [
+          // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+          ElementPlusResolver(),
+        ],
         eslintrc: {
+          // 是否自动生成 eslint 规则，建议生成之后设置 false
           enabled: false,
+          // 指定自动导入函数 eslint 规则的文件
           filepath: "./.eslintrc-auto-import.json",
           globalsPropValue: true,
         },
+        // 是否在 vue 模板中自动导入
         vueTemplate: true,
-        // 配置文件生成位置(false:关闭自动生成)
+        // 指定自动导入函数TS类型声明文件路径 (false:关闭自动生成)
         dts: false,
-        // dts: "src/typings/auto-imports.d.ts",
+        // dts: "src/types/auto-imports.d.ts",
       }),
-
       Components({
         resolvers: [
           // 自动导入 Element Plus 组件
           ElementPlusResolver(),
-          // 自动注册图标组件
-          IconsResolver({ enabledCollections: ["ep"] }),
         ],
         // 指定自定义组件位置(默认:src/components)
         dirs: ["src/components", "src/**/components"],
-        // 配置文件位置 (false:关闭自动生成)
+        // 指定自动导入组件TS类型声明文件路径 (false:关闭自动生成)
         dts: false,
-        // dts: "src/typings/components.d.ts",
-      }),
-
-      Icons({
-        autoInstall: true,
+        // dts: "src/types/components.d.ts",
       }),
       createSvgIconsPlugin({
         // 指定需要缓存的图标文件夹
         iconDirs: [resolve(pathSrc, "assets/icons")],
-        // 指定symbolId格式
         symbolId: "icon-[dir]-[name]",
-      }),
-      viteMockServe({
-        ignore: /^\_/,
-        mockPath: "mock",
-        enable: mode === "development",
       }),
     ],
     // 预加载项目必需的组件
@@ -120,6 +122,15 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         "vue-router",
         "pinia",
         "axios",
+        "@vueuse/core",
+        "sortablejs",
+        "exceljs",
+        "path-to-regexp",
+        "echarts",
+        "@wangeditor/editor",
+        "@wangeditor/editor-for-vue",
+        "vue-i18n",
+        "path-browserify",
         "element-plus/es/components/form/style/css",
         "element-plus/es/components/form-item/style/css",
         "element-plus/es/components/button/style/css",
@@ -169,13 +180,24 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         "element-plus/es/components/statistic/style/css",
         "element-plus/es/components/watermark/style/css",
         "element-plus/es/components/config-provider/style/css",
-        "@vueuse/core",
-        "sortablejs",
-        "path-to-regexp",
-        "echarts",
-        "@wangeditor/editor",
-        "@wangeditor/editor-for-vue",
-        "vue-i18n",
+        "element-plus/es/components/text/style/css",
+        "element-plus/es/components/drawer/style/css",
+        "element-plus/es/components/color-picker/style/css",
+        "element-plus/es/components/backtop/style/css",
+        "element-plus/es/components/message-box/style/css",
+        "element-plus/es/components/skeleton/style/css",
+        "element-plus/es/components/skeleton/style/css",
+        "element-plus/es/components/skeleton-item/style/css",
+        "element-plus/es/components/badge/style/css",
+        "element-plus/es/components/steps/style/css",
+        "element-plus/es/components/step/style/css",
+        "element-plus/es/components/avatar/style/css",
+        "element-plus/es/components/descriptions/style/css",
+        "element-plus/es/components/descriptions-item/style/css",
+        "element-plus/es/components/checkbox-group/style/css",
+        "element-plus/es/components/progress/style/css",
+        "element-plus/es/components/image-viewer/style/css",
+        "element-plus/es/components/empty/style/css",
       ],
     },
     // 构建配置
@@ -219,6 +241,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           },
         },
       },
+    },
+    define: {
+      __APP_INFO__: JSON.stringify(__APP_INFO__),
     },
   };
 });

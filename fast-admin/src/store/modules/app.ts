@@ -1,25 +1,29 @@
-import { defineStore } from "pinia";
-import { useStorage } from "@vueuse/core";
 import defaultSettings from "@/settings";
 
 // 导入 Element Plus 中英文语言包
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import en from "element-plus/es/locale/lang/en";
+import { store } from "@/store";
+import { DeviceEnum } from "@/enums/DeviceEnum";
+import { SidebarStatusEnum } from "@/enums/SidebarStatusEnum";
 
-// setup
 export const useAppStore = defineStore("app", () => {
-  // state
-  const device = useStorage("device", "desktop");
-  const size = useStorage<any>("size", defaultSettings.size);
+  // 设备类型
+  const device = useStorage("device", DeviceEnum.DESKTOP);
+  // 布局大小
+  const size = useStorage("size", defaultSettings.size);
+  // 语言
   const language = useStorage("language", defaultSettings.language);
-
-  const sidebarStatus = useStorage("sidebarStatus", "closed");
-
+  // 侧边栏状态
+  const sidebarStatus = useStorage("sidebarStatus", SidebarStatusEnum.CLOSED);
   const sidebar = reactive({
-    opened: sidebarStatus.value !== "closed",
+    opened: sidebarStatus.value === SidebarStatusEnum.OPENED,
     withoutAnimation: false,
   });
-  const activeTopMenu = useStorage("activeTop", "");
+
+  // 顶部菜单激活路径
+  const activeTopMenuPath = useStorage("activeTopMenuPath", "");
+
   /**
    * 根据语言标识读取对应的语言包
    */
@@ -31,33 +35,36 @@ export const useAppStore = defineStore("app", () => {
     }
   });
 
-  // actions
+  // 切换侧边栏
   function toggleSidebar() {
     sidebar.opened = !sidebar.opened;
-    sidebar.withoutAnimation = false;
-    if (sidebar.opened) {
-      sidebarStatus.value = "opened";
-    } else {
-      sidebarStatus.value = "closed";
-    }
+    sidebarStatus.value = sidebar.opened
+      ? SidebarStatusEnum.OPENED
+      : SidebarStatusEnum.CLOSED;
   }
 
-  function closeSideBar(withoutAnimation: boolean) {
+  // 关闭侧边栏
+  function closeSideBar() {
     sidebar.opened = false;
-    sidebar.withoutAnimation = withoutAnimation;
-    sidebarStatus.value = "closed";
+    sidebarStatus.value = SidebarStatusEnum.CLOSED;
   }
 
-  function openSideBar(withoutAnimation: boolean) {
+  // 打开侧边栏
+  function openSideBar() {
     sidebar.opened = true;
-    sidebar.withoutAnimation = withoutAnimation;
-    sidebarStatus.value = "opened";
+    sidebarStatus.value = SidebarStatusEnum.OPENED;
   }
 
+  // 切换设备
   function toggleDevice(val: string) {
     device.value = val;
   }
 
+  /**
+   * 改变布局大小
+   *
+   * @param val 布局大小 default | small | large
+   */
   function changeSize(val: string) {
     size.value = val;
   }
@@ -72,8 +79,8 @@ export const useAppStore = defineStore("app", () => {
   /**
    * 混合模式顶部切换
    */
-  function changeTopActive(val: string) {
-    activeTopMenu.value = val;
+  function activeTopMenu(val: string) {
+    activeTopMenuPath.value = val;
   }
   return {
     device,
@@ -88,6 +95,15 @@ export const useAppStore = defineStore("app", () => {
     toggleSidebar,
     closeSideBar,
     openSideBar,
-    changeTopActive,
+    activeTopMenuPath,
   };
 });
+
+/**
+ * 用于在组件外部（如在Pinia Store 中）使用 Pinia 提供的 store 实例。
+ * 官方文档解释了如何在组件外部使用 Pinia Store：
+ * https://pinia.vuejs.org/core-concepts/outside-component-usage.html#using-a-store-outside-of-a-component
+ */
+export function useAppStoreHook() {
+  return useAppStore(store);
+}

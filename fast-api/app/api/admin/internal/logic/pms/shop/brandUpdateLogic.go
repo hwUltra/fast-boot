@@ -17,6 +17,7 @@ type BrandUpdateLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 修改Brand
 func NewBrandUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BrandUpdateLogic {
 	return &BrandUpdateLogic{
 		Logger: logx.WithContext(ctx),
@@ -25,13 +26,13 @@ func NewBrandUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Brand
 	}
 }
 
-func (l *BrandUpdateLogic) BrandUpdate(req *types.BrandForm) error {
+func (l *BrandUpdateLogic) BrandUpdate(req *types.BrandForm) (resp *types.NullResp, err error) {
 	form := pmsPb.PmsBrandForm{}
 	_ = copier.Copy(&form, req)
 
 	if _, err := l.svcCtx.PmsRpc.PmsBrandUpdate(l.ctx, &form); err != nil {
-		return err
+		return &types.NullResp{}, err
 	}
 
-	return nil
+	return &types.NullResp{}, nil
 }

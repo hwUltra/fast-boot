@@ -5,7 +5,7 @@ import (
 	"fast-boot/app/rpc/model"
 	"fast-boot/app/rpc/sys/internal/svc"
 	"fast-boot/app/rpc/sys/sysPb"
-	"fast-boot/common/cryptx"
+	"github.com/hwUltra/fb-tools/utils"
 	"google.golang.org/grpc/status"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -32,7 +32,7 @@ func (l *UserChangePwdLogic) UserChangePwd(in *sysPb.UserChangePwdReq) (*sysPb.S
 		return nil, status.Error(100, "该用户不存在")
 	}
 	if len(in.Password) > 0 {
-		user.Password = cryptx.PasswordEncrypt(l.svcCtx.Config.Salt, in.Password)
+		user.Password = utils.PasswordEncrypt(l.svcCtx.Config.Salt, in.Password)
 	}
 	l.svcCtx.GormConn.Save(&user)
 	return &sysPb.SuccessResp{}, nil

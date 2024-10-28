@@ -2,7 +2,9 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
 	"fast-boot/app/rpc/model"
+	"fmt"
 	"github.com/jinzhu/copier"
 
 	"fast-boot/app/rpc/sys/internal/svc"
@@ -33,5 +35,9 @@ func (l *MenuGetLogic) MenuGet(in *sysPb.IdReq) (*sysPb.SysMenu, error) {
 	if err := copier.Copy(&sysRole, item); err != nil {
 		return nil, err
 	}
+	tmp := make([]*sysPb.MenuParamsItem, 0)
+	_ = json.Unmarshal(item.Params, &tmp)
+	sysRole.Params = tmp
+	fmt.Println("Params = ", item.Params, sysRole.Params)
 	return &sysRole, nil
 }

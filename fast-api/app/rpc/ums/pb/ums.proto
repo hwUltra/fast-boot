@@ -146,19 +146,18 @@ message UserInfoResp {
 }
 
 
-message  ListReq{
+message  PageReq{
   string keywords = 1;
   int64 pageNum = 2;
   int64 pageSize = 3;
 }
 
-
-message  UserListResp{
+message  UserPageResp{
   repeated User list = 1;
   int64 Total = 2;
 }
 
-message  UserThirdListResp{
+message  UserThirdPageResp{
   repeated UserThird list = 1;
   int64 Total = 2;
 }
@@ -175,12 +174,12 @@ service ums{
   rpc Bind(BindReq) returns (UserInfoResp);
   //-------
   rpc UserGet(IdReq) returns (User);
-  rpc UserList(ListReq) returns (UserListResp);
+  rpc UserPage(PageReq) returns (UserPageResp);
   rpc UserAdd(UserForm) returns(SuccessIdResp);
   rpc UserUpdate(UserForm) returns(SuccessResp);
   rpc UserDel(IdsReq) returns (SuccessResp);
   //third
-  rpc UserThirdList(ListReq) returns (UserThirdListResp);
+  rpc UserThirdPage(PageReq) returns (UserThirdPageResp);
 }
 
 

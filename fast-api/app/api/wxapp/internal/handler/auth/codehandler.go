@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"fast-boot/common/result"
+	"github.com/hwUltra/fb-tools/result"
 	"net/http"
 
 	"fast-boot/app/api/wxapp/internal/logic/auth"

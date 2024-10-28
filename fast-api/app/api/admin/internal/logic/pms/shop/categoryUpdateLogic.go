@@ -17,6 +17,7 @@ type CategoryUpdateLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 修改类型
 func NewCategoryUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CategoryUpdateLogic {
 	return &CategoryUpdateLogic{
 		Logger: logx.WithContext(ctx),
@@ -25,13 +26,13 @@ func NewCategoryUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ca
 	}
 }
 
-func (l *CategoryUpdateLogic) CategoryUpdate(req *types.PmsCategoryForm) error {
+func (l *CategoryUpdateLogic) CategoryUpdate(req *types.PmsCategoryForm) (resp *types.NullResp, err error) {
 	form := pmsPb.PmsCategoryForm{}
 	_ = copier.Copy(&form, req)
 
 	if _, err := l.svcCtx.PmsRpc.PmsCategoryUpdate(l.ctx, &form); err != nil {
-		return err
+		return &types.NullResp{}, err
 	}
 
-	return nil
+	return &types.NullResp{}, nil
 }

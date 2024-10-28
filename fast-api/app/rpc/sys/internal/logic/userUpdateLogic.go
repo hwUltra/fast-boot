@@ -3,7 +3,7 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
-	"fast-boot/common/cryptx"
+	"github.com/hwUltra/fb-tools/utils"
 	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
 
@@ -48,11 +48,8 @@ func (l *UserUpdateLogic) UserUpdate(in *sysPb.UserUpdateReq) (*sysPb.SuccessRes
 	if len(in.Username) > 0 {
 		user.Username = in.Username
 	}
-	if in.Gender > 0 {
-		user.Gender = int8(in.Gender)
-	}
 	if len(in.Password) > 0 {
-		user.Password = cryptx.PasswordEncrypt(l.svcCtx.Config.Salt, in.Password)
+		user.Password = utils.PasswordEncrypt(l.svcCtx.Config.Salt, in.Password)
 	}
 	if in.DeptId > 0 {
 		user.DeptID = in.DeptId
@@ -63,10 +60,16 @@ func (l *UserUpdateLogic) UserUpdate(in *sysPb.UserUpdateReq) (*sysPb.SuccessRes
 	if len(in.Mobile) > 0 {
 		user.Mobile = in.Mobile
 	}
-	user.Status = int8(in.Status)
 	if len(in.Email) > 0 {
 		user.Email = in.Email
 	}
+	if in.Gender != -1 {
+		user.Gender = int8(in.Gender)
+	}
+	if in.Status != -1 {
+		user.Status = int8(in.Status)
+	}
+
 	if err := l.svcCtx.GormConn.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Save(&user).Error; err != nil {
 			return err

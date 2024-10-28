@@ -1,15 +1,107 @@
+<template>
+  <el-drawer
+    v-model="settingsVisible"
+    size="300"
+    :title="$t('settings.project')"
+  >
+    <el-divider>{{ $t("settings.theme") }}</el-divider>
+
+    <div class="flex-center">
+      <el-switch
+        v-model="isDark"
+        active-icon="Moon"
+        inactive-icon="Sunny"
+        @change="changeTheme"
+      />
+    </div>
+
+    <el-divider>{{ $t("settings.interface") }}</el-divider>
+
+    <div class="setting-item">
+      <span class="text-xs">{{ $t("settings.themeColor") }}</span>
+      <ThemeColorPicker
+        v-model="settingsStore.themeColor"
+        @update:model-value="changeThemeColor"
+      />
+    </div>
+
+    <div class="setting-item">
+      <span class="text-xs">{{ $t("settings.tagsView") }}</span>
+      <el-switch v-model="settingsStore.tagsView" />
+    </div>
+
+    <div class="setting-item">
+      <span class="text-xs">{{ $t("settings.fixedHeader") }}</span>
+      <el-switch v-model="settingsStore.fixedHeader" />
+    </div>
+
+    <div class="setting-item">
+      <span class="text-xs">{{ $t("settings.sidebarLogo") }}</span>
+      <el-switch v-model="settingsStore.sidebarLogo" />
+    </div>
+
+    <div class="setting-item">
+      <span class="text-xs">{{ $t("settings.watermark") }}</span>
+      <el-switch v-model="settingsStore.watermarkEnabled" />
+    </div>
+
+    <el-divider>{{ $t("settings.navigation") }}</el-divider>
+
+    <LayoutSelect
+      v-model="settingsStore.layout"
+      @update:model-value="changeLayout"
+    />
+  </el-drawer>
+</template>
+
 <script setup lang="ts">
-import { useSettingsStore } from "@/store/modules/settings";
-import { usePermissionStore } from "@/store/modules/permission";
-import { useAppStore } from "@/store/modules/app";
-import { useRoute } from "vue-router";
+import { useSettingsStore, usePermissionStore, useAppStore } from "@/store";
+import { LayoutEnum } from "@/enums/LayoutEnum";
+import { ThemeEnum } from "@/enums/ThemeEnum";
 
 const route = useRoute();
-
+const appStore = useAppStore();
 const settingsStore = useSettingsStore();
 const permissionStore = usePermissionStore();
-const appStore = useAppStore();
 
+const settingsVisible = computed({
+  get() {
+    return settingsStore.settingsVisible;
+  },
+  set() {
+    settingsStore.settingsVisible = false;
+  },
+});
+
+/** 切换主题颜色 */
+function changeThemeColor(color: string) {
+  settingsStore.changeThemeColor(color);
+}
+
+/** 切换主题 */
+const isDark = ref<boolean>(settingsStore.theme === ThemeEnum.DARK);
+const changeTheme = (val: any) => {
+  isDark.value = val;
+  settingsStore.changeTheme(isDark.value ? ThemeEnum.DARK : ThemeEnum.LIGHT);
+};
+
+/** 切换布局 */
+function changeLayout(layout: string) {
+  settingsStore.changeLayout(layout);
+  if (layout === LayoutEnum.MIX) {
+    route.name && againActiveTop(route.name as string);
+  }
+}
+
+/** 重新激活顶部菜单 */
+function againActiveTop(newVal: string) {
+  const parent = findOutermostParent(permissionStore.routes, newVal);
+  if (appStore.activeTopMenuPath !== parent.path) {
+    appStore.activeTopMenu(parent.path);
+  }
+}
+
+/** 递归查找最外层父节点 */
 function findOutermostParent(tree: any[], findName: string) {
   let parentMap: any = {};
 
@@ -37,207 +129,10 @@ function findOutermostParent(tree: any[], findName: string) {
 
   return null;
 }
-const againActiveTop = (newVal: string) => {
-  const parent = findOutermostParent(permissionStore.routes, newVal);
-  if (appStore.activeTopMenu !== parent.path) {
-    appStore.changeTopActive(parent.path);
-  }
-};
-
-/**
- * 切换布局
- */
-function changeLayout(layout: string) {
-  settingsStore.changeSetting({ key: "layout", value: layout });
-  window.document.body.setAttribute("layout", settingsStore.layout);
-  if (layout === "mix") {
-    route.name && againActiveTop(route.name as string);
-  }
-}
-
-// 主题颜色
-const themeColors = ref<string[]>([
-  "#409EFF",
-  "#304156",
-  "#11a983",
-  "#13c2c2",
-  "#6959CD",
-  "#f5222d",
-]);
-
-/**
- * 切换主题颜色
- */
-function changeThemeColor(color: string) {
-  document.documentElement.style.setProperty("--el-color-primary", color);
-  settingsStore.changeSetting({ key: "themeColor", value: color });
-}
-
-const currentThemeColor = computed(() => {
-  return settingsStore.themeColor;
-});
-onMounted(() => {
-  window.document.body.setAttribute("layout", settingsStore.layout);
-  const theme = settingsStore.theme;
-  if (theme == "dark") {
-    document.documentElement.classList.add("dark");
-  }
-
-  document.documentElement.style.setProperty(
-    "--el-color-primary",
-    settingsStore.themeColor
-  );
-});
 </script>
 
-<template>
-  <div class="settings-container">
-    <h3 class="text-base font-bold">项目配置</h3>
-
-    <el-divider>界面设置</el-divider>
-    <div class="py-[8px] flex justify-between">
-      <span class="text-xs">开启 Tags-View</span>
-      <el-switch v-model="settingsStore.tagsView" />
-    </div>
-
-    <div class="py-[8px] flex justify-between">
-      <span class="text-xs">固定 Header</span>
-      <el-switch v-model="settingsStore.fixedHeader" />
-    </div>
-
-    <div class="py-[8px] flex justify-between">
-      <span class="text-xs">侧边栏 Logo</span>
-      <el-switch v-model="settingsStore.sidebarLogo" />
-    </div>
-
-    <el-divider>主题颜色</el-divider>
-
-    <ul class="w-full space-x-2 flex justify-center py-2">
-      <li
-        v-for="(color, index) in themeColors"
-        :key="index"
-        class="inline-block w-[30px] h-[30px] cursor-pointer theme-wrap"
-        :style="{ background: color }"
-        @click="changeThemeColor(color)"
-      >
-        <i-ep-check v-show="color === currentThemeColor" />
-      </li>
-    </ul>
-
-    <el-divider>导航设置</el-divider>
-
-    <ul class="layout">
-      <el-tooltip content="左侧模式" placement="bottom">
-        <li
-          :class="
-            'layout-item layout-left ' +
-            (settingsStore.layout === 'left' ? 'is-active' : '')
-          "
-          @click="changeLayout('left')"
-        >
-          <div></div>
-          <div></div>
-        </li>
-      </el-tooltip>
-      <el-tooltip content="顶部模式" placement="bottom">
-        <li
-          :class="
-            'layout-item layout-top ' +
-            (settingsStore.layout === 'top' ? 'is-active' : '')
-          "
-          @click="changeLayout('top')"
-        >
-          <div></div>
-          <div></div>
-        </li>
-      </el-tooltip>
-      <el-tooltip content="混合模式" placement="bottom">
-        <li
-          :class="
-            'layout-item layout-mix ' +
-            (settingsStore.layout === 'mix' ? 'is-active' : '')
-          "
-          @click="changeLayout('mix')"
-        >
-          <div></div>
-          <div></div>
-        </li>
-      </el-tooltip>
-    </ul>
-  </div>
-</template>
-
 <style lang="scss" scoped>
-.settings-container {
-  padding: 16px;
-
-  .layout {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    width: 100%;
-    height: 50px;
-
-    &-item {
-      position: relative;
-      width: 18%;
-      height: 45px;
-      overflow: hidden;
-      cursor: pointer;
-      background: #f0f2f5;
-      border-radius: 4px;
-    }
-
-    &-item.is-active {
-      border: 2px solid var(--el-color-primary);
-    }
-
-    &-mix div:nth-child(1) {
-      width: 100%;
-      height: 30%;
-      background: #1b2a47;
-      box-shadow: 0 0 1px #888;
-    }
-
-    &-mix div:nth-child(2) {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 30%;
-      height: 70%;
-      background: #1b2a47;
-      box-shadow: 0 0 1px #888;
-    }
-
-    &-top div:nth-child(1) {
-      width: 100%;
-      height: 30%;
-      background: #1b2a47;
-      box-shadow: 0 0 1px #888;
-    }
-
-    &-left div:nth-child(1) {
-      width: 30%;
-      height: 100%;
-      background: #1b2a47;
-    }
-
-    &-left div:nth-child(2) {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 70%;
-      height: 30%;
-      background: #fff;
-      box-shadow: 0 0 1px #888;
-    }
-  }
-
-  .theme-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-  }
+.setting-item {
+  @apply py-1 flex-x-between;
 }
 </style>

@@ -5,7 +5,7 @@ import (
 	"fast-boot/app/api/wxapp/internal/svc"
 	"fast-boot/app/api/wxapp/internal/types"
 	"fast-boot/app/rpc/ums/umsPb"
-	"fast-boot/common/jwtx"
+	"github.com/hwUltra/fb-tools/jwtx"
 	"github.com/jinzhu/copier"
 
 	"github.com/zeromicro/go-zero/core/logx"

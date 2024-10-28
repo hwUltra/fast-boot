@@ -4,9 +4,9 @@ import GoodsInfo from "./components/GoodsInfo.vue";
 import GoodsAttribute from "./components/GoodsAttribute.vue";
 import GoodsStock from "./components/GoodsStock.vue";
 
-import { getGoodsInfo } from "@/api/pms/goods";
+import GoodsApi,{ GoodsDetail } from "@/api/pms/goods";
 import { useRoute } from "vue-router";
-import { GoodsDetail } from "@/api/pms/goods/types";
+
 
 const route = useRoute();
 
@@ -27,8 +27,8 @@ function loadData() {
   const goodsId = route.query.goodsId as string;
 
   if (goodsId) {
-    getGoodsInfo(goodsId).then((response) => {
-      state.goodsInfo = response.data;
+    GoodsApi.getGoodsInfo(goodsId).then((data) => {
+      state.goodsInfo = data;
       state.goodsInfo.originPrice = (state.goodsInfo.originPrice as any) / 100;
       state.goodsInfo.price = (state.goodsInfo.price as any) / 100;
       state.loaded = true;

@@ -2,9 +2,9 @@ package other
 
 import (
 	"context"
-	"fast-boot/common/miniox"
 	"fast-boot/common/xerr"
 	"fmt"
+	"github.com/hwUltra/fb-tools/miniox"
 	"net/http"
 
 	"fast-boot/app/api/admin/internal/svc"
@@ -19,6 +19,7 @@ type FileUploadLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 文件上传
 func NewFileUploadLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FileUploadLogic {
 	return &FileUploadLogic{
 		Logger: logx.WithContext(ctx),
@@ -28,7 +29,6 @@ func NewFileUploadLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FileUp
 }
 
 func (l *FileUploadLogic) FileUpload(r *http.Request) (resp *types.FileUpload, err error) {
-
 	minioX := miniox.CreateMinioX(l.svcCtx.Config.MinioX)
 	res, err := minioX.MinIOUpload(r)
 	if err != nil {

@@ -2,7 +2,7 @@ package logic
 
 import (
 	"context"
-	"fast-boot/common/jwtx"
+	"github.com/hwUltra/fb-tools/jwtx"
 	"time"
 
 	"fast-boot/app/rpc/sys/internal/svc"

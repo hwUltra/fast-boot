@@ -1,22 +1,13 @@
-import { defineStore } from "pinia";
-
-import { loginApi, logoutApi } from "@/api/auth";
-import { getUserInfo } from "@/api/sys/user";
-import { resetRouter } from "@/router";
 import { store } from "@/store";
+import { usePermissionStoreHook } from "@/store/modules/permission";
+import { useDictStoreHook } from "@/store/modules/dict";
 
-import { LoginData } from "@/api/auth/types";
-import { UserInfo } from "@/api/sys/user/types";
+import AuthAPI, { type LoginData, type UserInfo } from "@/api/auth";
 
-import { useStorage } from "@vueuse/core";
+import { setToken, clearToken } from "@/utils/auth";
 
 export const useUserStore = defineStore("user", () => {
-  const user: UserInfo = {
-    roles: [],
-    perms: [],
-  };
-
-  const token = useStorage("accessToken", "");
+  const userInfo = useStorage<UserInfo>("userInfo", {} as UserInfo);
 
   /**
    * 登录
@@ -26,10 +17,10 @@ export const useUserStore = defineStore("user", () => {
    */
   function login(loginData: LoginData) {
     return new Promise<void>((resolve, reject) => {
-      loginApi(loginData)
-        .then((response) => {
-          const { accessToken } = response.data;
-          token.value = accessToken;
+      AuthAPI.login(loginData)
+        .then((data) => {
+          const { accessToken } = data;
+          setToken("Bearer" + " " + accessToken); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
           resolve();
         })
         .catch((error) => {
@@ -38,20 +29,20 @@ export const useUserStore = defineStore("user", () => {
     });
   }
 
-  // 获取信息(用户昵称、头像、角色集合、权限集合)
-  function getInfo() {
+  /**
+   * 获取用户信息
+   *
+   * @returns {UserInfo} 用户信息
+   */
+  function getUserInfo() {
     return new Promise<UserInfo>((resolve, reject) => {
-      getUserInfo()
-        .then(({ data }) => {
+      AuthAPI.getInfo()
+        .then((data) => {
           if (!data) {
             reject("Verification failed, please Login again.");
             return;
           }
-          if (!data.roles || data.roles.length <= 0) {
-            reject("getUserInfo: roles must be a non-null array!");
-            return;
-          }
-          Object.assign(user, { ...data });
+          Object.assign(userInfo.value, { ...data });
           resolve(data);
         })
         .catch((error) => {
@@ -60,13 +51,14 @@ export const useUserStore = defineStore("user", () => {
     });
   }
 
-  // 注销
+  /**
+   * 登出
+   */
   function logout() {
     return new Promise<void>((resolve, reject) => {
-      logoutApi()
+      AuthAPI.logout()
         .then(() => {
-          resetStore();
-          location.reload(); // 清空路由
+          clearUserSession();
           resolve();
         })
         .catch((error) => {
@@ -75,23 +67,34 @@ export const useUserStore = defineStore("user", () => {
     });
   }
 
-  /** 清空缓存 */
-  function resetStore() {
-    resetRouter();
-    token.value = "";
-    Object.assign(user, { roles: [], perms: [] });
+  /**
+   *  清理用户会话
+   *
+   * @returns
+   */
+  function clearUserSession() {
+    return new Promise<void>((resolve) => {
+      clearToken();
+      usePermissionStoreHook().resetRouter();
+      useDictStoreHook().clearDictionaryCache();
+      resolve();
+    });
   }
+
   return {
-    token,
-    user,
+    userInfo,
+    getUserInfo,
     login,
-    getInfo,
     logout,
-    resetStore,
+    clearUserSession,
   };
 });
 
-// 非setup
+/**
+ * 用于在组件外部（如在Pinia Store 中）使用 Pinia 提供的 store 实例。
+ * 官方文档解释了如何在组件外部使用 Pinia Store：
+ * https://pinia.vuejs.org/core-concepts/outside-component-usage.html#using-a-store-outside-of-a-component
+ */
 export function useUserStoreHook() {
   return useUserStore(store);
 }

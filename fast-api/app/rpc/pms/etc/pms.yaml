@@ -1,0 +1,53 @@
+Name: pms.rpc
+ListenOn: 0.0.0.0:7003
+Etcd:
+  Hosts:
+    - 192.168.3.88:12379
+  Key: pms.rpc
+
+Gorm:
+  SqlType: 0
+  IsOpenReadDb: false   # 是否开启读写分离配置（true=开启、false=关闭），IsOpenReadDb=开启,Read 部分参数有效，否则Read部分参数直接忽略
+  SlowThreshold: 30     # 慢 SQL 阈值(sql执行时间超过此时间单位（秒），就会触发系统日志记录)
+  Write:
+    Host: 192.168.3.88
+    DataBase: mall-boot
+    Port: 13306
+    Prefix:
+    User: root
+    Pass: "123456"
+    Charset: utf8
+    SetMaxIdleConns: 10
+    SetMaxOpenConns: 128
+    SetConnMaxLifetime: 60
+  Read:
+    Host: 192.168.3.88
+    DataBase: mall-boot
+    Port: 13306
+    Prefix:
+    User: root
+    Pass: "123456"
+    Charset: utf8
+    SetMaxIdleConns: 10
+    SetMaxOpenConns: 128
+    SetConnMaxLifetime: 60
+
+RedisConf:
+  Host: 192.168.3.88:16379
+  Pass:
+  Type: node
+
+Log:
+  Mode: file
+  Path: ../../../logs/rpc-pms
+
+#Prometheus:
+#  Host: 0.0.0.0
+#  Port: 10102
+#  Path: /metrics
+
+#Telemetry:
+#  Name: pms.rpc
+#  Endpoint: http://192.168.3.88:14268/api/traces
+#  Sampler: 1.0
+#  Batcher: jaeger

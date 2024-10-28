@@ -1,20 +1,23 @@
 package main
 
 import (
+	"fast-boot/app/api/admin/internal/wsservice"
+	"flag"
+	"fmt"
+	"github.com/hwUltra/fb-tools/result"
+	wsCore "github.com/hwUltra/fb-tools/websocket/core"
+	"github.com/zeromicro/go-zero/rest/httpx"
+	"net/http"
+
 	"fast-boot/app/api/admin/internal/config"
 	"fast-boot/app/api/admin/internal/handler"
 	"fast-boot/app/api/admin/internal/svc"
-	"fast-boot/common/result"
-	"flag"
-	"fmt"
-	"github.com/zeromicro/go-zero/rest/httpx"
-	"net/http"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 )
 
-var configFile = flag.String("f", "etc/admin-api.yaml", "the config file")
+var configFile = flag.String("f", "etc/admin.yaml", "the config file")
 
 func main() {
 	flag.Parse()
@@ -32,5 +35,19 @@ func main() {
 	handler.RegisterHandlers(server, ctx)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
+	//添加websocket支持
+	wsHub := wsCore.CreateHubFactory()
+	go wsHub.Run()
+	server.AddRoute(rest.Route{
+		Method: http.MethodGet,
+		Path:   c.WebSocket.Path,
+		Handler: func(w http.ResponseWriter, r *http.Request) {
+			if ws, ok := wsservice.OnOpen(wsHub, w, r, c); ok {
+				ws.OnMessage(r.Context())
+			}
+		},
+	})
+	fmt.Printf("Starting websocket server at %s:%d%s...\n", c.Host, c.Port, c.WebSocket.Path)
+	//logx.DisableStat()
 	server.Start()
 }

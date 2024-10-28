@@ -1,19 +1,39 @@
 package model
 
 import (
-	"fast-boot/common/gormV2"
+	"github.com/hwUltra/fb-tools/gormV2"
+	"gorm.io/gorm"
 )
 
 type SysDictModel struct {
 	gormV2.BaseDel
-	TypeCode string `gorm:"column:type_code;not null" json:"type_code"`     // 字典类型编码
-	Name     string `gorm:"column:name;not null" json:"name"`               // 字典项名称
-	Value    string `gorm:"column:value;not null" json:"value"`             // 字典项值
-	Sort     int64  `gorm:"column:sort;not null" json:"sort"`               // 排序
-	Status   int8   `gorm:"column:status;not null;default:1" json:"status"` // 状态(1:正常;0:禁用)
-	Remark   string `gorm:"column:remark;not null" json:"remark"`           // 备注
+	Code     string             `gorm:"column:code;not null" json:"type_code"`          // 字典类型编码
+	Name     string             `gorm:"column:name;not null" json:"name"`               // 字典项名称
+	Status   int8               `gorm:"column:status;not null;default:1" json:"status"` // 状态(1:正常;0:禁用)
+	Remark   string             `gorm:"column:remark;not null" json:"remark"`           // 备注
+	DataList []SysDictDataModel `gorm:"foreignKey:DictId"`
 }
 
 func (*SysDictModel) TableName() string {
 	return "sys_dict"
+}
+
+func (*SysDictModel) WithStatus(status int64) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		if status != -1 {
+			return db.Where("`status` = ?", status)
+		}
+		return db
+	}
+}
+
+func (*SysDictModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		if len(keyword) > 0 {
+			return db.Where("`name` LIKE ?", "%"+keyword+"%").
+				Or("`code` LIKE ?", "%"+keyword+"%")
+		}
+		return db
+
+	}
 }

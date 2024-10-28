@@ -1,20 +1,3 @@
-<script setup lang="ts">
-import { useAppStore } from "@/store/modules/app";
-
-const appStore = useAppStore();
-
-const sizeOptions = ref([
-  { label: "默认", value: "default" },
-  { label: "大型", value: "large" },
-  { label: "小型", value: "small" },
-]);
-
-function handleSizeChange(size: string) {
-  appStore.changeSize(size);
-  ElMessage.success("切换布局大小成功");
-}
-</script>
-
 <template>
   <el-dropdown trigger="click" @command="handleSizeChange">
     <div>
@@ -34,3 +17,23 @@ function handleSizeChange(size: string) {
     </template>
   </el-dropdown>
 </template>
+
+<script setup lang="ts">
+import { SizeEnum } from "@/enums/SizeEnum";
+import { useAppStore } from "@/store/modules/app";
+
+const { t } = useI18n();
+const sizeOptions = computed(() => {
+  return [
+    { label: t("sizeSelect.default"), value: SizeEnum.DEFAULT },
+    { label: t("sizeSelect.large"), value: SizeEnum.LARGE },
+    { label: t("sizeSelect.small"), value: SizeEnum.SMALL },
+  ];
+});
+
+const appStore = useAppStore();
+function handleSizeChange(size: string) {
+  appStore.changeSize(size);
+  ElMessage.success(t("sizeSelect.message.success"));
+}
+</script>

@@ -1,0 +1,111 @@
+info(
+	title: "ums-user-api"
+	desc: "ums-user-api"
+	author: "kyle"
+	email: "skywalkerwei@gmail.com"
+)
+
+
+import "../base.api"
+
+type (
+	UserForm {
+		Id        int64  `path:"id,optional"`
+		Mobile    string `json:"mobile,optional"`         //电话号码
+		Username  string `json:"username,optional"`             //姓名
+		Nickname  string `json:"nickname,optional"`     //昵称
+		Avatar    string `json:"avatar,optional"`         //头像
+		IdCard    string `json:"idCard,optional"`         //身份证号码
+		Gender    int64  `json:"gender,optional"`              //性别 0 未知 1男 2女
+		Signature string `json:"signature,optional"`
+		Birthday  string `json:"birthday,,default=0000:01:01"`
+		Tags      string `json:"tags,optional"`
+		Source    string `json:"source,optional"`
+		SourceUid int64  `json:"sourceUid,optional"`
+	}
+
+	UserInfo {
+		Id        int64  `json:"id"`
+		Mobile    string `json:"mobile"`         //电话号码
+		Username  string `json:"username,optional"`
+		Nickname  string `json:"nickname"`     //昵称
+		Avatar    string `json:"avatar"`         //头像
+		IdCard    string `json:"idCard"`         //身份证号码
+		Gender    int8  `json:"gender,optional"`     //性别 0 未知 1男 2女
+		Signature string `json:"signature"`   //签名
+		Birthday  string `json:"birthday"`    //生日
+		Tags      string `json:"tags"`            //tags
+		Source    string `json:"source"`        //来源，APP H5
+		SourceUid int64  `json:"sourceUid"` //邀请uid
+		CreatedAt  string `json:"created_at"`
+		Addresses []*UserAddress `json:"addresses"`
+	}
+
+    UserAddress  {
+	    ID        int64          `json:"id"` // ID
+	    ShopID    int64          `json:"shopId"`            // 店铺id
+	    UiD       int64          `json:"uid"`                    // 用户ID
+	    Name      string         `json:"name"`                  // 联系人
+	    Mobile    string         `json:"mobile"`              // 手机号
+	    Area      string         `json:"area"`                  // 学校地址
+	    Info      string         `json:"info"`                  // 详细地址
+	    IsDefault int8           `json:"isDefault"`      // 是否默认
+	}
+
+	UserPageRsqp{
+		Total int64 `json:"total"`
+		List []*UserInfo `json:"list"`
+	}
+
+	UserThird {
+		Id  int64 `json:"id"`  // id
+		Uid  int64 `json:"uid"`  // 会员ID
+		Platform  string `json:"platform"`  // 第三方应用
+		Openid  string `json:"openid"`  // 第三方唯一ID
+		Unionid  string `json:"unionid"`  // 小程序unionid
+		Nickname  string `json:"nickname"`  // 第三方会员昵称
+		Avatar  string `json:"avatar"`  // 第三方会员头像
+		CreatedAt  string `json:"createdAt"`
+	}
+
+	UserThirdPageRsqp{
+		List []*UserThird `json:"list"`
+		Total  int64 `json:"total"`
+	}
+
+
+)
+
+
+@server(
+	jwt: Auth
+	group: ums/user
+	prefix: /user
+)
+service admin {
+	@doc "添加用户"
+	@handler Add
+	post / (UserForm) returns (IdResp)
+
+	@doc "修改用户信息"
+	@handler Update
+	put /:id (UserForm) returns (NullResp)
+
+	@doc "删除用户"
+	@handler Del
+	delete /:ids (PathIdsReq) returns (NullResp)
+
+	@doc "获取用户信息"
+	@handler Get
+	get /:id (PathIdReq)  returns (UserInfo)
+
+	@doc "获取用户列表"
+	@handler Page
+	get / (PageReq)  returns (UserPageRsqp)
+
+	@doc "获取第三方用户列表"
+	@handler ThirdPage
+	get /third (PageReq)  returns (UserThirdPageRsqp)
+
+}
+

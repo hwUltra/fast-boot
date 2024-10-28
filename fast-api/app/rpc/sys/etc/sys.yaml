@@ -1,43 +1,16 @@
 Name: sys.rpc
-ListenOn: 0.0.0.0:18000
+ListenOn: 0.0.0.0:7001
 Etcd:
   Hosts:
-    - 192.168.3.85:12379
+    - 192.168.3.88:12379
   Key: sys.rpc
-
-#Gorm:
-#  SqlType: 1
-#  IsOpenReadDb: false   # 是否开启读写分离配置（true=开启、false=关闭），IsOpenReadDb=开启,Read 部分参数有效，否则Read部分参数直接忽略
-#  SlowThreshold: 30     # 慢 SQL 阈值(sql执行时间超过此时间单位（秒），就会触发系统日志记录)
-#  Write:
-#    Host: 127.0.0.1
-#    DataBase: boot
-#    Port: 5432
-#    Prefix:
-#    User: kyle
-#    Pass: "kyle@2023"
-#    Charset: utf8
-#    SetMaxIdleConns: 10
-#    SetMaxOpenConns: 128
-#    SetConnMaxLifetime: 60
-#  Read:
-#    Host: 127.0.0.1
-#    DataBase: boot
-#    Port: 5432
-#    Prefix:
-#    User: kyle
-#    Pass: "kyle@2023"
-#    Charset: utf8
-#    SetMaxIdleConns: 10
-#    SetMaxOpenConns: 128
-#    SetConnMaxLifetime: 60
 
 Gorm:
   SqlType: 0
   IsOpenReadDb: false   # 是否开启读写分离配置（true=开启、false=关闭），IsOpenReadDb=开启,Read 部分参数有效，否则Read部分参数直接忽略
   SlowThreshold: 30     # 慢 SQL 阈值(sql执行时间超过此时间单位（秒），就会触发系统日志记录)
   Write:
-    Host: 127.0.0.1
+    Host: 192.168.3.88
     DataBase: mall-boot
     Port: 13306
     Prefix:
@@ -48,9 +21,9 @@ Gorm:
     SetMaxOpenConns: 128
     SetConnMaxLifetime: 60
   Read:
-    Host: 127.0.0.1
+    Host: 192.168.3.88
     DataBase: mall-boot
-    Port: 13306                        #注意，非3306，请自行调整
+    Port: 13306                        #注意，非13306，请自行调整
     Prefix:
     User: root
     Pass: "123456"
@@ -60,7 +33,7 @@ Gorm:
     SetConnMaxLifetime: 60
 
 RedisConf:
-  Host: 127.0.0.1:16379
+  Host: 192.168.3.88:16379
   Pass:
   Type: node
 
@@ -75,3 +48,13 @@ Log:
   Mode: file
   Path: ../../../logs/rpc-sys
 
+#Prometheus:
+#  Host: 0.0.0.0
+#  Port: 10101
+#  Path: /metrics
+
+#Telemetry:
+#  Name: sys.rpc
+#  Endpoint: http://192.168.3.88:14268/api/traces
+#  Sampler: 1.0
+#  Batcher: jaeger

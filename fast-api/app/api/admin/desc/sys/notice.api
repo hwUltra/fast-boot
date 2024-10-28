@@ -1,0 +1,74 @@
+info(
+    desc: "notice"
+    author: "kyle"
+    email: "skywalkerwei@gmail.com"
+)
+
+import "../base.api"
+
+type (
+    SysNotice {
+        Id  int64 `json:"id"`
+        Title  string `json:"title"`  // 通知标题
+        Content  string `json:"content"`  // 通知内容
+        Type  int64 `json:"type"`  // 通知类型（关联字典编码：notice_type）
+        Level  string `json:"level"`  // 通知等级（字典code：notice_level）
+        TargetType  int64 `json:"target_type"`  // 目标类型（1: 全体, 2: 指定）
+        TargetUserIds  string `json:"target_user_ids"`  // 目标人ID集合（多个使用英文逗号,分割）
+        PublisherId  int64 `json:"publisher_id"`  // 发布人ID
+        PublishStatus  int64 `json:"publish_status"`  // 发布状态（0: 未发布, 1: 已发布, -1: 已撤回）
+        PublishTime  string `json:"publish_time"`  // 发布时间
+        RevokeTime  string `json:"revoke_time"`  // 撤回时间
+        CreateBy  int64 `json:"create_by"`  // 创建人ID
+        UpdateBy  int64 `json:"update_by"`  // 更新人ID
+        CreatedAt  string `json:"created_at,optional"`
+        UpdatedAt  string `json:"updated_at,optional"`
+    }
+
+    SysNoticeFormReq {
+        ID int64  `path:"id,optional"`
+        Title  string `json:"title" validate:"min=2,max=50"`  // 通知标题
+        Content  string `json:"content" validate:"min=2,max=65535"`  // 通知内容
+        Type  int64 `json:"type"`  // 通知类型（关联字典编码：notice_type）
+        Level  string `json:"level" validate:"min=2,max=5"`  // 通知等级（字典code：notice_level）
+        TargetType  int64 `json:"target_type"`  // 目标类型（1: 全体, 2: 指定）
+        TargetUserIds  string `json:"target_user_ids" validate:"min=2,max=255"`  // 目标人ID集合（多个使用英文逗号,分割）
+        PublisherId  int64 `json:"publisher_id"`  // 发布人ID
+        PublishStatus  int64 `json:"publish_status,default=0"`  // 发布状态（0: 未发布, 1: 已发布, -1: 已撤回）
+        PublishTime  string `json:"publish_time" validate:"min=2"`  // 发布时间
+        RevokeTime  string `json:"revoke_time" validate:"min=2"`  // 撤回时间
+        CreateBy  int64 `json:"create_by"`  // 创建人ID
+        UpdateBy  int64 `json:"update_by"`  // 更新人ID
+    }
+
+    SysNoticePageReq  {
+        Title string `form:"title,omitempty,optional"`
+        Status int64 `form:"status,omitempty,optional,default=-1"`
+        StartTime  string `form:"startTime,optional"`  // 开始时间
+        EndTime  string `form:"endTime,optional"`  // 结束时间
+        PageNum int64 `form:"pageNum,omitempty,optional,default=1"`
+        PageSize int64 `form:"pageSize,omitempty,optional,default=10"`
+    }
+
+    SysNoticePageResp  {
+        Total int64 `json:"total"`
+        List []*SysNotice `json:"list"`
+    }
+
+)
+
+@server(
+    jwt: Auth
+    group: sys/notice
+    prefix: /sys/notice
+)
+service admin {
+    @handler Add
+    post / (SysNoticeFormReq)  returns(IdResp)
+
+    @handler Page
+    get / (SysNoticePageReq) returns (SysNoticePageResp)
+
+    @handler MyPage
+    get /my-page (SysNoticePageReq) returns (SysNoticePageResp)
+}

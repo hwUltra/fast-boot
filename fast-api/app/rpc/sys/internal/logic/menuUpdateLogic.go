@@ -2,7 +2,9 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
 	"fast-boot/app/rpc/model"
+	"fmt"
 	"google.golang.org/grpc/status"
 	"strconv"
 
@@ -36,17 +38,21 @@ func (l *MenuUpdateLogic) MenuUpdate(in *sysPb.MenuForm) (*sysPb.SuccessResp, er
 		return nil, status.Error(100, "Menu不存在")
 	}
 
+	fmt.Println("in.Params", in.Params)
 	info.ParentID = in.ParentId
 	info.Name = in.Name
 	info.Type = int8(in.Type)
-	info.Path = in.Path
+	//info.Type = model.MenuType(strconv.FormatInt(in.Type, 10))
+	info.RoutePath = in.RoutePath
+	info.RouteName = in.RouteName
 	info.Component = in.Component
 	info.Perm = in.Perm
 	info.Visible = int8(in.Visible)
 	info.Sort = in.Sort
 	info.Icon = in.Icon
 	info.Redirect = in.Redirect
-
+	params, _ := json.Marshal(in.Params)
+	info.Params = params
 	treePath := "0"
 	if in.ParentId > 0 {
 		pTreePath := ""

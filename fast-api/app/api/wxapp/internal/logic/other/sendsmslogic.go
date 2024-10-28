@@ -4,9 +4,9 @@ import (
 	"context"
 	"fast-boot/app/api/wxapp/internal/svc"
 	"fast-boot/app/api/wxapp/internal/types"
-	"fast-boot/common/sms"
 	"fast-boot/common/xerr"
 	"fmt"
+	"github.com/hwUltra/fb-tools/sms"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 )

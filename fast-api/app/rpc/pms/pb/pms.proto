@@ -22,7 +22,7 @@ message IdResp {
   int64 id = 1;
 }
 
-message  ListReq{
+message  PageReq{
   string keywords = 1;
   int64 status = 2;
   string startTime = 3;
@@ -147,7 +147,7 @@ message PmsBrandForm {
   int64 sort = 5; //排序
 }
 
-message PmsBrandListResp {
+message PmsBrandPageResp {
   repeated PmsBrand List = 1;
   int64 total = 2;
 }
@@ -214,14 +214,14 @@ message PmsSku {
   string createdAt = 10; //创建时间
 }
 
-message ShopListResp {
+message ShopPageResp {
   repeated Shop list = 1;
   int64 total = 2;
 }
 
 
 // goods
-message PmsGoodsListReq{
+message PmsGoodsPageReq{
   string keywords = 1;
   int64 status = 2;
   string startTime = 3;
@@ -255,7 +255,7 @@ message PmsGoodsInfo {
   repeated PmsGoodsAttribute specList = 20;
 }
 
-message  PmsBrandListReq{
+message  PmsBrandPageReq{
   string keywords = 1;
   int64 shopId = 2;
   string startTime = 3;
@@ -264,7 +264,7 @@ message  PmsBrandListReq{
   int64 pageSize = 6;
 }
 
-message PmsGoodsListResp {
+message PmsGoodsPageResp {
   repeated PmsGoodsInfo List = 1;
   int64 Total = 2;
 }
@@ -311,7 +311,7 @@ message PmsGoodsFormSku{
 service pms{
 
   rpc ShopGet(IdReq) returns (Shop);
-  rpc ShopList(ListReq) returns (ShopListResp);
+  rpc ShopPage(PageReq) returns (ShopPageResp);
   rpc ShopAdd(ShopForm) returns(SuccessIdResp);
   rpc ShopUpdate(ShopForm) returns(SuccessResp);
   rpc ShopDel(IdsReq) returns (SuccessResp);
@@ -328,14 +328,14 @@ service pms{
   rpc PmsCategoryAttributeAdd(PmsCategoryAttributeAddReq) returns(SuccessResp);
 
   rpc PmsBrandGet(IdReq) returns (PmsBrand);
-  rpc PmsBrandList(PmsBrandListReq) returns (PmsBrandListResp);
+  rpc PmsBrandPage(PmsBrandPageReq) returns (PmsBrandPageResp);
   rpc PmsBrandAdd(PmsBrandForm) returns(SuccessIdResp);
   rpc PmsBrandUpdate(PmsBrandForm) returns(SuccessResp);
   rpc PmsBrandDel(IdsReq) returns (SuccessResp);
   rpc PmsBrandOptions(IdReq) returns (OptionsResp);
 
 
-  rpc PmsGoodsList(PmsGoodsListReq) returns (PmsGoodsListResp);
+  rpc PmsGoodsPage(PmsGoodsPageReq) returns (PmsGoodsPageResp);
   rpc PmsGoodsGet(IdReq) returns (PmsGoodsInfo);
   rpc PmsGoodsDel(IdsReq) returns (SuccessResp);
   rpc PmsGoodsEdit(PmsGoodsForm) returns (SuccessIdResp);

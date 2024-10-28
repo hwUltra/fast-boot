@@ -2,7 +2,7 @@ package svc
 
 import (
 	"fast-boot/app/rpc/sys/internal/config"
-	"fast-boot/common/gormV2"
+	"github.com/hwUltra/fb-tools/gormV2"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"gorm.io/gorm"
 )
@@ -14,7 +14,6 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-
 	gormConn, _ := gormV2.GetSqlDriver(c.Gorm)
 	return &ServiceContext{
 		Config:   c,

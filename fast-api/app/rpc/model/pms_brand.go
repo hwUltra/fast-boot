@@ -1,7 +1,7 @@
 package model
 
 import (
-	"fast-boot/common/gormV2"
+	"github.com/hwUltra/fb-tools/gormV2"
 	"gorm.io/gorm"
 )
 

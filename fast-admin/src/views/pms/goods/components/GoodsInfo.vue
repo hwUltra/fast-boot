@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import Editor from "@/components/WangEditor/index.vue";
 
-// API 依赖
-import { getBrandOptions } from "@/api/pms/brand";
+import BrandApi from "@/api/pms/brand";
 
 const emit = defineEmits(["prev", "next", "update:modelValue"]);
 const dataFormRef = ref(ElForm);
@@ -35,7 +34,7 @@ const state = reactive({
 const { rules, brandOptions } = toRefs(state);
 
 async function loadData() {
-  getBrandOptions(1).then(({ data }) => {
+  BrandApi.getBrandOptions(1).then((data) => {
     state.brandOptions = data;
   });
 }
@@ -112,9 +111,9 @@ onMounted(() => {
     </div>
     <div class="component-container__footer">
       <el-button @click="handlePrev">上一步，选择商品分类</el-button>
-      <el-button type="primary" @click="handleNext"
-        >下一步，设置商品属性</el-button
-      >
+      <el-button type="primary" @click="handleNext">
+        下一步，设置商品属性
+      </el-button>
     </div>
   </div>
 </template>

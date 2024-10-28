@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-  listCategories,
-  addCategory,
-  updateCategory,
-  deleteCategories,
-} from "@/api/pms/category";
+import CategoryAPI, { CategoryQuery, CategoryForm } from "@/api/pms/category";
 
 const emit = defineEmits(["category-click"]);
 
@@ -14,7 +9,7 @@ const dataFormRef = ref(ElForm);
 const state = reactive({
   loading: true,
   ids: [],
-  queryParam: {},
+  queryParam: {} as CategoryQuery,
   categoryOptions: [] as Array<any>,
   formData: {
     id: undefined,
@@ -24,7 +19,7 @@ const state = reactive({
     iconUrl: undefined,
     visible: 1,
     sort: 100,
-  },
+  } as CategoryForm,
   rules: {
     parentId: [
       {
@@ -54,14 +49,14 @@ const { loading, categoryOptions, formData, rules, dialog, parent } =
 
 function handleQuery() {
   state.loading = true;
-  listCategories(state.queryParam).then((response) => {
+  CategoryAPI.getCategoryList(state.queryParam).then((data) => {
     state.categoryOptions = [
       {
         id: 0,
         name: "全部分类",
         parentId: 0,
         level: 0,
-        children: response.data,
+        children: data,
       },
     ];
     state.loading = false;
@@ -110,7 +105,7 @@ function submitForm() {
   dataFormRef.value.validate((valid: any) => {
     if (valid) {
       if (state.formData.id) {
-        updateCategory(state.formData.id, state.formData).then(() => {
+        CategoryAPI.categoryUpdate(state.formData).then(() => {
           ElMessage.success("修改成功");
           closeDialog();
           handleQuery();
@@ -120,7 +115,7 @@ function submitForm() {
         state.formData.parentId = parentCategory.id;
         state.formData.level = parentCategory.level + 1;
 
-        addCategory(state.formData).then(() => {
+        CategoryAPI.categoryAdd(state.formData).then(() => {
           ElMessage.success("新增成功");
           closeDialog();
           handleQuery();
@@ -137,7 +132,7 @@ function handleDelete(row: any) {
     cancelButtonText: "取消",
     type: "warning",
   }).then(() => {
-    deleteCategories(ids).then(() => {
+    CategoryAPI.categoryDel(ids).then(() => {
       ElMessage.success("删除成功");
       handleQuery();
     });
@@ -192,14 +187,16 @@ onMounted(() => {
               type="success"
               link
               @click.stop="handleAdd(scope.data)"
-              >新增</el-button
             >
+              新增
+            </el-button>
             <el-button
               v-show="scope.data.id !== 0"
               type="warning"
               link
               @click.stop="handleUpdate(scope.data)"
-              >编辑
+            >
+              编辑
             </el-button>
             <el-button
               v-show="
@@ -209,8 +206,9 @@ onMounted(() => {
               type="danger"
               link
               @click.stop="handleDelete(scope.data)"
-              >删除</el-button
             >
+              删除
+            </el-button>
           </div>
         </div>
       </template>

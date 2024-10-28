@@ -17,6 +17,7 @@ type BrandOptionsLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// Brand下拉列表
 func NewBrandOptionsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BrandOptionsLogic {
 	return &BrandOptionsLogic{
 		Logger: logx.WithContext(ctx),
@@ -25,7 +26,7 @@ func NewBrandOptionsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Bran
 	}
 }
 
-func (l *BrandOptionsLogic) BrandOptions(req *types.BrandOptionsReq) (resp []*types.OptionItem, err error) {
+func (l *BrandOptionsLogic) BrandOptions(req *types.PathIdReq) (resp []*types.OptionItem, err error) {
 	options, err := l.svcCtx.PmsRpc.PmsBrandOptions(l.ctx, &pmsPb.IdReq{Id: req.Id})
 	if err != nil {
 		return nil, err

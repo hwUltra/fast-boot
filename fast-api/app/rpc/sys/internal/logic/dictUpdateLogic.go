@@ -33,11 +33,9 @@ func (l *DictUpdateLogic) DictUpdate(in *sysPb.DictForm) (*sysPb.SuccessResp, er
 		logx.WithContext(l.ctx).Errorf("不存在: %s", in.Id)
 		return nil, status.Error(100, "不存在")
 	}
-	info.TypeCode = in.TypeCode
-	info.Value = in.Value
+	info.Code = in.Code
 	info.Name = in.Name
 	info.Remark = in.Remark
-	info.Sort = in.Sort
 	info.Status = int8(in.Status)
 
 	res := l.svcCtx.GormConn.Save(&info)

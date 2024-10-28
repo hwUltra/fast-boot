@@ -108,41 +108,59 @@ message UserGetResp {
   repeated string perms = 12;
 }
 
-
+//enum SysMenuTypeEnum {
+//  CATALOG = 0;
+//  MENU = 1;
+//  BUTTON = 2;
+//  EXTLINK = 3;
+//}
 
 //--------------------------------菜单管理--------------------------------
 message SysMenu {
-  int64 id = 1; //id
-  int64 parentId = 2; //父菜单ID
-  string treePath = 3; //父节点ID路径
-  string name = 4; //菜单名称
-  int64 type = 5; //菜单类型(1:菜单；2:目录；3:外链；4:按钮)
-  string path = 6; //路由路径(浏览器地址栏路径)
-  string component = 7; //组件路径(vue页面完整路径，省略.vue后缀)
-  string perm = 8; //权限标识
-  int64 visible = 9; //显示状态(1-显示;0-隐藏)
-  int64 sort = 10; //排序
-  string icon = 11; //菜单图标
-  string redirect = 12; //跳转路径
-  string createdAt = 13; //创建时间
-  string updatedAt = 14; //更新时间
-  repeated string  roles = 15;
-}
-
-message SysMenuItem {
-  int64 id = 1; //id
+  int64 id = 1;
   int64 parentId = 2;
   string treePath = 3;
   string name = 4;
-  int64 type = 5;
-  string path = 6;
-  string component = 7;
-  string perm = 8;
-  int64 visible = 9;
-  int64 sort = 10;
-  string icon = 11;
-  string redirect = 12;
-  repeated SysMenuItem  children = 13;
+  int64 type = 5; //菜单类型(1:菜单；2:目录；3:外链；4:按钮)
+  string routeName = 6;
+  string routePath = 7;
+  string component = 8;
+  string perm = 9;
+  int64 alwaysShow = 10;
+  int64 keepAlive = 11;
+  int64 visible = 12;
+  int64 sort = 13;
+  repeated menuParamsItem params = 14;
+  string icon = 15;
+  string redirect = 16;
+  string createdAt = 17;
+  string updatedAt = 18;
+  repeated string  roles = 19;
+}
+
+message  menuParamsItem {
+  string key = 1;
+  string value = 2;
+}
+
+message SysMenuItem {
+  int64 id = 1;
+  int64 parentId = 2;
+  string treePath = 3;
+  string name = 4;
+  int64 type = 5; //菜单类型(1:菜单；2:目录；3:外链；4:按钮)
+  string routeName = 6;
+  string routePath = 7;
+  string component = 8;
+  string perm = 9;
+  int64 alwaysShow = 10;
+  int64 keepAlive = 11;
+  int64 visible = 12;
+  int64 sort = 13;
+  repeated menuParamsItem params = 14;
+  string icon = 15;
+  string redirect = 16;
+  repeated SysMenuItem  children = 17;
 }
 
 message RoutesReq {
@@ -167,17 +185,22 @@ message MenuListResp {
 
 
 message  MenuForm{
-  int64 id = 1; //id
-  int64 parentId = 2; //父菜单ID
-  string name = 3; //菜单名称
-  int64 type = 4; //菜单类型(1:菜单；2:目录；3:外链；4:按钮)
-  string path = 5; //路由路径(浏览器地址栏路径)
-  string component = 6; //组件路径(vue页面完整路径，省略.vue后缀)
-  string perm = 7; //权限标识
-  int64 visible = 8; //显示状态(1-显示;0-隐藏)
-  int64 sort = 9; //排序
-  string icon = 10; //菜单图标
-  string redirect = 11; //跳转路径
+  int64 id = 1;
+  int64 parentId = 2;
+  string treePath = 3;
+  string name = 4;
+  int64 type = 5; //菜单类型(1:菜单；2:目录；3:外链；4:按钮)
+  string routeName = 6;
+  string routePath = 7;
+  string component = 8;
+  string perm = 9;
+  int64 alwaysShow = 10;
+  int64 keepAlive = 11;
+  int64 visible = 12;
+  int64 sort = 13;
+  repeated menuParamsItem params = 14;
+  string icon = 15;
+  string redirect = 16;
 }
 
 message MenuOption{
@@ -191,7 +214,7 @@ message  MenuOptionsResp{
 }
 
 
-message  UserListReq{
+message  UserPageReq{
   string keywords = 1;
   int64 deptId = 2;
   int64 status = 3;
@@ -201,7 +224,7 @@ message  UserListReq{
   string endTime = 7;
 }
 
-message UserListResp{
+message UserPageResp{
   repeated SysUser list = 1;
   int64 Total = 2;
 }
@@ -291,6 +314,7 @@ message SysDept {
   int64 updateBy = 9; //修改人ID
   string createdAt = 10; //创建时间
   string updatedAt = 11; //更新时间
+  string code = 12;
 }
 
 
@@ -303,6 +327,7 @@ message DeptForm{
   int64 status = 6;
   int64 createBy = 7;
   int64 updateBy = 8;
+  string code = 9;
 }
 
 message DeptListReq{
@@ -322,7 +347,8 @@ message SysDeptItem {
   int64 updateBy = 9; //修改人ID
   string createdAt = 10; //创建时间
   string updatedAt = 11; //更新时间
-  repeated SysDeptItem  children = 12;
+  string code = 12;
+  repeated SysDeptItem  children = 13;
 }
 
 message DeptListResp{
@@ -342,92 +368,188 @@ message DeptOptionResp{
 //--------------------------------字典数据表--------------------------------
 message SysDict {
   int64 id = 1; //主键
-  string typeCode = 2; //字典类型编码
+  string code = 2; //字典类型编码
   string name = 3; //字典项名称
-  string value = 4; //字典项值
-  int64 sort = 5; //排序
-  int64 status = 6; //状态(1:正常;0:禁用)
-  int64 defaulted = 7; //是否默认(1:是;0:否)
-  string remark = 8; //备注
-  string createdAt = 9; //创建时间
-  string updatedAt = 10; //更新时间
-}
-
-message SysDictType {
-  int64 id = 1; //主键
-  string name = 2; //类型名称
-  string code = 3; //类型编码
   int64 status = 4; //状态(1:正常;0:禁用)
   string remark = 5; //备注
   string createdAt = 6; //创建时间
   string updatedAt = 7; //更新时间
 }
 
-
-message DictTypeForm{
+message SysDictData {
   int64 id = 1; //主键
-  string name = 2; //类型名称
-  string code = 3; //类型编码
+  int64 dictId = 2; //dictId
+  string value = 3;
+  string label = 4;
+  string tag = 5;
+  int64 status = 6;
+  string remark = 7;
+  int64 sort = 8;
+  string createdAt = 9; //创建时间
+  string updatedAt = 10; //更新时间
+}
+
+message DictForm{
+  int64 id = 1;
+  string code = 2; //字典类型编码
+  string name = 3; //字典项名称
   int64 status = 4; //状态(1:正常;0:禁用)
   string remark = 5; //备注
 }
 
-message DictForm{
-  string typeCode = 1; //字典类型编码
-  string name = 2; //字典项名称
-  string value = 3; //字典项值
-  int64 sort = 4; //排序
-  int64 status = 5; //状态(1:正常;0:禁用)
-  string remark = 6; //备注
-  int64 id = 7;
+message DictDataForm{
+  int64 id = 1; //主键
+  int64 dictId = 2; //dictId
+  string value = 3; //类型编码
+  string label = 4; //类型编码
+  string tag = 5; //类型编码
+  int64 status = 6; //状态(1:正常;0:禁用)
+  string remark = 7; //备注
+  int64 sort = 8; //主键
 }
 
-message DictListReq{
-  string typeCode = 1;
+message DictSimListResp{
+  repeated DictSimItem list = 1;
+}
+
+message DictSimItem{
+  string name = 1;
+  string dictCode = 2;
+  repeated DictDataSimItem dictDataList = 3;
+}
+
+message DictDataSimItem{
+  string value = 1;
+  string label = 2;
+  string tagType = 3;
+}
+
+message DictPageReq{
+  string keywords = 1;
   int64 pageNum = 2;
   int64 pageSize = 3;
 }
 
-message DictListResp{
+message DictPageResp{
   repeated SysDict list = 1;
   int64 Total = 2;
 }
 
-message DictTypeListReq{
+message DictDataPageReq{
   string keywords = 1;
+  int64 dictId = 2;
   int64 pageNum = 3;
   int64 pageSize = 4;
 }
 
-message DictTypeListResp{
-  repeated SysDictType list = 1;
+message DictDataPageResp{
+  repeated SysDictData list = 1;
   int64 Total = 2;
 }
 
-message DictTypeOption{
-  string label = 1;
-  int64 value = 2;
-  repeated DeptOption children = 3;
+//
+//message DictDataOption{
+//  string label = 1;
+//  int64 value = 2;
+//  repeated DeptOption children = 3;
+//}
+//
+//message DictOption{
+//  string label = 1;
+//  string value = 2;
+//  repeated DeptOption children = 3;
+//}
+//
+//message DictTypeOptionsResp{
+//  repeated DictDataOption items = 1;
+//}
+//
+//message DictOptionsResp{
+//  repeated DictOption items = 1;
+//}
+
+//--------------------------------系统日志表--------------------------------
+message SysLog {
+  int64 id = 1; //主键
+  string module = 2; //日志模块
+  string content = 3; //日志内容
+  string requestUri = 4; //请求路径
+  string ip = 5; //IP地址
+  string province = 6; //省份
+  string city = 7; //城市
+  int64 executionTime = 8; //执行时间(ms)
+  string browser = 9; //浏览器
+  string browserVersion = 10; //浏览器版本
+  string os = 11; //终端系统
+  int64 createBy = 12; //创建人ID
+  string createdAt = 13; //创建时间
 }
 
-message DictOption{
-  string label = 1;
-  string value = 2;
-  repeated DeptOption children = 3;
+message SysLogFormReq {
+  string module = 1; //日志模块
+  string content = 2; //日志内容
+  string requestUri = 3; //请求路径
+  string ip = 4; //IP地址
+  string province = 5; //省份
+  string city = 6; //城市
+  int64 executionTime = 7; //执行时间(ms)
+  string browser = 8; //浏览器
+  string browserVersion = 9; //浏览器版本
+  string os = 10; //终端系统
+  int64 createBy = 11; //创建人ID
 }
 
-message DictTypeOptionsResp{
-  repeated DictTypeOption items = 1;
+
+
+//--------------------------------通知公告表--------------------------------
+message SysNotice {
+  int64 id = 1; //id
+  string title = 2; //通知标题
+  string content = 3; //通知内容
+  int64 type = 4; //通知类型（关联字典编码：notice_type）
+  string level = 5; //通知等级（字典code：notice_level）
+  int64 targetType = 6; //目标类型（1: 全体, 2: 指定）
+  string targetUserIds = 7; //目标人ID集合（多个使用英文逗号,分割）
+  int64 publisherId = 8; //发布人ID
+  int64 publishStatus = 9; //发布状态（0: 未发布, 1: 已发布, -1: 已撤回）
+  int64 publishTime = 10; //发布时间
+  int64 revokeTime = 11; //撤回时间
+  int64 createBy = 12; //创建人ID
+  int64 updateBy = 13; //更新人ID
+  string createdAt = 14; //创建时间
+  string updatedAt = 15; //更新时间
 }
 
-message DictOptionsResp{
-  repeated DictOption items = 1;
+message SysNoticeFormReq {
+  string title = 1; //通知标题
+  string content = 2; //通知内容
+  int64 type = 3; //通知类型（关联字典编码：notice_type）
+  string level = 4; //通知等级（字典code：notice_level）
+  int64 targetType = 5; //目标类型（1: 全体, 2: 指定）
+  string targetUserIds = 6; //目标人ID集合（多个使用英文逗号,分割）
+  int64 publisherId = 7; //发布人ID
+  int64 publishStatus = 8; //发布状态（0: 未发布, 1: 已发布, -1: 已撤回）
+  int64 publishTime = 9; //发布时间
+  int64 revokeTime = 10; //撤回时间
+  int64 createBy = 11; //创建人ID
+  int64 updateBy = 12; //更新人ID
+  int64 id = 13;
 }
 
-message   TypeReq{
-  string typeCode = 1;
+message SysNoticePageReq {
+  int64 pageNum = 1;
+  int64 pageSize = 2;
+  string title = 3; //
+  int64 uid = 4; //
+  int64 publishStatus = 5; //发布状态（0: 未发布, 1: 已发布, -1: 已撤回）
+  string startTime = 6;
+  string endTime = 7;
 }
 
+message SysNoticePageResp {
+  repeated SysNotice list = 1; //sysNotice
+  int64 Total = 2;
+}
 
 
 
@@ -435,7 +557,7 @@ service sys{
 
   rpc Login(LoginReq) returns (LoginResp);
   rpc RefreshToken(RefreshTokenReq) returns (LoginResp);
-  rpc UserList(UserListReq) returns (UserListResp);
+  rpc UserPage(UserPageReq) returns (UserPageResp);
   rpc UserGet(IdReq) returns (UserGetResp);
   rpc UserAdd(UserAddReq) returns (IdResp);
   rpc UserUpdate(UserUpdateReq) returns (SuccessResp);
@@ -467,19 +589,27 @@ service sys{
   rpc DeptOptions(AnyReq) returns (DeptOptionResp);
 
 
-  rpc DictTypeAdd(DictTypeForm) returns (SuccessResp);
-  rpc DictTypeUpdate(DictTypeForm) returns (SuccessResp);
-  rpc DictTypeDel(IdsReq) returns (SuccessResp);
-  rpc DictTypeGet(IdReq) returns (SysDictType);
-  rpc DictTypeList(DictTypeListReq) returns (DictTypeListResp);
-  rpc DictTypeOptions(AnyReq) returns (DictTypeOptionsResp);
+  rpc DictSimList(AnyReq) returns (DictSimListResp);
 
   rpc DictAdd(DictForm) returns (SuccessResp);
   rpc DictUpdate(DictForm) returns (SuccessResp);
   rpc DictDel(IdsReq) returns (SuccessResp);
   rpc DictGet(IdReq) returns (SysDict);
-  rpc DictList(DictListReq) returns (DictListResp);
-  rpc DictOptions(TypeReq) returns (DictOptionsResp);
+  rpc DictPage(DictPageReq) returns (DictPageResp);
+//  rpc DictOptions(TypeReq) returns (DictOptionsResp);
+
+  rpc DictDataAdd(DictDataForm) returns (SuccessResp);
+  rpc DictDataUpdate(DictDataForm) returns (SuccessResp);
+  rpc DictDataDel(IdsReq) returns (SuccessResp);
+  rpc DictDataGet(IdReq) returns (SysDictData);
+  rpc DictDataPage(DictDataPageReq) returns (DictDataPageResp);
+
+  rpc SysNoticePage(SysNoticePageReq) returns (SysNoticePageResp);
+  //  rpc DictTypeAdd(DictTypeForm) returns (SuccessResp);
+//  rpc DictTypeUpdate(DictTypeForm) returns (SuccessResp);
+//  rpc DictTypeDel(IdsReq) returns (SuccessResp);
+//  rpc DictTypeList(DictTypeListReq) returns (DictTypeListResp);
+//  rpc DictTypeOptions(AnyReq) returns (DictTypeOptionsResp);
 
 
 }

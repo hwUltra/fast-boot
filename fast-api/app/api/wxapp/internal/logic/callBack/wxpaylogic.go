@@ -4,7 +4,7 @@ import (
 	"context"
 	"fast-boot/app/api/wxapp/internal/svc"
 	"fast-boot/app/api/wxapp/internal/types"
-	"fast-boot/common/mq"
+	"github.com/hwUltra/fb-tools/mq"
 	"github.com/zeromicro/go-zero/core/logx"
 	"net/http"
 )

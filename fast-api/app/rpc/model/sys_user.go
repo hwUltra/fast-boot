@@ -1,7 +1,7 @@
 package model
 
 import (
-	"fast-boot/common/gormV2"
+	"github.com/hwUltra/fb-tools/gormV2"
 	"gorm.io/gorm"
 )
 
@@ -36,9 +36,9 @@ func (*SysUserModel) WithCreatedAt(startTime string, endTime string) func(db *go
 func (*SysUserModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(keyword) > 0 {
-			return db.Where("`username` LIKE ?", "%"+keyword+"%").
-				Or("`nickname` LIKE ?", "%"+keyword+"%").
-				Or("`mobile` LIKE ?", "%"+keyword+"%")
+			return db.Where("sys_user.`username` LIKE ?", "%"+keyword+"%").
+				Or("sys_user.`nickname` LIKE ?", "%"+keyword+"%").
+				Or("sys_user.`mobile` LIKE ?", "%"+keyword+"%")
 		}
 		return db
 
@@ -48,7 +48,7 @@ func (*SysUserModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
 func (*SysUserModel) WithStatus(status int64) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if status != -1 {
-			return db.Where("`status` = ?", status)
+			return db.Where("sys_user.`status` = ?", status)
 		}
 		return db
 	}
@@ -57,7 +57,7 @@ func (*SysUserModel) WithStatus(status int64) func(db *gorm.DB) *gorm.DB {
 func (*SysUserModel) WithDeptId(deptId int64) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if deptId > 0 {
-			return db.Where("`dept_id` = ?", deptId)
+			return db.Where("sys_user.`dept_id` = ?", deptId)
 		}
 		return db
 	}

@@ -1,42 +1,85 @@
-<script setup lang="ts">
-import Main from "./main.vue";
-import { computed, watchEffect } from "vue";
-import { useWindowSize } from "@vueuse/core";
-import Sidebar from "./components/Sidebar/index.vue";
-import LeftMenu from "./components/Sidebar/LeftMenu.vue";
+<template>
+  <div class="wh-full" :class="classObj">
+    <!-- 遮罩层 -->
+    <div
+      v-if="isMobile && isOpenSidebar"
+      class="wh-full fixed-lt z-999 bg-black bg-opacity-30"
+      @click="handleOutsideClick"
+    />
 
-import { useAppStore } from "@/store/modules/app";
-import { useSettingsStore } from "@/store/modules/settings";
-import { usePermissionStore } from "@/store/modules/permission";
-const permissionStore = usePermissionStore();
-const { width } = useWindowSize();
-/**
- * 响应式布局容器固定宽度
- *
- * 大屏（>=1200px）
- * 中屏（>=992px）
- * 小屏（>=768px）
- */
-const WIDTH = 992;
+    <!-- 公用侧边栏 -->
+    <Sidebar class="sidebar-container" />
+
+    <!-- 混合布局 -->
+    <div v-if="layout === LayoutEnum.MIX" class="mix-container">
+      <div class="mix-container-sidebar">
+        <el-scrollbar>
+          <SidebarMenu
+            :menu-list="mixLeftMenus"
+            :base-path="activeTopMenuPath"
+          />
+        </el-scrollbar>
+        <div class="sidebar-toggle">
+          <hamburger
+            :is-active="appStore.sidebar.opened"
+            @toggle-click="toggleSidebar"
+          />
+        </div>
+      </div>
+
+      <div :class="{ hasTagsView: showTagsView }" class="main-container">
+        <div :class="{ 'fixed-header': fixedHeader }">
+          <TagsView v-if="showTagsView" />
+        </div>
+        <AppMain />
+        <Settings v-if="defaultSettings.showSettings" />
+        <!-- 返回顶部 -->
+        <el-backtop target=".main-container">
+          <svg-icon icon-class="backtop" size="24px" />
+        </el-backtop>
+      </div>
+    </div>
+
+    <!-- 左侧和顶部布局 -->
+    <div v-else :class="{ hasTagsView: showTagsView }" class="main-container">
+      <div :class="{ 'fixed-header': fixedHeader }">
+        <NavBar v-if="layout === LayoutEnum.LEFT" />
+        <TagsView v-if="showTagsView" />
+      </div>
+      <AppMain />
+      <Settings v-if="defaultSettings.showSettings" />
+      <!-- 返回顶部 -->
+      <el-backtop target=".main-container">
+        <svg-icon icon-class="backtop" size="24px" />
+      </el-backtop>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useAppStore, useSettingsStore, usePermissionStore } from "@/store";
+import defaultSettings from "@/settings";
+import { DeviceEnum } from "@/enums/DeviceEnum";
+import { LayoutEnum } from "@/enums/LayoutEnum";
 
 const appStore = useAppStore();
 const settingsStore = useSettingsStore();
+const permissionStore = usePermissionStore();
+const width = useWindowSize().width;
 
-const activeTopMenu = computed(() => {
-  return appStore.activeTopMenu;
-});
-// 混合模式左侧菜单
-const mixLeftMenu = computed(() => {
-  return permissionStore.mixLeftMenu;
-});
-const layout = computed(() => settingsStore.layout);
-const watermarkEnabled = computed(() => settingsStore.watermark.enabled);
+const WIDTH_DESKTOP = 992; // 响应式布局容器固定宽度  大屏（>=1200px） 中屏（>=992px） 小屏（>=768px）
+const isMobile = computed(() => appStore.device === DeviceEnum.MOBILE);
+const isOpenSidebar = computed(() => appStore.sidebar.opened);
+const fixedHeader = computed(() => settingsStore.fixedHeader); // 是否固定header
+const showTagsView = computed(() => settingsStore.tagsView); // 是否显示tagsView
+const layout = computed(() => settingsStore.layout); // 布局模式 left top mix
+const activeTopMenuPath = computed(() => appStore.activeTopMenuPath); // 顶部菜单激活path
+const mixLeftMenus = computed(() => permissionStore.mixLeftMenus); // 混合布局左侧菜单
 
 watch(
-  () => activeTopMenu.value,
-  (newVal) => {
-    if (layout.value !== "mix") return;
-    permissionStore.getMixLeftMenu(newVal);
+  () => activeTopMenuPath.value,
+  (newVal: string) => {
+    permissionStore.setMixLeftMenus(newVal);
   },
   {
     deep: true,
@@ -47,149 +90,143 @@ watch(
 const classObj = computed(() => ({
   hideSidebar: !appStore.sidebar.opened,
   openSidebar: appStore.sidebar.opened,
-  withoutAnimation: appStore.sidebar.withoutAnimation,
-  mobile: appStore.device === "mobile",
-  isTop: layout.value === "top",
-  isMix: layout.value === "mix",
+  mobile: appStore.device === DeviceEnum.MOBILE,
+  [`layout-${settingsStore.layout}`]: true,
 }));
 
 watchEffect(() => {
-  if (width.value < WIDTH) {
-    appStore.toggleDevice("mobile");
-    appStore.closeSideBar(true);
+  appStore.toggleDevice(
+    width.value < WIDTH_DESKTOP ? DeviceEnum.MOBILE : DeviceEnum.DESKTOP
+  );
+  if (width.value >= WIDTH_DESKTOP) {
+    appStore.openSideBar();
   } else {
-    appStore.toggleDevice("desktop");
-
-    if (width.value >= 1200) {
-      //大屏
-      appStore.openSideBar(true);
-    } else {
-      appStore.closeSideBar(true);
-    }
+    appStore.closeSideBar();
   }
 });
 
 function handleOutsideClick() {
-  appStore.closeSideBar(false);
+  appStore.closeSideBar();
 }
 
-function toggleSideBar() {
+function toggleSidebar() {
   appStore.toggleSidebar();
 }
+
+const route = useRoute();
+watch(route, () => {
+  if (isMobile.value && isOpenSidebar.value) {
+    appStore.closeSideBar();
+  }
+});
 </script>
 
-<template>
-  <div :class="classObj" class="app-wrapper">
-    <!-- 手机设备侧边栏打开遮罩层 -->
-    <div
-      v-if="classObj.mobile && classObj.openSidebar"
-      class="drawer__background"
-      @click="handleOutsideClick"
-    ></div>
-
-    <Sidebar class="sidebar-container" />
-
-    <div v-if="layout === 'mix'" class="mix-wrapper">
-      <div class="mix-wrapper__left">
-        <LeftMenu :menu-list="mixLeftMenu" :base-path="activeTopMenu" />
-        <!-- 展开/收缩侧边栏菜单 -->
-        <div class="toggle-sidebar">
-          <hamburger
-            :is-active="appStore.sidebar.opened"
-            @toggle-click="toggleSideBar"
-          />
-        </div>
-      </div>
-      <Main />
-    </div>
-
-    <Main v-else />
-  </div>
-</template>
-
 <style lang="scss" scoped>
-.app-wrapper {
-  &::after {
-    display: table;
-    clear: both;
-    content: "";
-  }
-
-  position: relative;
-  width: 100%;
-  height: 100%;
-
-  &.mobile.openSidebar {
-    position: fixed;
-    top: 0;
-  }
-}
-
-.drawer__background {
-  position: absolute;
+.sidebar-container {
+  position: fixed;
   top: 0;
+  bottom: 0;
+  left: 0;
   z-index: 999;
-  width: 100%;
-  height: 100%;
-  background: #000;
-  opacity: 0.3;
+  width: $sidebar-width;
+  background-color: $menu-background;
+  transition: width 0.28s;
+
+  :deep(.el-menu) {
+    border: none;
+  }
 }
-// 导航栏顶部显示
-.isTop {
+
+.main-container {
+  position: relative;
+  height: 100%;
+  margin-left: $sidebar-width;
+  overflow-y: auto;
+  transition: margin-left 0.28s;
+
+  .fixed-header {
+    position: sticky;
+    top: 0;
+    z-index: 9;
+    transition: width 0.28s;
+  }
+}
+
+.layout-top {
   .sidebar-container {
-    z-index: 800;
+    position: sticky;
+    z-index: 999;
     display: flex;
     width: 100% !important;
-    height: 50px;
-
-    :deep(.logo-wrap) {
-      width: $sideBarWidth;
-    }
+    height: $navbar-height;
 
     :deep(.el-scrollbar) {
       flex: 1;
-      min-width: 0;
-      height: 50px;
+      height: $navbar-height;
+    }
+
+    :deep(.el-menu-item),
+    :deep(.el-sub-menu__title),
+    :deep(.el-menu--horizontal) {
+      height: $navbar-height;
+      line-height: $navbar-height;
+    }
+
+    :deep(.el-menu--collapse) {
+      width: 100%;
     }
   }
 
   .main-container {
-    padding-top: 50px;
+    height: calc(100vh - $navbar-height);
     margin-left: 0;
-    overflow: hidden;
-  }
-
-  // 顶部模式全局变量修改
-  --el-menu-item-height: 50px;
-}
-
-.mobile.isTop {
-  :deep(.logo-wrap) {
-    width: 63px;
   }
 }
 
-.isMix {
-  :deep(.main-container) {
-    display: inline-block;
-    width: calc(100% - #{$sideBarWidth});
-    margin-left: 0;
+.layout-mix {
+  .sidebar-container {
+    width: 100% !important;
+    height: $navbar-height;
+
+    :deep(.el-scrollbar) {
+      flex: 1;
+      height: $navbar-height;
+    }
+
+    :deep(.el-menu-item),
+    :deep(.el-sub-menu__title),
+    :deep(.el-menu--horizontal) {
+      height: $navbar-height;
+      line-height: $navbar-height;
+    }
+
+    :deep(.el-menu--horizontal.el-menu) {
+      border: none;
+    }
   }
 
-  .mix-wrapper {
+  .mix-container {
     display: flex;
     height: 100%;
-    padding-top: 50px;
+    padding-top: $navbar-height;
 
-    .mix-wrapper__left {
+    .mix-container-sidebar {
       position: relative;
+      width: $sidebar-width;
       height: 100%;
+      background-color: var(--menu-background);
 
-      .el-menu {
-        height: 100%;
+      :deep(.el-scrollbar) {
+        // 50px 是底部收缩按钮的高度
+        height: calc(100vh - $navbar-height - 50px);
       }
 
-      .toggle-sidebar {
+      :deep(.el-menu) {
+        height: 100%;
+        border: none;
+      }
+
+      .sidebar-toggle {
         position: absolute;
         bottom: 0;
         display: flex;
@@ -201,11 +238,11 @@ function toggleSideBar() {
         box-shadow: 0 0 6px -2px var(--el-color-primary);
 
         div:hover {
-          background-color: var(--menuBg);
+          background-color: var(--menu-background);
         }
 
         :deep(svg) {
-          color: #409eff !important;
+          color: var(--el-color-primary) !important;
         }
       }
     }
@@ -213,24 +250,65 @@ function toggleSideBar() {
     .main-container {
       flex: 1;
       min-width: 0;
+      margin-left: 0;
     }
   }
 }
 
-.openSidebar {
-  .mix-wrapper {
-    .mix-wrapper__left {
-      width: $sideBarWidth;
+.hideSidebar {
+  .main-container {
+    margin-left: $sidebar-width-collapsed;
+  }
+
+  &.layout-top {
+    .main-container {
+      margin-left: 0;
+    }
+  }
+
+  &.layout-mix {
+    .sidebar-container {
+      width: 100% !important;
     }
 
-    :deep(.svg-icon) {
-      margin-top: -1px;
-      margin-right: 5px;
+    .mix-container {
+      &-sidebar {
+        width: $sidebar-width-collapsed;
+      }
+    }
+  }
+}
+
+.layout-left.hideSidebar {
+  .sidebar-container {
+    width: $sidebar-width-collapsed !important;
+  }
+
+  .main-container {
+    margin-left: $sidebar-width-collapsed;
+  }
+
+  &.mobile {
+    .sidebar-container {
+      pointer-events: none;
+      transition-duration: 0.3s;
+      transform: translate3d(-210px, 0, 0);
     }
 
-    .el-menu {
-      border: none;
+    .main-container {
+      margin-left: 0;
     }
+  }
+}
+
+.mobile {
+  .main-container {
+    margin-left: 0;
+  }
+
+  &.layout-top {
+    // 顶部模式全局变量修改
+    --el-menu-item-height: $navbar-height;
   }
 }
 </style>

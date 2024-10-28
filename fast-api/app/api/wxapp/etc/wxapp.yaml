@@ -1,32 +1,23 @@
 Name: WxApp
 Host: 0.0.0.0
-Port: 888
+Port: 777
 
 Auth:
   AccessSecret: ad879038-c7a8-8063-9236-6bfc35d54b8d
   AccessExpire: 864000
 
-RedisConf:
-  Host: 127.0.0.1:6379
+Redis:
+  Host: 192.168.3.88:16379
   Pass:
   Type: node
 
-MinioX:
-  MinIOAccessKeyID:
-  MinIOAccessSecretKey:
-  MinIOEndpoint:
-  MinIOBucket: files
-  MinIOSSLBool: false
-  MinIOBucketLocation: cn-north-1
-  MinIOBasePath:
-
-#Sms
-SmsConf:
-  AliYun:
-    RegionId: "RegionId"
-    AccessKeyID: "AccessKeyID"
-    AccessKeySecret: "AccessKeySecret"
-    SignName: "SignName"
+Sms:
+  Type: 0
+  AliConf:
+    RegionId:
+    AccessKeyId:
+    AccessSecret:
+    SignName:
   Debug: true
   Length: 6
   Life: 300
@@ -35,18 +26,37 @@ SmsConf:
     - 18012312312
     - 18627111095
   Template:
-    Reg: "reg001"
+    Reg: "SMS_219510061"
 
-#小程序配置
-WxMiniConf:
+MinioX:
+  MinIOAccessKeyID: c4h0z6z3GxY8UXJkb7Fd
+  MinIOAccessSecretKey: 2ej0kOfnNNxt5Jlz6pIw98aGuqUOSOg0BGqyV5L2
+  MinIOEndpoint: 192.168.3.88:9000
+  MinIOBucket: files
+  MinIOSSLBool: false
+  MinIOBucketLocation: cn-north-1
+  MinIOBasePath: http://192.168.3.88:9000
+
+AliOss:
+  AccessKeyId:
+  AccessKeySecret:
+  Endpoint:
+  Bucket:
+  CDNDomain:
+  SSL: true
+  Iscname: false
+
+
+WxMini:
   AppId:
   Secret:
 
-WxPayConf:
-  MchId:
-  AppMiniId:
-  SerialNo:
-  APIv3Key:
+
+WxPay:
+  MchId: "11234455"
+  AppMiniId: wx5ed344b55cb695a8
+  SerialNo: 333333964008A80E5524718049ABB333322
+  APIv3Key: twewe23vjXrlnpTed5afyZZJ6FrI2323dd
   PrivateKey: |-
     -----BEGIN PRIVATE KEY-----
     11BADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDBY/kxOoNkZxgK
@@ -59,11 +69,11 @@ WxPayConf:
     -----END PRIVATE KEY-----
   NotifyUrl : http://xxx.xxx.com/payment/v1/thirdPayment/thirdPaymentWxPayCallback
 
-
+#Rpc
 UmsRpc:
   Etcd:
     Hosts:
-      - localhost:2379
+      - 192.168.3.88:12379
     Key: ums.rpc
 
 Log:
@@ -76,6 +86,6 @@ Log:
 #  Token: 6jKNZbEpYGeUMAifz10gOnmoty3TV  # Token 值
 #  Etcd:
 #    Hosts:
-#      - 127.0.0.1:2379
+#      - 192.168.3.88:12379
 #    Key: rpc.user
 

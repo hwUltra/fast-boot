@@ -37,6 +37,7 @@ func (l *DeptUpdateLogic) DeptUpdate(in *sysPb.DeptForm) (*sysPb.SuccessResp, er
 	info.ParentID = in.ParentId
 	info.TreePath = in.TreePath
 	info.Name = in.Name
+	info.Code = in.Code
 	info.Sort = in.Sort
 	info.Status = int8(in.Status)
 	info.UpdateBy = in.UpdateBy

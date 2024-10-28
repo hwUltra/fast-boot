@@ -3,7 +3,7 @@ package svc
 import (
 	"fast-boot/app/api/wxapp/internal/config"
 	"fast-boot/app/rpc/ums/ums"
-	"fast-boot/common/wechat"
+	"github.com/hwUltra/fb-tools/wechat"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/zrpc"
 )

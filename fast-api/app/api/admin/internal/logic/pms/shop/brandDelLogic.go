@@ -16,6 +16,7 @@ type BrandDelLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 删除
 func NewBrandDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BrandDelLogic {
 	return &BrandDelLogic{
 		Logger: logx.WithContext(ctx),
@@ -24,10 +25,10 @@ func NewBrandDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BrandDel
 	}
 }
 
-func (l *BrandDelLogic) BrandDel(req *types.BrandDelReq) error {
+func (l *BrandDelLogic) BrandDel(req *types.PathIdsReq) (resp *types.NullResp, err error) {
 	if _, err := l.svcCtx.PmsRpc.PmsBrandDel(l.ctx, &pmsPb.IdsReq{Ids: req.Ids}); err != nil {
-		return err
+		return &types.NullResp{}, err
 	}
 
-	return nil
+	return &types.NullResp{}, nil
 }

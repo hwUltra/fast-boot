@@ -6,12 +6,11 @@ defineOptions({
 });
 
 import { useRouter } from "vue-router";
-import { getGoodsList, delGoods } from "@/api/pms/goods";
-import { getCategoryOptions } from "@/api/pms/category";
+import GoodsApi, { GoodsInfo, GoodsQuery } from "@/api/pms/goods";
+import CategoryApi from "@/api/pms/category";
 import { moneyFormatter } from "@/utils/filter";
-import { GoodsInfo, GoodsQuery } from "@/api/pms/goods/types";
 
-import { getShopOptions } from "@/api/pms/shop";
+import ShopApi from "@/api/pms/shop";
 
 const dataTableRef = ref(ElTable);
 const router = useRouter();
@@ -49,7 +48,7 @@ const {
 
 function handleQuery() {
   state.loading = true;
-  getGoodsList(state.queryParams).then(({ data }) => {
+  GoodsApi.getGoodsList(state.queryParams).then((data) => {
     state.goodsList = data.list;
     state.total = data.total;
     state.loading = false;
@@ -75,7 +74,7 @@ watch(
   },
   (newValue, oldValue) => {
     if (newValue.shopId != oldValue.shopId && newValue.shopId != undefined) {
-      getCategoryOptions(newValue.shopId).then(({ data }) => {
+      CategoryApi.getCategoryOptions(newValue.shopId).then((data) => {
         categoryOptions.value = data;
         state.queryParams.categoryId = undefined;
       });
@@ -107,7 +106,7 @@ function handleDelete(row: any) {
     type: "warning",
   })
     .then(function () {
-      return delGoods(ids);
+      return GoodsApi.delGoods(ids);
     })
     .then(() => {
       ElMessage.success("删除成功");
@@ -125,10 +124,10 @@ function handleSelectionChange(selection: any) {
 
 onMounted(async () => {
   let shopId = 1;
-  await getShopOptions().then((response) => {
-    shopOptions.value = response.data;
+  await ShopApi.getShopOptions().then((data) => {
+    shopOptions.value = data;
   });
-  await getCategoryOptions(shopId).then(({ data }) => {
+  await CategoryApi.getCategoryOptions(shopId).then(({ data }) => {
     categoryOptions.value = data;
   });
   await handleQuery();
@@ -168,25 +167,32 @@ onMounted(async () => {
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="handleQuery"
-            ><i-ep-search /> 搜索</el-button
-          >
-          <el-button @click="resetQuery"><i-ep-refresh /> 重置</el-button>
+          <el-button type="primary" @click="handleQuery">
+            <i-ep-search />
+            搜索
+          </el-button>
+          <el-button @click="resetQuery">
+            <i-ep-refresh />
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
 
     <el-card>
       <template #header>
-        <el-button type="success" @click="handleAdd"
-          ><i-ep-plus /> 新增</el-button
-        >
+        <el-button type="success" @click="handleAdd">
+          <i-ep-plus />
+          新增
+        </el-button>
         <el-button
           type="danger"
           :disabled="ids.length === 0"
           @click="handleDelete"
-          ><i-ep-delete />删除</el-button
         >
+          <i-ep-delete />
+          删除
+        </el-button>
       </template>
 
       <el-table
@@ -214,9 +220,9 @@ onMounted(async () => {
                 </template>
               </el-table-column>
               <el-table-column align="center" label="价格" prop="price">
-                <template #default="scope">{{
-                  moneyFormatter(scope.row.price)
-                }}</template>
+                <template #default="scope">
+                  {{ moneyFormatter(scope.row.price) }}
+                </template>
               </el-table-column>
               <el-table-column align="center" label="库存" prop="stock" />
             </el-table>
@@ -240,14 +246,14 @@ onMounted(async () => {
         <el-table-column label="商品类目" prop="categoryName" min-width="100" />
         <el-table-column label="商品品牌" prop="brandName" min-width="100" />
         <el-table-column align="center" label="零售价" prop="originalPrice">
-          <template #default="scope">{{
-            moneyFormatter(scope.row.originPrice)
-          }}</template>
+          <template #default="scope">
+            {{ moneyFormatter(scope.row.originPrice) }}
+          </template>
         </el-table-column>
         <el-table-column align="center" label="促销价" prop="price">
-          <template #default="scope">{{
-            moneyFormatter(scope.row.price)
-          }}</template>
+          <template #default="scope">
+            {{ moneyFormatter(scope.row.price) }}
+          </template>
         </el-table-column>
         <el-table-column label="销量" prop="sales" width="100" />
         <el-table-column label="操作" width="200">
@@ -256,18 +262,19 @@ onMounted(async () => {
               type="success"
               link
               @click.stop="handleGoodsView(scope.row.detail)"
-              >查看详情</el-button
             >
+              查看详情
+            </el-button>
             <el-button
               type="primary"
               link
               @click.stop="handleUpdate(scope.row)"
             >
-              编辑</el-button
-            >
-            <el-button type="danger" link @click.stop="handleDelete(scope.row)"
-              >删除</el-button
-            >
+              编辑
+            </el-button>
+            <el-button type="danger" link @click.stop="handleDelete(scope.row)">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>

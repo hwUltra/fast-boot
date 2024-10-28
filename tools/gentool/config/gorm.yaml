@@ -1,11 +1,12 @@
 dbType: mysql
-host: localhost
-port: 3306
+host: 192.168.3.88
+port: 13306
 user: root
 password: 123456
 schema: mall-boot
 tables:
-  - name: user_address
+  - name: sys_log
+  - name: sys_notice
 onlyModel: true
 outPath: ./data/model/
 outFile:

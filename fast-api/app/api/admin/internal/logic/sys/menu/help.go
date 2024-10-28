@@ -13,7 +13,7 @@ func GetRoutes(list []*sysPb.SysMenu, parentId int64) []*types.RouteData {
 		if item.ParentId == parentId {
 			var menu types.RouteData
 			menu.Id = item.Id
-			menu.Path = item.Path
+			menu.Path = item.RoutePath
 			menu.Component = item.Component
 			menu.Name = item.Name
 			menu.Redirect = item.Redirect
@@ -22,7 +22,7 @@ func GetRoutes(list []*sysPb.SysMenu, parentId int64) []*types.RouteData {
 				Icon:      item.Icon,
 				Roles:     item.Roles,
 				Hidden:    !(item.Visible > 0),
-				KeepAlive: true,
+				KeepAlive: item.KeepAlive > 0,
 			}
 			menu.Children = GetRoutes(list, item.Id)
 			if len(menu.Children) > 0 {

@@ -3,7 +3,7 @@ package user
 import (
 	"context"
 	"fast-boot/app/rpc/ums/umsPb"
-	"fast-boot/common/jwtx"
+	"github.com/hwUltra/fb-tools/jwtx"
 	"github.com/jinzhu/copier"
 
 	"fast-boot/app/api/wxapp/internal/svc"

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { getBrandList, brandAdd, brandDel, brandUpdate } from "@/api/pms/brand";
-import { BrandQuery, BrandInfo, BrandForm } from "@/api/pms/brand/types";
+import BrandApi, { BrandQuery, BrandInfo, BrandForm } from "@/api/pms/brand";
 
 const props = defineProps({
   shopId: {
@@ -63,7 +62,7 @@ function handleQuery() {
   console.log("Brand shopId", props.shopId);
   queryParams.shopId = props.shopId;
   loading.value = true;
-  getBrandList(queryParams)
+  BrandApi.getBrandList(queryParams)
     .then(({ data }) => {
       pageList.value = data.list;
     })
@@ -95,7 +94,7 @@ function handleDelete(id?: number) {
     type: "warning",
   })
     .then(function () {
-      brandDel(ids).then(() => {
+      BrandApi.brandDel(ids).then(() => {
         ElMessage.success("删除成功");
         resetQuery();
       });
@@ -131,7 +130,7 @@ function handleSubmit() {
       formData.shopId = props.shopId;
 
       if (formData.id) {
-        brandUpdate(formData)
+        BrandApi.brandUpdate(formData)
           .then(() => {
             ElMessage.success("修改成功");
             closeDialog();
@@ -139,7 +138,7 @@ function handleSubmit() {
           })
           .finally(() => (loading.value = false));
       } else {
-        brandAdd(formData)
+        BrandApi.brandAdd(formData)
           .then(() => {
             ElMessage.success("新增成功");
             closeDialog();
@@ -164,10 +163,14 @@ function handleSubmit() {
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleQuery"
-            ><i-ep-search />搜索</el-button
-          >
-          <el-button @click="resetQuery"> <i-ep-refresh />重置</el-button>
+          <el-button type="primary" @click="handleQuery">
+            <i-ep-search />
+            搜索
+          </el-button>
+          <el-button @click="resetQuery">
+            <i-ep-refresh />
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
 
@@ -176,15 +179,18 @@ function handleSubmit() {
         <template #header>
           <div class="flex justify-between">
             <div>
-              <el-button type="success" @click="openDialog(0)"
-                ><i-ep-plus />新增</el-button
-              >
+              <el-button type="success" @click="openDialog(0)">
+                <i-ep-plus />
+                新增
+              </el-button>
               <el-button
                 type="danger"
                 :disabled="removeIds.length === 0"
                 @click="handleDelete()"
-                ><i-ep-delete />删除</el-button
               >
+                <i-ep-delete />
+                删除
+              </el-button>
             </div>
           </div>
         </template>
@@ -221,15 +227,19 @@ function handleSubmit() {
                 size="small"
                 link
                 @click="handleDelete(scope.row.id)"
-                ><i-ep-refresh-left />删除</el-button
               >
+                <i-ep-refresh-left />
+                删除
+              </el-button>
               <el-button
                 type="primary"
                 link
                 size="small"
                 @click="openDialog(scope.row.id, scope.row)"
-                ><i-ep-edit />编辑</el-button
               >
+                <i-ep-edit />
+                编辑
+              </el-button>
             </template>
           </el-table-column>
         </el-table>

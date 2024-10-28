@@ -1,11 +1,12 @@
 dbType: mysql
-host: localhost
-port: 3306
+host: 192.168.3.88
+port: 13306
 user: root
 password: 123456
-schema: boot
+schema: mall-boot
 tables:
-  - pms_sku
+  - sys_log
+  - sys_notice
 serviceName: boot
 outFile: ./data/api/boot.api
 jwt: true

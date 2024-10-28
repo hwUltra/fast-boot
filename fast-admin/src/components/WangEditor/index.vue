@@ -23,12 +23,16 @@
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 
 // API 引用
-import { uploadFileApi } from "@/api/file";
+import FileAPI from "@/api/file";
 
 const props = defineProps({
   modelValue: {
     type: [String],
     default: "",
+  },
+  excludeKeys: {
+    type: Array<string>,
+    default: [],
   },
 });
 
@@ -37,8 +41,10 @@ const emit = defineEmits(["update:modelValue"]);
 const modelValue = useVModel(props, "modelValue", emit);
 
 const editorRef = shallowRef(); // 编辑器实例，必须用 shallowRef
-const mode = ref("default"); // 编辑器模式
-const toolbarConfig = ref({}); // 工具条配置
+const mode = ref("simple"); // 编辑器模式
+const toolbarConfig = ref({
+  excludeKeys: props.excludeKeys,
+}); // 工具条配置
 // 编辑器配置
 const editorConfig = ref({
   placeholder: "请输入内容...",
@@ -46,9 +52,8 @@ const editorConfig = ref({
     uploadImage: {
       // 自定义图片上传
       async customUpload(file: any, insertFn: any) {
-        uploadFileApi(file).then((response) => {
-          const url = response.data.url;
-          insertFn(url);
+        FileAPI.upload(file).then((data) => {
+          insertFn(data.url);
         });
       },
     },

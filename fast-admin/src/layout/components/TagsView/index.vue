@@ -1,31 +1,34 @@
 <template>
   <div class="tags-container">
-    <scroll-pane ref="scrollPaneRef" @scroll="handleScroll">
+    <el-scrollbar
+      class="scroll-container"
+      :vertical="false"
+      @wheel.prevent="handleScroll"
+    >
       <router-link
-        ref="tagRef"
         v-for="tag in visitedViews"
-        :key="tag.path"
-        :class="'tags-item ' + (isActive(tag) ? 'active' : '')"
-        :data-path="tag.path"
+        ref="tagRef"
+        :key="tag.fullPath"
+        :class="'tags-item ' + (tagsViewStore.isActive(tag) ? 'active' : '')"
         :to="{ path: tag.path, query: tag.query }"
         @click.middle="!isAffix(tag) ? closeSelectedTag(tag) : ''"
-        @contextmenu.prevent="openTagMenu(tag, $event)"
+        @contextmenu.prevent="openContentMenu(tag, $event)"
       >
         {{ translateRouteTitle(tag.title) }}
-        <span
+        <el-icon
           v-if="!isAffix(tag)"
-          class="tags-item-close"
+          class="tag-close-icon"
           @click.prevent.stop="closeSelectedTag(tag)"
         >
-          <i-ep-close size="10px" />
-        </span>
+          <Close />
+        </el-icon>
       </router-link>
-    </scroll-pane>
+    </el-scrollbar>
 
     <!-- tag标签操作菜单 -->
     <ul
-      v-show="tagMenuVisible"
-      class="tag-menu"
+      v-show="contentMenuVisible"
+      class="contextmenu"
       :style="{ left: left + 'px', top: top + 'px' }"
     >
       <li @click="refreshSelectedTag(selectedTag)">
@@ -57,18 +60,16 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { useRoute, useRouter, RouteRecordRaw } from "vue-router";
 import { resolve } from "path-browserify";
-
 import { translateRouteTitle } from "@/utils/i18n";
 
-import { usePermissionStore } from "@/store/modules/permission";
-import { useTagsViewStore } from "@/store/modules/tagsView";
-import { useSettingsStore } from "@/store/modules/settings";
-import { useAppStore } from "@/store/modules/app";
-
-import ScrollPane from "./ScrollPane.vue";
+import {
+  usePermissionStore,
+  useTagsViewStore,
+  useSettingsStore,
+  useAppStore,
+} from "@/store";
 
 const { proxy } = getCurrentInstance()!;
 const router = useRouter();
@@ -79,7 +80,6 @@ const tagsViewStore = useTagsViewStore();
 const appStore = useAppStore();
 
 const { visitedViews } = storeToRefs(tagsViewStore);
-
 const settingsStore = useSettingsStore();
 const layout = computed(() => settingsStore.layout);
 
@@ -93,7 +93,6 @@ const selectedTag = ref<TagView>({
 });
 
 const affixTags = ref<TagView[]>([]);
-const scrollPaneRef = ref();
 const left = ref(0);
 const top = ref(0);
 
@@ -108,47 +107,44 @@ watch(
   }
 );
 
-const tagMenuVisible = ref(false); // 标签操作菜单显示状态
-watch(tagMenuVisible, (value) => {
+const contentMenuVisible = ref(false); // 右键菜单是否显示
+watch(contentMenuVisible, (value) => {
   if (value) {
-    document.body.addEventListener("click", closeTagMenu);
+    document.body.addEventListener("click", closeContentMenu);
   } else {
-    document.body.removeEventListener("click", closeTagMenu);
+    document.body.removeEventListener("click", closeContentMenu);
   }
 });
 
+/**
+ * 过滤出需要固定的标签
+ */
 function filterAffixTags(routes: RouteRecordRaw[], basePath = "/") {
-  const processRoute = (route: RouteRecordRaw) => {
-    const fullPath = resolve(basePath, route.path);
-
-    const tag: TagView = {
-      path: route.path,
-      fullPath,
-      name: String(route.name),
-      title: route.meta?.title || "no-name",
-      affix: route.meta?.affix,
-      keepAlive: route.meta?.keepAlive,
-    };
-
-    if (tag.affix) {
-      tags.push(tag);
-    }
-
-    if (route.children) {
-      route.children.forEach(processRoute);
-    }
-  };
-
   let tags: TagView[] = [];
-  routes.forEach(processRoute);
-
-
+  routes.forEach((route: RouteRecordRaw) => {
+    const tagPath = resolve(basePath, route.path);
+    if (route.meta?.affix) {
+      tags.push({
+        path: tagPath,
+        fullPath: tagPath,
+        name: String(route.name),
+        title: route.meta?.title || "no-name",
+        affix: route.meta?.affix,
+        keepAlive: route.meta?.keepAlive,
+      });
+    }
+    if (route.children) {
+      const tempTags = filterAffixTags(route.children, basePath + route.path);
+      if (tempTags.length >= 1) {
+        tags = [...tags, ...tempTags];
+      }
+    }
+  });
   return tags;
 }
 
 function initTags() {
   const tags: TagView[] = filterAffixTags(permissionStore.routes);
-
   affixTags.value = tags;
   for (const tag of tags) {
     // Must have tag name
@@ -159,7 +155,6 @@ function initTags() {
 }
 
 function addTags() {
-
   if (route.meta.title) {
     tagsViewStore.addView({
       name: route.name as string,
@@ -168,17 +163,16 @@ function addTags() {
       fullPath: route.fullPath,
       affix: route.meta?.affix,
       keepAlive: route.meta?.keepAlive,
+      query: route.query,
     });
   }
 }
 
 function moveToCurrentTag() {
-
   // 使用 nextTick() 的目的是确保在更新 tagsView 组件之前，scrollPaneRef 对象已经滚动到了正确的位置。
   nextTick(() => {
     for (const tag of visitedViews.value) {
       if (tag.path === route.path) {
-        scrollPaneRef.value.moveToTarget(tag);
         // when query is different then update
         // route.query = { ...route.query, ...tag.query };
         if (tag.fullPath !== route.fullPath) {
@@ -189,15 +183,12 @@ function moveToCurrentTag() {
             fullPath: route.fullPath,
             affix: route.meta?.affix,
             keepAlive: route.meta?.keepAlive,
+            query: route.query,
           });
         }
       }
     }
   });
-}
-
-function isActive(tag: TagView) {
-  return tag.fullPath === route.fullPath;
 }
 
 function isAffix(tag: TagView) {
@@ -207,7 +198,7 @@ function isAffix(tag: TagView) {
 function isFirstView() {
   try {
     return (
-      selectedTag.value.fullPath === "/dashboard" ||
+      selectedTag.value.path === "/dashboard" ||
       selectedTag.value.fullPath === tagsViewStore.visitedViews[1].fullPath
     );
   } catch (err) {
@@ -230,49 +221,29 @@ function refreshSelectedTag(view: TagView) {
   tagsViewStore.delCachedView(view);
   const { fullPath } = view;
   nextTick(() => {
-    router.replace({ path: "/redirect" + fullPath });
+    router.replace("/redirect" + fullPath);
   });
-}
-
-function toLastView(visitedViews: TagView[], view?: TagView) {
-  const latestView = visitedViews.slice(-1)[0];
-  if (latestView && latestView.fullPath) {
-    router.push(latestView.fullPath);
-  } else {
-    // now the default is to redirect to the home page if there is no tags-view,
-    // you can adjust it according to your needs.
-    if (view?.name === "Dashboard") {
-      // to reload home page
-      router.replace({ path: "/redirect" + view.fullPath });
-    } else {
-      router.push("/");
-    }
-  }
 }
 
 function closeSelectedTag(view: TagView) {
   tagsViewStore.delView(view).then((res: any) => {
-    if (isActive(view)) {
-      toLastView(res.visitedViews, view);
+    if (tagsViewStore.isActive(view)) {
+      tagsViewStore.toLastView(res.visitedViews, view);
     }
   });
 }
 
 function closeLeftTags() {
   tagsViewStore.delLeftViews(selectedTag.value).then((res: any) => {
-    if (
-      !res.visitedViews.find((item: any) => item.fullPath === route.fullPath)
-    ) {
-      toLastView(res.visitedViews);
+    if (!res.visitedViews.find((item: any) => item.path === route.path)) {
+      tagsViewStore.toLastView(res.visitedViews);
     }
   });
 }
 function closeRightTags() {
   tagsViewStore.delRightViews(selectedTag.value).then((res: any) => {
-    if (
-      !res.visitedViews.find((item: any) => item.fullPath === route.fullPath)
-    ) {
-      toLastView(res.visitedViews);
+    if (!res.visitedViews.find((item: any) => item.path === route.path)) {
+      tagsViewStore.toLastView(res.visitedViews);
     }
   });
 }
@@ -286,11 +257,14 @@ function closeOtherTags() {
 
 function closeAllTags(view: TagView) {
   tagsViewStore.delAllViews().then((res: any) => {
-    toLastView(res.visitedViews, view);
+    tagsViewStore.toLastView(res.visitedViews, view);
   });
 }
 
-function openTagMenu(tag: TagView, e: MouseEvent) {
+/**
+ * 打开右键菜单
+ */
+function openContentMenu(tag: TagView, e: MouseEvent) {
   const menuMinWidth = 105;
 
   const offsetLeft = proxy?.$el.getBoundingClientRect().left; // container margin left
@@ -311,17 +285,24 @@ function openTagMenu(tag: TagView, e: MouseEvent) {
     top.value = e.clientY;
   }
 
-  tagMenuVisible.value = true;
+  contentMenuVisible.value = true;
   selectedTag.value = tag;
 }
 
-function closeTagMenu() {
-  tagMenuVisible.value = false;
+/**
+ * 关闭右键菜单
+ */
+function closeContentMenu() {
+  contentMenuVisible.value = false;
 }
 
+/**
+ * 滚动事件
+ */
 function handleScroll() {
-  closeTagMenu();
+  closeContentMenu();
 }
+
 function findOutermostParent(tree: any[], findName: string) {
   let parentMap: any = {};
 
@@ -349,11 +330,12 @@ function findOutermostParent(tree: any[], findName: string) {
 
   return null;
 }
+
 const againActiveTop = (newVal: string) => {
   if (layout.value !== "mix") return;
   const parent = findOutermostParent(permissionStore.routes, newVal);
   if (appStore.activeTopMenu !== parent.path) {
-    appStore.changeTopActive(parent.path);
+    appStore.activeTopMenu(parent.path);
   }
 };
 // 如果是混合模式，更改selectedTag，需要对应高亮的activeTop
@@ -389,6 +371,10 @@ onMounted(() => {
     cursor: pointer;
     border: 1px solid var(--el-border-color-light);
 
+    &:hover {
+      color: var(--el-color-primary);
+    }
+
     &:first-of-type {
       margin-left: 15px;
     }
@@ -397,14 +383,20 @@ onMounted(() => {
       margin-right: 15px;
     }
 
-    &:hover {
-      color: var(--el-color-primary);
+    .tag-close-icon {
+      vertical-align: -0.15em;
+      cursor: pointer;
+      border-radius: 50%;
+
+      &:hover {
+        color: #fff;
+        background-color: var(--el-color-primary);
+      }
     }
 
     &.active {
       color: #fff;
       background-color: var(--el-color-primary);
-      border-color: var(--el-color-primary);
 
       &::before {
         display: inline-block;
@@ -415,20 +407,16 @@ onMounted(() => {
         background: #fff;
         border-radius: 50%;
       }
-    }
 
-    &-close {
-      border-radius: 100%;
-
-      &:hover {
-        color: #fff;
-        background: rgb(0 0 0 / 16%);
+      .tag-close-icon:hover {
+        color: var(--el-color-primary);
+        background-color: var(--el-fill-color-light);
       }
     }
   }
 }
 
-.tag-menu {
+.contextmenu {
   position: absolute;
   z-index: 99;
   font-size: 12px;
@@ -443,6 +431,21 @@ onMounted(() => {
     &:hover {
       background: var(--el-fill-color-light);
     }
+  }
+}
+
+.scroll-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+
+  .el-scrollbar__bar {
+    bottom: 0;
+  }
+
+  .el-scrollbar__wrap {
+    height: 49px;
   }
 }
 </style>

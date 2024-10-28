@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
-	"fast-boot/common/cryptx"
-	"fast-boot/common/jwtx"
+	"github.com/hwUltra/fb-tools/jwtx"
+	"github.com/hwUltra/fb-tools/utils"
 	"google.golang.org/grpc/status"
 	"time"
 
@@ -36,7 +36,7 @@ func (l *LoginLogic) Login(in *sysPb.LoginReq) (*sysPb.LoginResp, error) {
 		logx.WithContext(l.ctx).Errorf("用户不存在Username: %s", in.Username)
 		return nil, status.Error(100, "用户不存在")
 	}
-	password := cryptx.PasswordEncrypt(l.svcCtx.Config.Salt, in.Password)
+	password := utils.PasswordEncrypt(l.svcCtx.Config.Salt, in.Password)
 	if password != res.Password {
 		return nil, status.Error(100, "密码错误")
 	}

@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
-	"fast-boot/common/jwtx"
 	"fmt"
+	"github.com/hwUltra/fb-tools/jwtx"
 	"time"
 
 	"fast-boot/app/rpc/ums/internal/svc"

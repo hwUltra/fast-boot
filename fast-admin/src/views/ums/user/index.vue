@@ -10,24 +10,27 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleQuery"
-            ><template #icon><i-ep-search /></template>搜索</el-button
-          >
+          <el-button type="primary" @click="handleQuery">
+            <template #icon><i-ep-search /></template>
+            搜索
+          </el-button>
           <el-button @click="resetQuery">
             <template #icon><i-ep-refresh /></template>
-            重置</el-button
-          >
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
     <el-card shadow="never" class="table-container">
       <template #header>
-        <el-button type="success" @click="openDialog('user-form')"
-          ><i-ep-plus />新增</el-button
-        >
-        <el-button type="danger" @click="handleDelete()"
-          ><i-ep-delete />删除</el-button
-        >
+        <el-button type="success" @click="openDialog('user-form')">
+          <i-ep-plus />
+          新增
+        </el-button>
+        <el-button type="danger" @click="handleDelete()">
+          <i-ep-delete />
+          删除
+        </el-button>
       </template>
 
       <el-table
@@ -59,22 +62,28 @@
               size="small"
               link
               @click="resetPassword(scope.row)"
-              ><i-ep-refresh-left />重置密码</el-button
             >
+              <i-ep-refresh-left />
+              重置密码
+            </el-button>
             <el-button
               type="primary"
               link
               size="small"
               @click="openDialog('user-form', scope.row.id)"
-              ><i-ep-edit />编辑</el-button
             >
+              <i-ep-edit />
+              编辑
+            </el-button>
             <el-button
               type="primary"
               link
               size="small"
               @click="handleDelete(scope.row.id)"
-              ><i-ep-delete />删除</el-button
             >
+              <i-ep-delete />
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -115,13 +124,24 @@
           <el-input v-model="formData.nickname" placeholder="请输入用户昵称" />
         </el-form-item>
         <el-form-item label="性别" prop="gender">
-          <dictionary v-model="formData.gender" type-code="gender" />
+          <el-select
+            v-model="formData.gender"
+            placeholder="Select"
+            size="large"
+          >
+            <el-option
+              v-for="item in genderOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="手机号" prop="mobile">
           <el-input v-model="formData.mobile" placeholder="请输入手机号码" />
         </el-form-item>
         <el-form-item label="头像" prop="avatar">
-          <single-upload v-model="formData.avatar" />
+          <SingleImageUpload v-model="formData.avatar" />
         </el-form-item>
       </el-form>
       <!-- 弹窗底部操作按钮 -->
@@ -135,14 +155,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {
-  getList,
-  getUserInfo,
-  addUser,
-  updateUser,
-  delUser,
-} from "@/api/ums/user";
-import { UserQuery, UserPageVO, UserForm } from "@/api/ums/user/types";
+import UserAPI, { UserQuery, UserPageVO, UserForm } from "@/api/ums/user";
 
 const loading = ref(false);
 const total = ref(0);
@@ -185,6 +198,21 @@ const userRule = reactive({
   ],
 });
 
+const genderOptions = [
+  {
+    value: 1,
+    label: "男",
+  },
+  {
+    value: 2,
+    label: "女",
+  },
+  {
+    value: 0,
+    label: "保密",
+  },
+];
+
 onMounted(() => {
   handleQuery();
 });
@@ -195,8 +223,8 @@ onMounted(() => {
 function handleQuery() {
   // 重置父组件
   loading.value = true;
-  getList(queryParams)
-    .then(({ data }) => {
+  UserAPI.getList(queryParams)
+    .then((data) => {
       pageData.value = data.list;
       total.value = data.total;
     })
@@ -246,7 +274,7 @@ function handleDelete(id?: number) {
     type: "warning",
   })
     .then(function () {
-      delUser(userIds).then(() => {
+      UserAPI.delUser(userIds).then(() => {
         ElMessage.success("删除成功");
         resetQuery();
       });
@@ -265,7 +293,7 @@ async function openDialog(type: string, id?: number) {
   if (dialog.type === "user-form") {
     if (id) {
       dialog.title = "修改用户";
-      getUserInfo(id).then(({ data }) => {
+      UserAPI.getUserInfo(id).then((data) => {
         Object.assign(formData, { ...data });
       });
     } else {
@@ -299,7 +327,7 @@ const handleSubmit = useThrottleFn(() => {
         console.log(formData);
         loading.value = true;
         if (userId) {
-          updateUser(formData)
+          UserAPI.updateUser(formData)
             .then(() => {
               ElMessage.success("修改用户成功");
               closeDialog();
@@ -307,7 +335,7 @@ const handleSubmit = useThrottleFn(() => {
             })
             .finally(() => (loading.value = false));
         } else {
-          addUser(formData)
+          UserAPI.addUser(formData)
             .then(() => {
               ElMessage.success("新增用户成功");
               closeDialog();

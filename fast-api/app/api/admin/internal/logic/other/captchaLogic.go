@@ -2,9 +2,11 @@ package other
 
 import (
 	"context"
+	captchaTool "github.com/hwUltra/fb-tools/captcha"
+
 	"fast-boot/app/api/admin/internal/svc"
 	"fast-boot/app/api/admin/internal/types"
-	captchaTool "fast-boot/common/captcha"
+
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -14,6 +16,7 @@ type CaptchaLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 验证码
 func NewCaptchaLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CaptchaLogic {
 	return &CaptchaLogic{
 		Logger: logx.WithContext(ctx),
@@ -37,4 +40,5 @@ func (l *CaptchaLogic) Captcha() (resp *types.CaptchaResp, err error) {
 			CaptchaKey:    id,
 		}, nil
 	}
+
 }

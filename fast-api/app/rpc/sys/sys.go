@@ -1,13 +1,14 @@
 package main
 
 import (
-	"fast-boot/app/rpc/sys/sysPb"
 	"flag"
 	"fmt"
 
 	"fast-boot/app/rpc/sys/internal/config"
 	"fast-boot/app/rpc/sys/internal/server"
 	"fast-boot/app/rpc/sys/internal/svc"
+	"fast-boot/app/rpc/sys/sysPb"
+
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
@@ -33,6 +34,6 @@ func main() {
 	})
 	defer s.Stop()
 
-	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
+	fmt.Printf("Starting sys rpc server at %s...\n", c.ListenOn)
 	s.Start()
 }

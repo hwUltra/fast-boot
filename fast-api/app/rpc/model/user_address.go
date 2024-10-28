@@ -1,6 +1,6 @@
 package model
 
-import "fast-boot/common/gormV2"
+import "github.com/hwUltra/fb-tools/gormV2"
 
 type UserAddressModel struct {
 	gormV2.BaseDel

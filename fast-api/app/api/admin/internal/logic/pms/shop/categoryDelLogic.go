@@ -2,9 +2,10 @@ package shop
 
 import (
 	"context"
+	"fast-boot/app/rpc/pms/pmsPb"
+
 	"fast-boot/app/api/admin/internal/svc"
 	"fast-boot/app/api/admin/internal/types"
-	"fast-boot/app/rpc/pms/pmsPb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -15,6 +16,7 @@ type CategoryDelLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
+// 删除类型
 func NewCategoryDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CategoryDelLogic {
 	return &CategoryDelLogic{
 		Logger: logx.WithContext(ctx),
@@ -23,10 +25,10 @@ func NewCategoryDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Categ
 	}
 }
 
-func (l *CategoryDelLogic) CategoryDel(req *types.CategoryDelReq) error {
+func (l *CategoryDelLogic) CategoryDel(req *types.PathIdsReq) (resp *types.NullResp, err error) {
 	if _, err := l.svcCtx.PmsRpc.PmsCategoryDel(l.ctx, &pmsPb.IdsReq{Ids: req.Ids}); err != nil {
-		return err
+		return &types.NullResp{}, err
 	}
 
-	return nil
+	return &types.NullResp{}, nil
 }

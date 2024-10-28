@@ -233,7 +233,7 @@ func (s *Schema) String() string {
 		m.GenRpcUpdateReqMessage(buf, s)
 		m.GenRpcDelReqMessage(buf)
 		m.GenRpcGetReqMessage(buf)
-		m.GenRpcListReqMessage(buf, s)
+		m.GenRpcPageReqMessage(buf, s)
 	}
 
 	buf.WriteString("\n")
@@ -260,7 +260,7 @@ func (s *Schema) String() string {
 		funcTpl += "\t rpc " + m.Name + "Update(" + m.Name + "UpdateReq) returns (" + m.Name + "UpdateResp); \n"
 		funcTpl += "\t rpc " + m.Name + "Del(" + m.Name + "DelReq) returns (" + m.Name + "DelResp); \n"
 		funcTpl += "\t rpc " + m.Name + "Get(" + m.Name + "GetReq) returns (" + m.Name + "GetResp); \n"
-		funcTpl += "\t rpc " + m.Name + "List(" + m.Name + "ListReq) returns (" + m.Name + "ListResp); \n"
+		funcTpl += "\t rpc " + m.Name + "Page(" + m.Name + "PageReq) returns (" + m.Name + "PageResp); \n"
 	}
 	funcTpl = funcTpl + "\n}"
 	buf.WriteString(funcTpl)
@@ -525,12 +525,12 @@ func (m Message) GenRpcGetReqMessage(buf *bytes.Buffer) {
 	m.Fields = mOrginFields
 }
 
-// GenRpcListReqMessage gen add resp message
-func (m Message) GenRpcListReqMessage(buf *bytes.Buffer, s *Schema) {
+// GenRpcPageReqMessage gen add resp message
+func (m Message) GenRpcPageReqMessage(buf *bytes.Buffer, s *Schema) {
 	mOrginName := m.Name
 	mOrginFields := m.Fields
 
-	m.Name = mOrginName + "ListReq"
+	m.Name = mOrginName + "PageReq"
 	curFields := []MessageField{
 		{Typ: "int64", Name: "page", tag: 1, Comment: "page"},
 		{Typ: "int64", Name: "pageSize", tag: 2, Comment: "pageSize"},
@@ -557,7 +557,7 @@ func (m Message) GenRpcListReqMessage(buf *bytes.Buffer, s *Schema) {
 
 	//resp
 	firstWord := strings.ToLower(string(m.Name[0]))
-	m.Name = mOrginName + "ListResp"
+	m.Name = mOrginName + "PageResp"
 	m.Fields = []MessageField{
 		{Typ: "repeated " + mOrginName, Name: From(firstWord + mOrginName[1:]).ToCamelWithStartLower(), tag: 1, Comment: From(firstWord + mOrginName[1:]).ToCamelWithStartLower()},
 	}
@@ -648,9 +648,9 @@ func parseColumn(s *Schema, msg *Message, col Column) error {
 	case "char", "varchar", "text", "longtext", "mediumtext", "tinytext":
 		fieldType = "string"
 	case "enum", "set":
-		// Parse c.ColumnType to get the enum list
-		enumList := regexp.MustCompile(`[enum|set]\((.+?)\)`).FindStringSubmatch(col.ColumnType)
-		enums := strings.FieldsFunc(enumList[1], func(c rune) bool {
+		// Parse c.ColumnType to get the enum Page
+		enumPage := regexp.MustCompile(`[enum|set]\((.+?)\)`).FindStringSubmatch(col.ColumnType)
+		enums := strings.FieldsFunc(enumPage[1], func(c rune) bool {
 			cs := string(c)
 			return "," == cs || "'" == cs
 		})

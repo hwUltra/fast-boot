@@ -10,13 +10,14 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleQuery"
-            ><template #icon><i-ep-search /></template>搜索</el-button
-          >
+          <el-button type="primary" @click="handleQuery">
+            <template #icon><i-ep-search /></template>
+            搜索
+          </el-button>
           <el-button @click="resetQuery">
             <template #icon><i-ep-refresh /></template>
-            重置</el-button
-          >
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
 
@@ -33,9 +34,9 @@
           <el-table-column label="配送费" prop="distributionFee" width="90" />
           <el-table-column label="状态" align="center" prop="status">
             <template #default="scope">
-              <el-tag :type="scope.row.status == 1 ? 'success' : 'info'">{{
-                scope.row.status == 1 ? "启用" : "禁用"
-              }}</el-tag>
+              <el-tag :type="scope.row.status == 1 ? 'success' : 'info'">
+                {{ scope.row.status == 1 ? "启用" : "禁用" }}
+              </el-tag>
             </template>
           </el-table-column>
           <el-table-column label="创建时间" align="center" prop="createdAt" />
@@ -47,22 +48,28 @@
                 size="small"
                 link
                 @click="opencDialog(scope.row.id)"
-                ><i-ep-refresh-left />分类管理</el-button
               >
+                <i-ep-refresh-left />
+                分类管理
+              </el-button>
               <el-button
                 type="primary"
                 size="small"
                 link
                 @click="opendDialog(scope.row.id)"
-                ><i-ep-refresh-left />品牌管理</el-button
               >
+                <i-ep-refresh-left />
+                品牌管理
+              </el-button>
               <el-button
                 type="primary"
                 link
                 size="small"
                 @click="openDialog(scope.row)"
-                ><i-ep-edit />编辑</el-button
               >
+                <i-ep-edit />
+                编辑
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -147,8 +154,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getShopList, shopUpdate } from "@/api/pms/shop";
-import { ShopQuery, ShopVO, ShopForm } from "@/api/pms/shop/types";
+import ShopAPI, { ShopQuery, ShopVO, ShopForm } from "@/api/pms/shop";
 
 import CategoryData from "@/views/pms/shop/CategoryData.vue";
 import BrandData from "@/views/pms/shop/BrandData.vue";
@@ -203,14 +209,11 @@ onMounted(() => {
 function handleQuery() {
   // 重置父组件
   loading.value = true;
-  getShopList(state.queryParams)
-    .then(({ data }) => {
-      state.pageData = data.list;
-      state.total = data.total;
-    })
-    .finally(() => {
-      loading.value = false;
-    });
+  ShopAPI.getShopList(state.queryParams).then((data) => {
+    state.pageData = data.list;
+    state.total = data.total;
+    loading.value = false;
+  });
 }
 
 /** 重置查询 */

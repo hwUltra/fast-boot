@@ -1,10 +1,10 @@
 package config
 
 import (
-	"fast-boot/common/miniox"
-	"fast-boot/common/pay"
-	"fast-boot/common/sms"
-	"fast-boot/common/wechat"
+	"github.com/hwUltra/fb-tools/miniox"
+	"github.com/hwUltra/fb-tools/pay"
+	"github.com/hwUltra/fb-tools/sms"
+	"github.com/hwUltra/fb-tools/wechat"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"

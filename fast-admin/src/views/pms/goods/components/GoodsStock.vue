@@ -177,9 +177,8 @@
 </template>
 
 <script setup lang="ts">
-// API 引用
-// import { getAttributeList } from "@/api/pms/attribute";
-import { editGoods } from "@/api/pms/goods";
+
+import GoodsApi from "@/api/pms/goods";
 
 const emit = defineEmits(["prev", "next", "update:modelValue"]);
 import { useRouter } from "vue-router";
@@ -579,7 +578,7 @@ function submitForm() {
           submitsData.skuList = skuList;
 
           // 新增商品提交
-          editGoods(submitsData).then(() => {
+          GoodsApi.editGoods(submitsData).then(() => {
             router.push({ path: "/pms/goods" });
             ElNotification({
               title: "提示",

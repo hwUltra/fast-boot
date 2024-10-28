@@ -13,8 +13,8 @@ func init() {
 	message[GRPC_CODE] = "数据验证失败"
 }
 
-func MapErrMsg(errcode uint32) string {
-	if msg, ok := message[errcode]; ok {
+func MapErrMsg(errCode uint32) string {
+	if msg, ok := message[errCode]; ok {
 		return msg
 	} else {
 		return "服务器开小差啦,稍后再来试一试"

@@ -1,10 +1,10 @@
 type (
     //登陆
     LoginReq {
-        UserName string `json:"username"`
-        Password string `json:"password"`
-        CaptchaCode string `json:"captchaCode"`
-        CaptchaKey string `json:"captchaKey"`
+        UserName string `json:"username" validate:"min=2,max=50"    label:"用户名"`
+        Password string `json:"password" validate:"min=2,max=50"    label:"密码"`
+        CaptchaCode string `json:"captchaCode" validate:"min=1,max=50"    label:"CaptchaCode"`
+        CaptchaKey string `json:"captchaKey" validate:"min=2,max=50"    label:"CaptchaKey"`
     }
 
     // 用户信息
@@ -23,6 +23,9 @@ type (
         Perms       []string    `json:"perms,omitempty"`
     }
 
+    LogoutResp{
+
+    }
 
 )
 
@@ -30,7 +33,7 @@ type (
     group: auth
     prefix: /auth
 )
-service admin-api {
+service admin {
     @doc(
         summary: "登录"
     )
@@ -46,7 +49,7 @@ service admin-api {
     jwt: Auth
     prefix: /auth
 )
-service admin-api {
+service admin {
     @doc(
         summary: "刷新ToKen"
     )
@@ -64,7 +67,7 @@ service admin-api {
         summary: "退出登录"
     )
     @handler logout
-    get /logout
+    get /logout returns (LogoutResp)
 
 }
 
