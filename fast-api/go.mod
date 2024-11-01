@@ -5,7 +5,7 @@ go 1.22
 require (
 	github.com/gorilla/websocket v1.5.3
 	github.com/hibiken/asynq v0.24.1
-	github.com/hwUltra/fb-tools v0.1.4
+	github.com/hwUltra/fb-tools v0.2.0
 	github.com/jinzhu/copier v0.4.0
 	github.com/pkg/errors v0.9.1
 	github.com/zeromicro/go-zero v1.7.3
@@ -14,7 +14,7 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
-	github.com/aliyun/alibaba-cloud-sdk-go v1.63.27 // indirect
+	github.com/aliyun/alibaba-cloud-sdk-go v1.63.40 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bradfitz/gomemcache v0.0.0-20230905024940-24af94b03874 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect

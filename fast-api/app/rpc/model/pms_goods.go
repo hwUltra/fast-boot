@@ -35,7 +35,7 @@ func (*PmsGoodsModel) TableName() string {
 func (*PmsGoodsModel) WithShopId(shopId int64) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if shopId > 0 {
-			return db.Where("`shop_id` = ?", shopId)
+			return db.Where("shop_id = ?", shopId)
 		}
 		return db
 	}
@@ -44,7 +44,7 @@ func (*PmsGoodsModel) WithShopId(shopId int64) func(db *gorm.DB) *gorm.DB {
 func (*PmsGoodsModel) WithCategoryId(categoryId int64) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if categoryId > 0 {
-			return db.Where("`category_id` = ?", categoryId)
+			return db.Where("category_id = ?", categoryId)
 		}
 		return db
 	}
@@ -53,7 +53,7 @@ func (*PmsGoodsModel) WithCategoryId(categoryId int64) func(db *gorm.DB) *gorm.D
 func (*PmsGoodsModel) WithStatus(status int64) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if status != -1 {
-			return db.Where("`status` = ?", status)
+			return db.Where("status = ?", status)
 		}
 		return db
 	}
@@ -62,7 +62,7 @@ func (*PmsGoodsModel) WithStatus(status int64) func(db *gorm.DB) *gorm.DB {
 func (*PmsGoodsModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(keyword) > 0 {
-			return db.Where("`name` LIKE ?", "%"+keyword+"%")
+			return db.Where("name LIKE ?", "%"+keyword+"%")
 		}
 		return db
 	}
@@ -71,7 +71,7 @@ func (*PmsGoodsModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
 func (*PmsGoodsModel) WithCreatedAt(startTime string, endTime string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(startTime) > 0 && len(endTime) > 0 {
-			return db.Where("`created_at` BETWEEN ? AND ?", startTime, endTime)
+			return db.Where("created_at BETWEEN ? AND ?", startTime, endTime)
 		}
 		return db
 	}

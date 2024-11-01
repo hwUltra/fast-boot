@@ -33,7 +33,7 @@ func (l *DictDataPageLogic) DictDataPage(in *sysPb.DictDataPageReq) (*sysPb.Dict
 
 	total := int64(0)
 	if err := l.svcCtx.GormConn.Model(dictDataModel).
-		Where("`dict_id` = ?", in.DictId).
+		Where("dict_id = ?", in.DictId).
 		Scopes(dictDataModel.WithKeywords(in.Keywords)).
 		Count(&total).Error; err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Failed to get  err : %v , in :%+v", err, in)
@@ -42,7 +42,7 @@ func (l *DictDataPageLogic) DictDataPage(in *sysPb.DictDataPageReq) (*sysPb.Dict
 	if total > 0 {
 		items := make([]*model.SysDictDataModel, 0)
 		l.svcCtx.GormConn.Model(dictDataModel).
-			Where("`dict_id` = ?", in.DictId).
+			Where("dict_id = ?", in.DictId).
 			Scopes(
 				dictDataModel.WithKeywords(in.Keywords),
 				gormV2.Paginate(int(in.PageNum), int(in.PageSize))).

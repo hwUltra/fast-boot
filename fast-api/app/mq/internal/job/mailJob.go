@@ -34,8 +34,8 @@ func HandleSchedulerMail(ctx context.Context, task *asynq.Task) error {
 		return err
 	}
 	// TODO: 模拟处理
-	fmt.Println("**** begin!")
+	fmt.Println("SchedulerMail begin!")
 	fmt.Printf("%s - Sending to %s, subject: %s, body: %s\n", time.Now().String(), payload.To, payload.Subject, payload.Body)
-	fmt.Println("**** end")
+	fmt.Println("SchedulerMail end")
 	return nil
 }

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
-	"github.com/hwUltra/fb-tools/websocket/core"
+	"github.com/hwUltra/fb-tools/wsCore"
 	"github.com/zeromicro/go-zero/core/logc"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"net/http"
@@ -15,13 +15,13 @@ import (
 )
 
 type Ws struct {
-	WsClient    *core.Client
+	WsClient    *wsCore.Client
 	RedisClient *redis.Redis
 }
 
 // OnOpen 事件函数
-func OnOpen(hub *core.Hub, rw http.ResponseWriter, r *http.Request, c config.Config) (*Ws, bool) {
-	if client, ok := (&core.Client{}).OnOpen(hub, rw, r); ok {
+func OnOpen(hub *wsCore.Hub, rw http.ResponseWriter, r *http.Request, c config.Config) (*Ws, bool) {
+	if client, ok := (&wsCore.Client{}).OnOpen(hub, rw, r); ok {
 		ws := &Ws{}
 		ws.WsClient = client
 		ws.RedisClient = redis.MustNewRedis(c.Redis)
@@ -141,7 +141,7 @@ func (w *Ws) CloseUid(uid int64) {
 }
 
 // GetClientByUid 获取Client
-func (w *Ws) GetClientByUid(uid int64) (*core.Client, bool) {
+func (w *Ws) GetClientByUid(uid int64) (*wsCore.Client, bool) {
 	for onlineClient := range w.WsClient.Hub.Clients {
 		if onlineClient.Uid == uid {
 			return onlineClient, true
@@ -151,7 +151,7 @@ func (w *Ws) GetClientByUid(uid int64) (*core.Client, bool) {
 }
 
 // GetClientById 获取Client
-func (w *Ws) GetClientById(clientId string) (*core.Client, bool) {
+func (w *Ws) GetClientById(clientId string) (*wsCore.Client, bool) {
 	for onlineClient := range w.WsClient.Hub.Clients {
 		if onlineClient.ClientId == clientId {
 			return onlineClient, true

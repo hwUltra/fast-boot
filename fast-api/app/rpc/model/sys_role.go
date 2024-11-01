@@ -21,8 +21,8 @@ func (*SysRoleModel) TableName() string {
 func (*SysRoleModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(keyword) > 0 {
-			return db.Where("`name` LIKE ?", "%"+keyword+"%").
-				Or("`code` LIKE ?", "%"+keyword+"%")
+			return db.Where("name LIKE ?", "%"+keyword+"%").
+				Or("code LIKE ?", "%"+keyword+"%")
 		}
 		return db
 

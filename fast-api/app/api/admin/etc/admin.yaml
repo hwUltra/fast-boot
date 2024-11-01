@@ -4,6 +4,7 @@ Port: 7770
 MaxBytes: 10485760
 
 WebSocket:
+  Enable: true
   Path: "/ws"
 
 Auth:
@@ -20,6 +21,7 @@ MinioX:
   MinIOAccessSecretKey: 2ej0kOfnNNxt5Jlz6pIw98aGuqUOSOg0BGqyV5L2
   MinIOEndpoint: 192.168.3.88:9000
   MinIOBucket: files
+  MinIOFile: file
   MinIOSSLBool: false
   MinIOBucketLocation: cn-north-12
   MinIOBasePath: http://192.168.3.88:9000

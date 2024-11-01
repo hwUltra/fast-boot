@@ -38,7 +38,7 @@ type (
 		Name  string `json:"name"`
 		Icon  string `json:"icon"`
 		Sort  int64 `json:"sort"`
-		Visible  int64 `json:"visible"`
+		Visible  bool `json:"visible"`
 		CreatedAt  string `json:"createdAt"`
 		Children []*PmsCategory `json:"children,omitempty"`
 	}
@@ -59,7 +59,7 @@ type (
 		Name  string `json:"name"`
 		Icon  string `json:"icon"`
 		Sort  int64 `json:"sort"`
-		Visible  int64 `json:"visible"`
+		Visible  bool `json:"visible"`
 	}
 
 	PmsCategoryAttribute {

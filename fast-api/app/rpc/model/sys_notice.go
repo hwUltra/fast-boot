@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/utils"
 	"gorm.io/gorm"
 	"time"
 )
@@ -39,9 +40,14 @@ func (*SysNoticeModel) WithTitle(title string) func(db *gorm.DB) *gorm.DB {
 func (*SysNoticeModel) WithUid(uid int64) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if uid > 0 {
-			return db.Where("find_in_set(?, `target_user_ids`)", uid)
-		}
 
+			//if SqlType == gormV2.PostgresqlType {
+			//'1' = ANY(string_to_array(target_user_ids, ','));
+			return db.Where("?=ANY(string_to_array(target_user_ids, ','))", utils.ToString(uid))
+			//} else {
+			//return db.Where("find_in_set(?, `target_user_ids`)", uid)
+			//}
+		}
 		return db
 	}
 }

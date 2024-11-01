@@ -7,9 +7,9 @@
 
 #### 后端技术栈
 
-1. go-zero 1.7.0
+1. go-zero 1.7.3
 2. Gorm 2.3
-3. MySQL 8.0
+3. pgsql 16.0
 4. Redis 6.0.8
 5. Etcd 
 

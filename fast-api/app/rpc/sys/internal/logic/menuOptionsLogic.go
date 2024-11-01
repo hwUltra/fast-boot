@@ -27,7 +27,7 @@ func (l *MenuOptionsLogic) MenuOptions(in *sysPb.AnyReq) (*sysPb.MenuOptionsResp
 	menuModel := model.SysMenuModel{}
 	var items []*model.SysMenuModel
 	l.svcCtx.GormConn.Model(menuModel).
-		Where("visible = 1").
+		Where("visible = true").
 		Order("sort asc, id asc ").
 		Scan(&items)
 

@@ -29,8 +29,9 @@ func NewFileUploadLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FileUp
 }
 
 func (l *FileUploadLogic) FileUpload(r *http.Request) (resp *types.FileUpload, err error) {
-	minioX := miniox.CreateMinioX(l.svcCtx.Config.MinioX)
+	minioX := miniox.NewMinioX(l.svcCtx.Config.MinioX)
 	res, err := minioX.MinIOUpload(r)
+	//fmt.Println("res", res, err)
 	if err != nil {
 		return nil, xerr.NewErrCodeMsg(10011, "请上传正确的文件")
 	}

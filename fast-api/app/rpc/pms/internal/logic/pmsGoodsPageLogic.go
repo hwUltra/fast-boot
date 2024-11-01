@@ -54,7 +54,7 @@ func (l *PmsGoodsPageLogic) PmsGoodsPage(in *pmsPb.PmsGoodsPageReq) (*pmsPb.PmsG
 				m.WithCategoryId(in.CategoryId),
 				m.WithKeywords(in.Keywords),
 				m.WithCreatedAt(in.StartTime, in.EndTime)).
-			Preload("Category", "visible = 1").
+			Preload("Category", "visible = true").
 			Preload("Brand").
 			Preload("SkuList", "status = 1").
 			Preload("SpecList", "type = 1 and status = 1").

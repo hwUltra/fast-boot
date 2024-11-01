@@ -43,7 +43,7 @@ func (m *CorsMiddleware) Handler() http.Handler {
 // setHeader 设置响应头
 func setHeader(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-CSRF-Token, authorization, beid, ptyid")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-CSRF-Token, authorization, bid, ptyid")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH")
 	w.Header().Set("Access-Control-Expose-Headers", "Content-Length, Content-Type, Access-Control-Allow-Origin, Access-Control-Allow-Headers")
 	w.Header().Set("Access-Control-Allow-Credentials", "true")

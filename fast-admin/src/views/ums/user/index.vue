@@ -327,7 +327,7 @@ const handleSubmit = useThrottleFn(() => {
         console.log(formData);
         loading.value = true;
         if (userId) {
-          UserAPI.updateUser(formData)
+          UserAPI.updateUser(userId,formData)
             .then(() => {
               ElMessage.success("修改用户成功");
               closeDialog();

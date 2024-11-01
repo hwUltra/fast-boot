@@ -5,8 +5,10 @@ import (
 	"fast-boot/app/rpc/model"
 	"fast-boot/app/rpc/ums/internal/svc"
 	"fast-boot/app/rpc/ums/umsPb"
+	"fast-boot/common/globalkey"
 	"fast-boot/common/xerr"
 	"github.com/pkg/errors"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -52,9 +54,9 @@ func (l *UserUpdateLogic) UserUpdate(in *umsPb.UserForm) (*umsPb.SuccessResp, er
 		info.Signature = in.Signature
 	}
 	if len(in.Birthday) > 0 {
-		info.Birthday = in.Birthday
-		//t, _ := time.ParseInLocation("2006-01-02", in.Birthday, time.Local) //这里按照当前时区转
-		//info.Birthday = sql.NullTime{Time: t, Valid: true}
+		//info.Birthday = in.Birthday
+		t, _ := time.ParseInLocation(globalkey.DateTimeFormatYMDTime, in.Birthday, time.Local) //这里按照当前时区转
+		info.Birthday = t
 	}
 	if len(in.Tags) > 0 && (in.Tags != info.Tags) {
 		info.Tags = in.Tags

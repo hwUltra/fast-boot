@@ -12,7 +12,7 @@ type PmsCategoryModel struct {
 	Name     string `gorm:"column:name;not null" json:"name"`                 // 商品分类名称
 	Icon     string `gorm:"column:icon;not null" json:"icon"`                 // 图标地址
 	Sort     int64  `gorm:"column:sort;not null;default:1" json:"sort"`       // 排序
-	Visible  int8   `gorm:"column:visible;not null;default:1" json:"visible"` // 显示状态:( 0:隐藏 1:显示)
+	Visible  bool   `gorm:"column:visible;not null;default:1" json:"visible"` // 显示状态:( 0:隐藏 1:显示)
 	//Attributes []PmsCategoryAttributeModel `gorm:"foreignKey:CategoryId"`
 }
 

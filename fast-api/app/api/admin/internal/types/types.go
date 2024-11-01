@@ -173,7 +173,7 @@ type PmsCategory struct {
 	Name      string         `json:"name"`
 	Icon      string         `json:"icon"`
 	Sort      int64          `json:"sort"`
-	Visible   int64          `json:"visible"`
+	Visible   bool           `json:"visible"`
 	CreatedAt string         `json:"createdAt"`
 	Children  []*PmsCategory `json:"children,omitempty"`
 }
@@ -204,7 +204,7 @@ type PmsCategoryForm struct {
 	Name     string `json:"name"`
 	Icon     string `json:"icon"`
 	Sort     int64  `json:"sort"`
-	Visible  int64  `json:"visible"`
+	Visible  bool   `json:"visible"`
 }
 
 type PmsCategoryListReq struct {
@@ -552,9 +552,9 @@ type SysMenuItem struct {
 	RoutePath  string         `json:"routePath"`
 	Component  string         `json:"component"`
 	Perm       string         `json:"perm,omitempty"`
-	AlwaysShow int64          `json:"alwaysShow"`
-	KeepAlive  int64          `json:"keepAlive"`
-	Visible    int64          `json:"visible"`
+	AlwaysShow bool           `json:"alwaysShow"`
+	KeepAlive  bool           `json:"keepAlive"`
+	Visible    bool           `json:"visible"`
 	Sort       int64          `json:"sort,default=1"`
 	Icon       string         `json:"icon"`
 	Params     string         `json:"params,omitempty"`
@@ -772,7 +772,7 @@ type UserForm struct {
 	IdCard    string `json:"idCard,optional"`   //身份证号码
 	Gender    int64  `json:"gender,optional"`   //性别 0 未知 1男 2女
 	Signature string `json:"signature,optional"`
-	Birthday  string `json:"birthday,,default=0000:01:01"`
+	Birthday  string `json:"birthday,default=2000:01:01"`
 	Tags      string `json:"tags,optional"`
 	Source    string `json:"source,optional"`
 	SourceUid int64  `json:"sourceUid,optional"`

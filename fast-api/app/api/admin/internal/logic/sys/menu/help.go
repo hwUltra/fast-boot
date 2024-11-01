@@ -21,8 +21,8 @@ func GetRoutes(list []*sysPb.SysMenu, parentId int64) []*types.RouteData {
 				Title:     item.Name,
 				Icon:      item.Icon,
 				Roles:     item.Roles,
-				Hidden:    !(item.Visible > 0),
-				KeepAlive: item.KeepAlive > 0,
+				Hidden:    !item.Visible,
+				KeepAlive: item.KeepAlive,
 			}
 			menu.Children = GetRoutes(list, item.Id)
 			if len(menu.Children) > 0 {

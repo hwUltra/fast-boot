@@ -32,6 +32,7 @@ func (l *UserAddLogic) UserAdd(in *umsPb.UserForm) (*umsPb.SuccessIdResp, error)
 	if err := copier.Copy(&item, in); err != nil {
 		return nil, errors.Wrapf(xerr.NewErrMsg("数据转化有误"), "UserAdd err:%v", err)
 	}
+
 	l.svcCtx.GormConn.Create(&item)
 
 	return &umsPb.SuccessIdResp{}, nil

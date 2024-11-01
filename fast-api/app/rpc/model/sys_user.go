@@ -27,7 +27,7 @@ func (*SysUserModel) TableName() string {
 func (*SysUserModel) WithCreatedAt(startTime string, endTime string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(startTime) > 0 && len(endTime) > 0 {
-			return db.Where("`created_at` BETWEEN ? AND ?", startTime, endTime)
+			return db.Where("created_at BETWEEN ? AND ?", startTime, endTime)
 		}
 		return db
 	}
@@ -36,9 +36,9 @@ func (*SysUserModel) WithCreatedAt(startTime string, endTime string) func(db *go
 func (*SysUserModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(keyword) > 0 {
-			return db.Where("sys_user.`username` LIKE ?", "%"+keyword+"%").
-				Or("sys_user.`nickname` LIKE ?", "%"+keyword+"%").
-				Or("sys_user.`mobile` LIKE ?", "%"+keyword+"%")
+			return db.Where("sys_user.username LIKE ?", "%"+keyword+"%").
+				Or("sys_user.nickname LIKE ?", "%"+keyword+"%").
+				Or("sys_user.mobile LIKE ?", "%"+keyword+"%")
 		}
 		return db
 
@@ -48,7 +48,7 @@ func (*SysUserModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
 func (*SysUserModel) WithStatus(status int64) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if status != -1 {
-			return db.Where("sys_user.`status` = ?", status)
+			return db.Where("sys_user.status = ?", status)
 		}
 		return db
 	}
@@ -57,7 +57,7 @@ func (*SysUserModel) WithStatus(status int64) func(db *gorm.DB) *gorm.DB {
 func (*SysUserModel) WithDeptId(deptId int64) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if deptId > 0 {
-			return db.Where("sys_user.`dept_id` = ?", deptId)
+			return db.Where("sys_user.dept_id = ?", deptId)
 		}
 		return db
 	}

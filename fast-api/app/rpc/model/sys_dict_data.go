@@ -23,8 +23,8 @@ func (*SysDictDataModel) TableName() string {
 func (*SysDictDataModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(keyword) > 0 {
-			return db.Where("`value` LIKE ?", "%"+keyword+"%").
-				Or("`label` LIKE ?", "%"+keyword+"%")
+			return db.Where("value LIKE ?", "%"+keyword+"%").
+				Or("label LIKE ?", "%"+keyword+"%")
 		}
 		return db
 
@@ -34,7 +34,7 @@ func (*SysDictDataModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB
 func (*SysDictDataModel) WithStatus(status int64) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if status != -1 {
-			return db.Where("`status` = ?", status)
+			return db.Where("status = ?", status)
 		}
 		return db
 	}

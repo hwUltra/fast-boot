@@ -1,8 +1,10 @@
 import request from "@/utils/request";
+
+const USER_BASE_URL = "/user";
 class UserAPI {
   static getList(queryParams?: UserQuery) {
     return request<any, PageResult<UserPageVO[]>>({
-      url: "/user",
+      url: `${USER_BASE_URL}`,
       method: "get",
       params: queryParams,
     });
@@ -23,9 +25,9 @@ class UserAPI {
     });
   }
 
-  static updateUser(data: UserForm) {
+  static updateUser(userId: number,data: UserForm) {
     return request({
-      url: "/user",
+      url: "/user/" + userId,
       method: "put",
       data: data,
     });

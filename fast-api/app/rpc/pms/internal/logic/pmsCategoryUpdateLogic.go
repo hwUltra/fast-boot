@@ -39,7 +39,7 @@ func (l *PmsCategoryUpdateLogic) PmsCategoryUpdate(in *pmsPb.PmsCategoryForm) (*
 	info.Name = in.Name
 	info.Icon = in.Icon
 	info.Sort = in.Sort
-	info.Visible = int8(in.Visible)
+	info.Visible = in.Visible
 	res := l.svcCtx.GormConn.Save(&info)
 	if res.Error != nil {
 		return nil, res.Error

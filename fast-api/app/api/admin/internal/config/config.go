@@ -18,8 +18,9 @@ type Config struct {
 		AccessExpire int64
 	}
 	Redis     redis.RedisConf
-	MinioX    miniox.Conf
+	MinioX    miniox.MinioConf
 	WebSocket struct {
-		Path string
+		Enable bool
+		Path   string
 	}
 }

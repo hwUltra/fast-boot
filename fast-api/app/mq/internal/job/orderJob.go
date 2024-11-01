@@ -32,8 +32,8 @@ func HandleTaskOrder(ctx context.Context, task *asynq.Task) error {
 		return err
 	}
 	// TODO: 模拟处理
-	fmt.Printf("HandleOrderTask begin!\n")
+	fmt.Println("OrderTask begin!")
 	fmt.Printf("OrderNo to %s,  OrderMsg: %s\n", payload.OrderNo, payload.OrderMsg)
-	fmt.Println("HandleOrderTask end!")
+	fmt.Println("OrderTask end!")
 	return nil
 }

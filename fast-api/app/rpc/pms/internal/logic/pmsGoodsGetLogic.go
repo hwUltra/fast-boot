@@ -29,7 +29,7 @@ func (l *PmsGoodsGetLogic) PmsGoodsGet(in *pmsPb.IdReq) (*pmsPb.PmsGoodsInfo, er
 	m := model.PmsGoodsModel{}
 	l.svcCtx.GormConn.
 		//Preload("Shop", "status = 1").
-		Preload("Category", "visible = 1").
+		Preload("Category", "visible = true").
 		Preload("Brand").
 		Preload("SkuList", "status = 1").
 		Preload("SpecList", "type = 1 and status = 1").

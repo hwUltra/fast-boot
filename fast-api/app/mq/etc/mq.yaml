@@ -16,7 +16,7 @@ Redis:
 Log:
   ServiceName: message-mq
   Mode: file
-  Path: ../../../logs/mq
+  Path: ../../logs/mq
 
 
 #kq

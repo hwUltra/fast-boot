@@ -11,6 +11,10 @@ Redis:
   Pass:
   Type: node
 
+WebSocket:
+  Enable: false
+  Path: "/ws"
+
 Sms:
   Type: 0
   AliConf:

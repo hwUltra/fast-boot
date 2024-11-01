@@ -7,7 +7,7 @@ class GoodsAPI {
    */
   static getGoodsList(queryParams: GoodsQuery) {
     return request<any, GoodsPageResult>({
-      url: "/goods/list",
+      url: "/goods",
       method: "get",
       params: queryParams,
     });

@@ -12,12 +12,16 @@ import (
 
 type Config struct {
 	rest.RestConf
-	WxMini wechat.WxMiniConf
-	WxPay  pay.WxConf
-	Sms    sms.VCodeConf
-	Redis  redis.RedisConf
-	MinioX miniox.Conf
-	Auth   struct {
+	WxMini    wechat.WxMiniConf
+	WxPay     pay.WxConf
+	Sms       sms.VCodeConf
+	Redis     redis.RedisConf
+	MinioX    miniox.Conf
+	WebSocket struct {
+		Enable bool
+		Path   string
+	}
+	Auth struct {
 		AccessSecret string
 		AccessExpire int64
 	}

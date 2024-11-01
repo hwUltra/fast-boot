@@ -47,7 +47,9 @@ func (l *MenuUpdateLogic) MenuUpdate(in *sysPb.MenuForm) (*sysPb.SuccessResp, er
 	info.RouteName = in.RouteName
 	info.Component = in.Component
 	info.Perm = in.Perm
-	info.Visible = int8(in.Visible)
+	info.Visible = in.Visible
+	info.AlwaysShow = in.AlwaysShow
+	info.KeepAlive = in.KeepAlive
 	info.Sort = in.Sort
 	info.Icon = in.Icon
 	info.Redirect = in.Redirect

@@ -1,4 +1,4 @@
-syntax = "proto3";
+ syntax = "proto3";
 
 package sysPb;
 
@@ -126,9 +126,9 @@ message SysMenu {
   string routePath = 7;
   string component = 8;
   string perm = 9;
-  int64 alwaysShow = 10;
-  int64 keepAlive = 11;
-  int64 visible = 12;
+  bool alwaysShow = 10;
+  bool keepAlive = 11;
+  bool visible = 12;
   int64 sort = 13;
   repeated menuParamsItem params = 14;
   string icon = 15;
@@ -153,9 +153,9 @@ message SysMenuItem {
   string routePath = 7;
   string component = 8;
   string perm = 9;
-  int64 alwaysShow = 10;
-  int64 keepAlive = 11;
-  int64 visible = 12;
+  bool alwaysShow = 10;
+  bool keepAlive = 11;
+  bool visible = 12;
   int64 sort = 13;
   repeated menuParamsItem params = 14;
   string icon = 15;
@@ -194,9 +194,9 @@ message  MenuForm{
   string routePath = 7;
   string component = 8;
   string perm = 9;
-  int64 alwaysShow = 10;
-  int64 keepAlive = 11;
-  int64 visible = 12;
+  bool alwaysShow = 10;
+  bool keepAlive = 11;
+  bool visible = 12;
   int64 sort = 13;
   repeated menuParamsItem params = 14;
   string icon = 15;

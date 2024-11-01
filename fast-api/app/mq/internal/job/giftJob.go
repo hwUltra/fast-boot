@@ -33,8 +33,8 @@ func HandleTaskGift(ctx context.Context, task *asynq.Task) error {
 		return err
 	}
 	// TODO: 模拟处理
-	fmt.Println("HandleAsyncGiftTask begin!")
+	fmt.Println("GiftTask begin!")
 	fmt.Printf("Sending to %s, subject: %s, body: %s\n", payload.To, payload.Subject, payload.Body)
-	fmt.Println("HandleAsyncGiftTask end!")
+	fmt.Println("GiftTask end!")
 	return nil
 }

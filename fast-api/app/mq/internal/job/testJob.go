@@ -32,9 +32,9 @@ func HandleSchedulerTest(ctx context.Context, task *asynq.Task) error {
 		return err
 	}
 	// TODO: 模拟处理
-	fmt.Println("******* begin!")
+	fmt.Println("SchedulerTest begin!")
 	fmt.Printf("%s - sn: %s\n", time.Now().String(), payload.Sn)
-	fmt.Println("*******  end")
+	fmt.Println("SchedulerTest end")
 
 	return nil
 }

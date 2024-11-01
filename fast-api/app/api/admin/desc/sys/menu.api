@@ -90,9 +90,9 @@ type (
         RoutePath  string `json:"routePath"`
         Component  string `json:"component"`
         Perm  string  `json:"perm,omitempty"`
-        AlwaysShow  int64 `json:"alwaysShow"`
-        KeepAlive  int64 `json:"keepAlive"`
-        Visible  int64 `json:"visible"`
+        AlwaysShow  bool `json:"alwaysShow"`
+        KeepAlive  bool `json:"keepAlive"`
+        Visible  bool `json:"visible"`
         Sort  int64 `json:"sort,default=1"`
         Icon  string `json:"icon"`
         Params string `json:"params,omitempty"`

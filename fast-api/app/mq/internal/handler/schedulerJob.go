@@ -40,12 +40,12 @@ func (l *SchedulerJob) Start() {
 
 	//启动定时任务1
 	testScheduler, _ := job.NewSchedulerTest(job.SchedulerTestPayload{Sn: "msg for sn"})
-	entryID, err := srv.Register("*/1 * * * *", testScheduler)
+	entryID, err := srv.Register("*/10 * * * *", testScheduler)
 	fmt.Printf("registered an entry: %q\n", entryID)
 	//启动定时任务2
 	mailScheduler, _ := job.NewSchedulerMail(job.SchedulerMailPayload{To: "msg for sn",
 		Subject: "xxx", Body: "bbbb"})
-	entryID2, err := srv.Register("@every 30s", mailScheduler)
+	entryID2, err := srv.Register("@every 5m", mailScheduler)
 	fmt.Printf("registered an entry2: %q\n", entryID2)
 
 	//开启
