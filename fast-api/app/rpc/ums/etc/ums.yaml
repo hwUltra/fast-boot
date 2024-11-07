@@ -5,7 +5,7 @@ Etcd:
     - 192.168.3.88:12379
   Key: ums.rpc
 
-Gorm:
+GormConf:
   SqlType: 1
   IsOpenReadDb: false   # 是否开启读写分离配置（true=开启、false=关闭），IsOpenReadDb=开启,Read 部分参数有效，否则Read部分参数直接忽略
   SlowThreshold: 30     # 慢 SQL 阈值(sql执行时间超过此时间单位（秒），就会触发系统日志记录)
@@ -32,11 +32,9 @@ Gorm:
     SetMaxOpenConn: 128
     SetConnMaxLifetime: 60
 
-RedisConf:
-  Host: 192.168.3.88:16379
-  Pass:
-  Type: node
-
+CacheConf:
+  - Host: 192.168.3.88:16379
+    Pass: 
 
 Salt: H0VOFkGgPTrz9ICwd7qnJaZR9KQ2i8xe
 

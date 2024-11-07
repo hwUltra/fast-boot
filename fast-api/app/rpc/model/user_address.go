@@ -1,9 +1,9 @@
 package model
 
-import "github.com/hwUltra/fb-tools/gormV2"
+import "github.com/hwUltra/fb-tools/gormx"
 
 type UserAddressModel struct {
-	gormV2.BaseDel
+	gormx.BaseDel
 	ShopId    int64  `gorm:"column:shop_id;not null" json:"shopId"`       // 店铺id
 	Uid       int64  `gorm:"column:uid;not null" json:"uid"`              // 用户ID
 	Name      string `gorm:"column:name;not null" json:"name"`            // 联系人

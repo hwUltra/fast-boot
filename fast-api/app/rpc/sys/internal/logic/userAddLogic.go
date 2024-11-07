@@ -29,14 +29,14 @@ func NewUserAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserAddLo
 
 func (l *UserAddLogic) UserAdd(in *sysPb.UserAddReq) (*sysPb.IdResp, error) {
 	user := model.SysUserModel{}
-	l.svcCtx.GormConn.Where("username = ?", in.Username).First(&user)
+	l.svcCtx.GormClient.GormDb.Where("username = ?", in.Username).First(&user)
 	if user.Id > 0 {
 		return nil, status.Error(100, "该用户已存在")
 	}
 	if err := copier.Copy(&user, in); err != nil {
 		return nil, err
 	}
-	if err := l.svcCtx.GormConn.Transaction(func(tx *gorm.DB) error {
+	if err := l.svcCtx.GormClient.GormDb.Transaction(func(tx *gorm.DB) error {
 		user.Password = utils.PasswordEncrypt(l.svcCtx.Config.Salt, in.Password)
 		tx.Create(&user)
 		//tx.Delete(&model.SysUserRoleModel{}).Where("user_id = ?", user.Id)

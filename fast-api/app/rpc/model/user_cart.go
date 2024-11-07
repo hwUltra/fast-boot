@@ -1,9 +1,9 @@
 package model
 
-import "github.com/hwUltra/fb-tools/gormV2"
+import "github.com/hwUltra/fb-tools/gormx"
 
 type ShopCartModel struct {
-	gormV2.Base
+	gormx.Base
 	ShopId    int64  `gorm:"column:shop_id;not null" json:"shopId"`            // 商户id
 	Uid       int64  `gorm:"column:uid;not null" json:"uid"`                   // 用户id
 	GoodsId   int64  `gorm:"column:goods_id;not null" json:"goodsId"`          // 商品id

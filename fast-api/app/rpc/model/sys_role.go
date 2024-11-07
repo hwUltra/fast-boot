@@ -1,12 +1,12 @@
 package model
 
 import (
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"gorm.io/gorm"
 )
 
 type SysRoleModel struct {
-	gormV2.BaseDel
+	gormx.BaseDel
 	Name      string `gorm:"column:name;not null" json:"name"`               // 角色名称
 	Code      string `gorm:"column:code;not null" json:"code"`               // 角色编码
 	Sort      int64  `gorm:"column:sort;not null" json:"sort"`               // 显示顺序
@@ -28,3 +28,11 @@ func (*SysRoleModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
 
 	}
 }
+
+// -----------------
+// for SysRoleModel CacheFun
+// -----------------
+
+const CacheSysRoleModelIdPrefix = "Cache:SysRoleModel:ID:"
+
+type SysRoleCache gormx.CacheTool

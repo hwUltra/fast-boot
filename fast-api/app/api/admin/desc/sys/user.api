@@ -77,6 +77,20 @@ type (
         Status  string `json:"status"`
     }
 
+    SysUserProfileResq {
+        Id  int64 `json:"id"`
+        Username  string `json:"username"`  // 用户名
+        Nickname  string `json:"nickname"`  // 昵称
+        Gender  int64 `json:"gender"`  // 性别((1:男;2:女))
+        Avatar  string `json:"avatar"`  // 用户头像
+        Mobile  string `json:"mobile"`  // 联系方式
+        Status  int64 `json:"status"`  // 用户状态((1:正常;0:禁用))
+        Email  string `json:"email"`  // 用户邮箱
+        RoleNames string `json:"roleNames"`
+        DeptName string `json:"deptName"`
+        CreatedAt  string `json:"created_at"`
+    }
+
 
 )
 
@@ -101,6 +115,10 @@ service admin {
     @doc "获取用户"
     @handler Get
     get /:id (PathIdReq) returns (SysUserGet)
+
+    @doc "Profile 获取用户"
+    @handler Profile
+    get /profile returns (SysUserProfileResq)
 
     @doc "用户分页列表"
     @handler Page

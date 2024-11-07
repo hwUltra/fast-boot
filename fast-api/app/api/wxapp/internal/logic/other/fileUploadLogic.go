@@ -2,9 +2,6 @@ package other
 
 import (
 	"context"
-	"fast-boot/common/xerr"
-	"fmt"
-	"github.com/hwUltra/fb-tools/miniox"
 	"net/http"
 
 	"fast-boot/app/api/wxapp/internal/svc"
@@ -28,17 +25,17 @@ func NewFileUploadLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FileUp
 }
 
 func (l *FileUploadLogic) FileUpload(req *http.Request) (resp *types.FileUploadResp, err error) {
-	minioX := miniox.CreateMinioX(l.svcCtx.Config.MinioX)
-	updateInfo, err := minioX.MinIOUpload(req)
-	if err != nil {
-		return nil, xerr.NewErrCodeMsg(10011, "请上传正确的文件")
-	}
-	return &types.FileUploadResp{
-		Name: updateInfo.Name,
-		Ext:  updateInfo.Ext,
-		Size: updateInfo.Size,
-		Hash: updateInfo.Hash,
-		Path: fmt.Sprintf("%s/%s", l.svcCtx.Config.MinioX.MinIOBasePath, updateInfo.Path),
-	}, nil
-
+	//minioX := miniox.CreateMinioX(l.svcCtx.Config.MinioX)
+	//updateInfo, err := minioX.MinIOUpload(req)
+	//if err != nil {
+	//	return nil, xerr.NewErrCodeMsg(10011, "请上传正确的文件")
+	//}
+	//return &types.FileUploadResp{
+	//	Name: updateInfo.Name,
+	//	Ext:  updateInfo.Ext,
+	//	Size: updateInfo.Size,
+	//	Hash: updateInfo.Hash,
+	//	Path: fmt.Sprintf("%s/%s", l.svcCtx.Config.MinioX.MinIOBasePath, updateInfo.Path),
+	//}, nil
+	return resp, err
 }

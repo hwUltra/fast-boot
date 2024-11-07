@@ -3,7 +3,7 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/jinzhu/copier"
 
 	"fast-boot/app/rpc/pms/internal/svc"
@@ -29,9 +29,9 @@ func NewPmsCategoryListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *P
 func (l *PmsCategoryListLogic) PmsCategoryList(in *pmsPb.PmsCategoryListReq) (*pmsPb.PmsCategoryListResp, error) {
 	sModel := model.PmsCategoryModel{}
 	items := make([]*model.PmsCategoryModel, 0)
-	l.svcCtx.GormConn.Model(sModel).
+	l.svcCtx.GormClient.GormDb.Model(sModel).
 		Scopes(
-			gormV2.Paginate(int(in.PageNum), int(in.PageSize)),
+			gormx.Paginate(int(in.PageNum), int(in.PageSize)),
 			sModel.WithShopId(in.ShopId),
 			sModel.WithKeywords(in.Keywords)).
 		Order("sort asc,id asc").Find(&items)

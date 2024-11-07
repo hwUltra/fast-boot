@@ -2,16 +2,14 @@ package auth
 
 import (
 	"context"
-	"encoding/json"
-	"fast-boot/app/rpc/sys/sysPb"
-	"fast-boot/common/globalkey"
-	"fast-boot/common/xerr"
-	"fmt"
-	captchaTool "github.com/hwUltra/fb-tools/captcha"
-	"github.com/zeromicro/go-zero/core/stores/redis"
-
 	"fast-boot/app/api/admin/internal/svc"
 	"fast-boot/app/api/admin/internal/types"
+	"fast-boot/app/rpc/sys/sysPb"
+	"fast-boot/common/cachex"
+	"fast-boot/common/globalkey"
+	"fast-boot/common/xerr"
+	"github.com/hwUltra/fb-tools/captchax"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,10 +31,10 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 
 func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.TokenResp, err error) {
 	//checkCaptcha
-	var ct = captchaTool.NewCaptchaTool(captchaTool.CaptchaConf{
-		Type:      captchaTool.MathType,
-		Store:     captchaTool.RedisType,
-		RedisConf: l.svcCtx.Config.Redis,
+	var ct = captchax.NewCaptchaTool(captchax.CaptchaConf{
+		Type:      captchax.MathType,
+		Store:     captchax.RedisType,
+		CacheConf: l.svcCtx.Config.CacheConf,
 	})
 	if ok := ct.VerifyCaptcha(req.CaptchaKey, req.CaptchaCode, true); ok == false {
 		return nil, xerr.NewErrMsg("验证码错误")
@@ -51,12 +49,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.TokenResp, err erro
 		RefreshAfter: res.RefreshAfter,
 		AccessExpire: res.AccessExpire,
 	}
-	StoreUserInfo(res.UserId, resp, l.svcCtx.RedisClient, l.svcCtx.Config.Auth.AccessExpire)
+	cc := cachex.NewStore(l.svcCtx.Config.CacheConf)
+	_ = cc.SetWithExpire(cc.FormatPrimary(globalkey.CacheUserTokenKey, res.UserId), resp, time.Duration(l.svcCtx.Config.Auth.AccessExpire)*time.Second)
 	return resp, nil
-}
-
-func StoreUserInfo(userId int64, userInfo *types.TokenResp, redisClient *redis.Redis, expire int64) {
-	bytes, _ := json.Marshal(userInfo)
-	key := fmt.Sprintf(globalkey.CacheUserTokenKey, userId)
-	_ = redisClient.Setex(key, string(bytes), int(expire))
 }

@@ -3,7 +3,7 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/jinzhu/copier"
 
 	"fast-boot/app/rpc/pms/internal/svc"
@@ -30,7 +30,7 @@ func (l *ShopPageLogic) ShopPage(in *pmsPb.PageReq) (*pmsPb.ShopPageResp, error)
 	shopModel := model.PmsShopModel{}
 
 	total := int64(0)
-	if err := l.svcCtx.GormConn.Model(shopModel).
+	if err := l.svcCtx.GormClient.GormDb.Model(shopModel).
 		Scopes(
 			shopModel.WithStatus(in.Status),
 			shopModel.WithKeywords(in.Keywords)).
@@ -42,9 +42,9 @@ func (l *ShopPageLogic) ShopPage(in *pmsPb.PageReq) (*pmsPb.ShopPageResp, error)
 
 	if total > 0 {
 		items := make([]*model.PmsShopModel, 0)
-		l.svcCtx.GormConn.Model(shopModel).
+		l.svcCtx.GormClient.GormDb.Model(shopModel).
 			Scopes(
-				gormV2.Paginate(int(in.PageNum), int(in.PageSize)),
+				gormx.Paginate(int(in.PageNum), int(in.PageSize)),
 				shopModel.WithStatus(in.Status),
 				shopModel.WithKeywords(in.Keywords)).
 			Order("id asc").Find(&items)

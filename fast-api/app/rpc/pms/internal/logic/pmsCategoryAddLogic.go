@@ -30,6 +30,6 @@ func (l *PmsCategoryAddLogic) PmsCategoryAdd(in *pmsPb.PmsCategoryForm) (*pmsPb.
 	if err := copier.Copy(&item, in); err != nil {
 		return nil, err
 	}
-	l.svcCtx.GormConn.Create(&item)
+	l.svcCtx.GormClient.GormDb.Create(&item)
 	return &pmsPb.SuccessIdResp{Id: item.Id}, nil
 }

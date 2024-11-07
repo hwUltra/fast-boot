@@ -1,12 +1,12 @@
 package model
 
 import (
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"gorm.io/gorm"
 )
 
 type SysUserModel struct {
-	gormV2.BaseDel
+	gormx.BaseDel
 	Username string         `gorm:"column:username;not null" json:"username"`       // 用户名
 	Nickname string         `gorm:"column:nickname;not null" json:"nickname"`       // 昵称
 	Gender   int8           `gorm:"column:gender;not null;default:1" json:"gender"` // 性别((1:男;2:女))

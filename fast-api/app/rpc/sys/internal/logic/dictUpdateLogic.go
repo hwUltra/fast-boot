@@ -27,7 +27,7 @@ func NewDictUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DictUp
 
 func (l *DictUpdateLogic) DictUpdate(in *sysPb.DictForm) (*sysPb.SuccessResp, error) {
 	info := model.SysDictModel{}
-	l.svcCtx.GormConn.First(&info, in.Id)
+	l.svcCtx.GormClient.GormDb.First(&info, in.Id)
 
 	if info.Id == 0 {
 		logx.WithContext(l.ctx).Errorf("不存在: %s", in.Id)
@@ -38,7 +38,7 @@ func (l *DictUpdateLogic) DictUpdate(in *sysPb.DictForm) (*sysPb.SuccessResp, er
 	info.Remark = in.Remark
 	info.Status = int8(in.Status)
 
-	res := l.svcCtx.GormConn.Save(&info)
+	res := l.svcCtx.GormClient.GormDb.Save(&info)
 	if res.Error != nil {
 		return nil, res.Error
 	}

@@ -7,6 +7,7 @@ import (
 	"fast-boot/app/rpc/ums/umsPb"
 	"fast-boot/common/globalkey"
 	"fast-boot/common/xerr"
+	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/pkg/errors"
 	"time"
 
@@ -30,7 +31,7 @@ func NewUserUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserUp
 // UserUpdate  修改用户
 func (l *UserUpdateLogic) UserUpdate(in *umsPb.UserForm) (*umsPb.SuccessResp, error) {
 	info := model.UserModel{}
-	l.svcCtx.GormConn.Where("id = ?", in.Id).First(&info)
+	l.svcCtx.GormClient.GormDb.Where("id = ?", in.Id).First(&info)
 	if info.Id == 0 {
 		return nil, errors.Wrapf(xerr.NewErrMsg("用户不存在"), "用户不存在：%d ", in.Id)
 	}
@@ -71,9 +72,10 @@ func (l *UserUpdateLogic) UserUpdate(in *umsPb.UserForm) (*umsPb.SuccessResp, er
 		info.SourceUid = in.SourceUid
 	}
 
-	res := l.svcCtx.GormConn.Save(&info)
-	if res.Error != nil {
-		return nil, res.Error
+	ct := (*model.UserCache)(gormx.NewCacheTool(l.svcCtx.Config.CacheConf, l.svcCtx.GormClient.GormDb))
+	err := ct.Update(&info)
+	if err != nil {
+		return nil, err
 	}
 	return &umsPb.SuccessResp{}, nil
 

@@ -85,7 +85,7 @@
                   <el-icon class="align-middle"><Timer /></el-icon>
                   创建日期
                 </template>
-                {{ userProfile.createTime }}
+                {{ userProfile.createdAt }}
               </el-descriptions-item>
             </el-descriptions>
           </el-card>

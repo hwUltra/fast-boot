@@ -2,10 +2,8 @@ package auth
 
 import (
 	"context"
-	"encoding/json"
-	"fast-boot/app/rpc/sys/sysPb"
+	"fast-boot/common/cachex"
 	"fast-boot/common/globalkey"
-	"fast-boot/common/xerr"
 	"fmt"
 	"github.com/hwUltra/fb-tools/jwtx"
 	"github.com/hwUltra/fb-tools/result"
@@ -35,33 +33,25 @@ func NewRefreshTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Refr
 func (l *RefreshTokenLogic) RefreshToken() (resp *types.TokenResp, err error) {
 	userId := jwtx.GetUid(l.ctx)
 	key := fmt.Sprintf(globalkey.CacheUserTokenKey, userId)
-	exists, err := l.svcCtx.RedisClient.Exists(key)
-	if exists {
-		info, err := l.svcCtx.RedisClient.Get(key)
-		if err == nil {
-			var result *types.TokenResp
-			if err = json.Unmarshal([]byte(info), &result); err != nil {
-				return nil, xerr.NewErrMsg("token有误")
-			}
-			now := time.Now().Unix()
-			if now > result.RefreshAfter {
-				res, err := l.svcCtx.SysRpc.RefreshToken(l.ctx,
-					&sysPb.RefreshTokenReq{UserId: userId})
-				if err != nil {
-					return nil, err
-				}
-				loginResp := &types.TokenResp{
-					AccessToken:  res.AccessToken,
-					AccessExpire: res.AccessExpire,
-					RefreshAfter: res.RefreshAfter,
-				}
-				StoreUserInfo(userId, loginResp, l.svcCtx.RedisClient, l.svcCtx.Config.Auth.AccessExpire)
-				return loginResp, nil
-			} else {
-				return result, nil
-			}
-		}
-
+	cc := cachex.NewStore(l.svcCtx.Config.CacheConf)
+	var res types.TokenResp
+	if err := cc.Get(key, &res); err != nil {
+		return nil, result.NewErrCodeMsg(10001, "token已过期")
 	}
-	return nil, result.NewErrCodeMsg(10001, "token已过期")
+	now := time.Now().Unix()
+	if now > res.RefreshAfter {
+		accessExpire := l.svcCtx.Config.Auth.AccessExpire
+		accessToken, err := jwtx.GetToken(l.svcCtx.Config.Auth.AccessSecret, now, accessExpire, userId)
+		if err != nil {
+			return nil, err
+		}
+		res = types.TokenResp{
+			AccessToken:  accessToken,
+			AccessExpire: now + accessExpire,
+			RefreshAfter: now + accessExpire/2,
+		}
+		_ = cc.SetWithExpire(key, res, time.Duration(l.svcCtx.Config.Auth.AccessExpire)*time.Second)
+	}
+	return &res, nil
+
 }

@@ -6,7 +6,11 @@ Auth:
   AccessSecret: ad879038-c7a8-8063-9236-6bfc35d54b8d
   AccessExpire: 864000
 
-Redis:
+CacheConf:
+  - Host: 192.168.3.88:16379
+    Pass:
+
+RedisConf:
   Host: 192.168.3.88:16379
   Pass:
   Type: node
@@ -31,15 +35,6 @@ Sms:
     - 18627111095
   Template:
     Reg: "SMS_219510061"
-
-MinioX:
-  MinIOAccessKeyID: c4h0z6z3GxY8UXJkb7Fd
-  MinIOAccessSecretKey: 2ej0kOfnNNxt5Jlz6pIw98aGuqUOSOg0BGqyV5L2
-  MinIOEndpoint: 192.168.3.88:9000
-  MinIOBucket: files
-  MinIOSSLBool: false
-  MinIOBucketLocation: cn-north-1
-  MinIOBasePath: http://192.168.3.88:9000
 
 AliOss:
   AccessKeyId:

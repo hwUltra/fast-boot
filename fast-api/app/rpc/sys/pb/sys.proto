@@ -67,6 +67,24 @@ message SysUser {
 
 }
 
+ message SysUserProfile {
+   int64 id = 1; //id
+   string username = 2; //用户名
+   string nickname = 3; //昵称
+   int64 gender = 4; //性别((1:男;2:女))
+   string password = 5; //密码
+   int64 deptId = 6; //部门ID
+   string avatar = 7; //用户头像
+   string mobile = 8; //联系方式
+   int64 status = 9; //用户状态((1:正常;0:禁用))
+   string email = 10; //用户邮箱
+   string createdAt = 11; //创建时间
+   string updatedAt = 12; //更新时间
+   string RoleNames = 13;
+   string deptName = 14;
+   string  GenderLabel = 15;
+ }
+
 //-----------sys_user_role---------------------角色和用户关联表--------------------------------
 message SysUserRole {
   int64 userId = 1; //用户ID
@@ -559,6 +577,7 @@ service sys{
   rpc RefreshToken(RefreshTokenReq) returns (LoginResp);
   rpc UserPage(UserPageReq) returns (UserPageResp);
   rpc UserGet(IdReq) returns (UserGetResp);
+  rpc UserProfile(IdReq) returns (SysUserProfile);
   rpc UserAdd(UserAddReq) returns (IdResp);
   rpc UserUpdate(UserUpdateReq) returns (SuccessResp);
   rpc UserChangePwd(UserChangePwdReq) returns (SuccessResp);

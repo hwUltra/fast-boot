@@ -25,7 +25,7 @@ func NewDeptOptionsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeptO
 func (l *DeptOptionsLogic) DeptOptions(in *sysPb.AnyReq) (*sysPb.DeptOptionResp, error) {
 	deptModel := model.SysDeptModel{}
 	var items []*model.SysDeptModel
-	l.svcCtx.GormConn.Model(deptModel).
+	l.svcCtx.GormClient.GormDb.Model(deptModel).
 		Where("status = 1").
 		Order("sort asc, id asc ").
 		Scan(&items)

@@ -3,17 +3,17 @@ package test
 import (
 	"fast-boot/app/rpc/model"
 	"fmt"
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"testing"
 )
 
 func TestPgSql(t *testing.T) {
-	gormConn, err := gormV2.GetSqlDriver(
-		gormV2.Conf{
+	gormConn, err := gormx.GetSqlDriver(
+		gormx.Conf{
 			SqlType:       1,
 			IsOpenReadDb:  false,
 			SlowThreshold: 30,
-			Write: gormV2.ConfigParamsDetail{
+			Write: gormx.ConfigParamsDetail{
 				Host:               "192.168.3.88",
 				DataBase:           "mall-boot",
 				Port:               15432,
@@ -25,7 +25,7 @@ func TestPgSql(t *testing.T) {
 				SetMaxOpenConn:     128,
 				SetConnMaxLifetime: 60,
 			},
-			Read: gormV2.ConfigParamsDetail{
+			Read: gormx.ConfigParamsDetail{
 				Host:               "192.168.3.88",
 				DataBase:           "mall-boot",
 				Port:               15432,

@@ -30,7 +30,7 @@ func (l *RoleOptionsLogic) RoleOptions(in *sysPb.AnyReq) (*sysPb.RoleOptionsResp
 
 	var items []*sysPb.RoleOption
 
-	l.svcCtx.GormConn.Model(roleModel).
+	l.svcCtx.GormClient.GormDb.Model(roleModel).
 		Select("id as value", "name as label ").
 		Where("status = 1").
 		Order("sort asc, id asc ").

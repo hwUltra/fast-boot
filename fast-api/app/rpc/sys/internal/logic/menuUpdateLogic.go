@@ -31,7 +31,7 @@ func NewMenuUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *MenuUp
 // MenuUpdate 修改
 func (l *MenuUpdateLogic) MenuUpdate(in *sysPb.MenuForm) (*sysPb.SuccessResp, error) {
 	info := model.SysMenuModel{}
-	l.svcCtx.GormConn.First(&info, in.Id)
+	l.svcCtx.GormClient.GormDb.First(&info, in.Id)
 
 	if info.Id == 0 {
 		logx.WithContext(l.ctx).Errorf("Menu不存在: %s", in.Id)
@@ -58,12 +58,12 @@ func (l *MenuUpdateLogic) MenuUpdate(in *sysPb.MenuForm) (*sysPb.SuccessResp, er
 	treePath := "0"
 	if in.ParentId > 0 {
 		pTreePath := ""
-		l.svcCtx.GormConn.Model(model.SysMenuModel{}).Where("id = ?", in.ParentId).Pluck("tree_path", &pTreePath)
+		l.svcCtx.GormClient.GormDb.Model(model.SysMenuModel{}).Where("id = ?", in.ParentId).Pluck("tree_path", &pTreePath)
 		treePath = pTreePath + "," + strconv.Itoa(int(in.ParentId))
 	}
 	info.TreePath = treePath
 
-	res := l.svcCtx.GormConn.Save(&info)
+	res := l.svcCtx.GormClient.GormDb.Save(&info)
 	if res.Error != nil {
 		return nil, res.Error
 	}

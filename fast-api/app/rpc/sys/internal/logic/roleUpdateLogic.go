@@ -28,7 +28,7 @@ func NewRoleUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RoleUp
 // RoleUpdate 修改
 func (l *RoleUpdateLogic) RoleUpdate(in *sysPb.RoleForm) (*sysPb.SuccessResp, error) {
 	info := model.SysRoleModel{}
-	l.svcCtx.GormConn.First(&info, in.Id)
+	l.svcCtx.GormClient.GormDb.First(&info, in.Id)
 
 	if info.Id == 0 {
 		logx.WithContext(l.ctx).Errorf("role不存在: %s", in.Id)
@@ -49,7 +49,7 @@ func (l *RoleUpdateLogic) RoleUpdate(in *sysPb.RoleForm) (*sysPb.SuccessResp, er
 	if info.DataScope != int8(in.DataScope) {
 		info.DataScope = int8(in.DataScope)
 	}
-	res := l.svcCtx.GormConn.Save(&info)
+	res := l.svcCtx.GormClient.GormDb.Save(&info)
 	if res.Error != nil {
 		return nil, res.Error
 	}

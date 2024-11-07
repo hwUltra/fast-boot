@@ -26,7 +26,7 @@ func NewPmsCategoryOptionsLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 
 func (l *PmsCategoryOptionsLogic) PmsCategoryOptions(in *pmsPb.IdReq) (*pmsPb.RepOptionsResp, error) {
 	var items []*model.PmsCategoryModel
-	l.svcCtx.GormConn.Model(model.PmsCategoryModel{}).
+	l.svcCtx.GormClient.GormDb.Model(model.PmsCategoryModel{}).
 		Where("shop_id = ?", in.Id).
 		Order("sort desc ,id asc ").
 		Find(&items)

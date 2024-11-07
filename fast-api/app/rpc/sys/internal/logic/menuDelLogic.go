@@ -28,7 +28,7 @@ func NewMenuDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *MenuDelLo
 // MenuDel 删除
 func (l *MenuDelLogic) MenuDel(in *sysPb.IdsReq) (*sysPb.SuccessResp, error) {
 	ids := strings.Split(in.Ids, ",")
-	l.svcCtx.GormConn.Delete(&model.SysMenuModel{}, ids)
+	l.svcCtx.GormClient.GormDb.Delete(&model.SysMenuModel{}, ids)
 
 	return &sysPb.SuccessResp{}, nil
 }

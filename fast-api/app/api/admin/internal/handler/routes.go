@@ -111,7 +111,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				// 文件上传
 				Method:  http.MethodPost,
 				Path:    "/upload",
-				Handler: other.FileUploadHandler(serverCtx),
+				Handler: other.UploadHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/other"),
@@ -582,6 +582,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/changeStatus",
 				Handler: sysuser.ChangeStatusHandler(serverCtx),
+			},
+			{
+				// Profile 获取用户
+				Method:  http.MethodGet,
+				Path:    "/profile",
+				Handler: sysuser.ProfileHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

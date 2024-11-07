@@ -25,9 +25,9 @@ func NewDictSimListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DictS
 func (l *DictSimListLogic) DictSimList(in *sysPb.AnyReq) (*sysPb.DictSimListResp, error) {
 	dictModel := model.SysDictModel{}
 	items := make([]*model.SysDictModel, 0)
-	l.svcCtx.GormConn.Model(dictModel).
+	l.svcCtx.GormClient.GormDb.Model(dictModel).
 		Preload("DataList").
-		Order("sort asc,id asc").Find(&items)
+		Order("id asc").Find(&items)
 	list := make([]*sysPb.DictSimItem, 0)
 	for _, item := range items {
 		DataSimItems := make([]*sysPb.DictDataSimItem, 0)

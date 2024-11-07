@@ -23,6 +23,7 @@ const (
 	Sys_RefreshToken_FullMethodName   = "/sysPb.sys/RefreshToken"
 	Sys_UserPage_FullMethodName       = "/sysPb.sys/UserPage"
 	Sys_UserGet_FullMethodName        = "/sysPb.sys/UserGet"
+	Sys_UserProfile_FullMethodName    = "/sysPb.sys/UserProfile"
 	Sys_UserAdd_FullMethodName        = "/sysPb.sys/UserAdd"
 	Sys_UserUpdate_FullMethodName     = "/sysPb.sys/UserUpdate"
 	Sys_UserChangePwd_FullMethodName  = "/sysPb.sys/UserChangePwd"
@@ -70,6 +71,7 @@ type SysClient interface {
 	RefreshToken(ctx context.Context, in *RefreshTokenReq, opts ...grpc.CallOption) (*LoginResp, error)
 	UserPage(ctx context.Context, in *UserPageReq, opts ...grpc.CallOption) (*UserPageResp, error)
 	UserGet(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*UserGetResp, error)
+	UserProfile(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*SysUserProfile, error)
 	UserAdd(ctx context.Context, in *UserAddReq, opts ...grpc.CallOption) (*IdResp, error)
 	UserUpdate(ctx context.Context, in *UserUpdateReq, opts ...grpc.CallOption) (*SuccessResp, error)
 	UserChangePwd(ctx context.Context, in *UserChangePwdReq, opts ...grpc.CallOption) (*SuccessResp, error)
@@ -147,6 +149,15 @@ func (c *sysClient) UserPage(ctx context.Context, in *UserPageReq, opts ...grpc.
 func (c *sysClient) UserGet(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*UserGetResp, error) {
 	out := new(UserGetResp)
 	err := c.cc.Invoke(ctx, Sys_UserGet_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sysClient) UserProfile(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*SysUserProfile, error) {
+	out := new(SysUserProfile)
+	err := c.cc.Invoke(ctx, Sys_UserProfile_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -494,6 +505,7 @@ type SysServer interface {
 	RefreshToken(context.Context, *RefreshTokenReq) (*LoginResp, error)
 	UserPage(context.Context, *UserPageReq) (*UserPageResp, error)
 	UserGet(context.Context, *IdReq) (*UserGetResp, error)
+	UserProfile(context.Context, *IdReq) (*SysUserProfile, error)
 	UserAdd(context.Context, *UserAddReq) (*IdResp, error)
 	UserUpdate(context.Context, *UserUpdateReq) (*SuccessResp, error)
 	UserChangePwd(context.Context, *UserChangePwdReq) (*SuccessResp, error)
@@ -549,6 +561,9 @@ func (UnimplementedSysServer) UserPage(context.Context, *UserPageReq) (*UserPage
 }
 func (UnimplementedSysServer) UserGet(context.Context, *IdReq) (*UserGetResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserGet not implemented")
+}
+func (UnimplementedSysServer) UserProfile(context.Context, *IdReq) (*SysUserProfile, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserProfile not implemented")
 }
 func (UnimplementedSysServer) UserAdd(context.Context, *UserAddReq) (*IdResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserAdd not implemented")
@@ -742,6 +757,24 @@ func _Sys_UserGet_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SysServer).UserGet(ctx, req.(*IdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Sys_UserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SysServer).UserProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Sys_UserProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SysServer).UserProfile(ctx, req.(*IdReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1434,6 +1467,10 @@ var Sys_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserGet",
 			Handler:    _Sys_UserGet_Handler,
+		},
+		{
+			MethodName: "UserProfile",
+			Handler:    _Sys_UserProfile_Handler,
 		},
 		{
 			MethodName: "UserAdd",

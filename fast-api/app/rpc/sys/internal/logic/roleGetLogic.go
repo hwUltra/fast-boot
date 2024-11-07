@@ -28,7 +28,7 @@ func NewRoleGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RoleGetLo
 // RoleGet 获取单个
 func (l *RoleGetLogic) RoleGet(in *sysPb.IdReq) (*sysPb.SysRole, error) {
 	item := model.SysRoleModel{}
-	l.svcCtx.GormConn.First(&item, in.Id)
+	l.svcCtx.GormClient.GormDb.First(&item, in.Id)
 	var sysRole sysPb.SysRole
 	if err := copier.Copy(&sysRole, item); err != nil {
 		return nil, err

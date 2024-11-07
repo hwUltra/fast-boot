@@ -26,7 +26,7 @@ func NewMenuOptionsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *MenuO
 func (l *MenuOptionsLogic) MenuOptions(in *sysPb.AnyReq) (*sysPb.MenuOptionsResp, error) {
 	menuModel := model.SysMenuModel{}
 	var items []*model.SysMenuModel
-	l.svcCtx.GormConn.Model(menuModel).
+	l.svcCtx.GormClient.GormDb.Model(menuModel).
 		Where("visible = true").
 		Order("sort asc, id asc ").
 		Scan(&items)

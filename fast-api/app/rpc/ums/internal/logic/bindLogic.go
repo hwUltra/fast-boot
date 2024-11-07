@@ -31,14 +31,14 @@ func NewBindLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BindLogic {
 func (l *BindLogic) Bind(in *umsPb.BindReq) (*umsPb.UserInfoResp, error) {
 	userInfo := model.UserModel{}
 	userThirdInfo := model.UserThirdModel{}
-	l.svcCtx.GormConn.Where("mobile = ?", in.Mobile).First(&userInfo)
-	l.svcCtx.GormConn.Where("platform = 'wxapp' and openid = ?", in.OpenId).
+	l.svcCtx.GormClient.GormDb.Where("mobile = ?", in.Mobile).First(&userInfo)
+	l.svcCtx.GormClient.GormDb.Where("platform = 'wxapp' and openid = ?", in.OpenId).
 		First(&userThirdInfo)
 
 	if userInfo.Id == 0 {
 		//注册用户
 		userInfo.Mobile = in.Mobile
-		if err := l.svcCtx.GormConn.Transaction(func(tx *gorm.DB) error {
+		if err := l.svcCtx.GormClient.GormDb.Transaction(func(tx *gorm.DB) error {
 			if err := tx.Create(&userInfo).Error; err != nil {
 				return err
 			}

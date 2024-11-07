@@ -4,7 +4,7 @@ import (
 	"context"
 	"fast-boot/app/rpc/model"
 	"fast-boot/common/xerr"
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 
@@ -32,7 +32,7 @@ func (l *UserThirdPageLogic) UserThirdPage(in *umsPb.PageReq) (*umsPb.UserThirdP
 	gModel := model.UserThirdModel{}
 
 	total := int64(0)
-	if err := l.svcCtx.GormConn.Model(gModel).
+	if err := l.svcCtx.GormClient.GormDb.Model(gModel).
 		Scopes(gModel.WithKeywords(in.Keywords)).
 		Count(&total).Error; err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Failed to get  err : %v , in :%+v", err, in)
@@ -40,9 +40,9 @@ func (l *UserThirdPageLogic) UserThirdPage(in *umsPb.PageReq) (*umsPb.UserThirdP
 	list := make([]*umsPb.UserThird, 0)
 	if total > 0 {
 		items := make([]*model.UserThirdModel, 0)
-		l.svcCtx.GormConn.Model(gModel).
+		l.svcCtx.GormClient.GormDb.Model(gModel).
 			Scopes(
-				gormV2.Paginate(int(in.PageNum), int(in.PageSize)),
+				gormx.Paginate(int(in.PageNum), int(in.PageSize)),
 				gModel.WithKeywords(in.Keywords)).
 			Order("id asc").Find(&items)
 

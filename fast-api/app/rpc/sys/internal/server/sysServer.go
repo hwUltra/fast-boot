@@ -43,6 +43,11 @@ func (s *SysServer) UserGet(ctx context.Context, in *sysPb.IdReq) (*sysPb.UserGe
 	return l.UserGet(in)
 }
 
+func (s *SysServer) UserProfile(ctx context.Context, in *sysPb.IdReq) (*sysPb.SysUserProfile, error) {
+	l := logic.NewUserProfileLogic(ctx, s.svcCtx)
+	return l.UserProfile(in)
+}
+
 func (s *SysServer) UserAdd(ctx context.Context, in *sysPb.UserAddReq) (*sysPb.IdResp, error) {
 	l := logic.NewUserAddLogic(ctx, s.svcCtx)
 	return l.UserAdd(in)

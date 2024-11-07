@@ -28,14 +28,6 @@ type CaptchaResp struct {
 	CaptchaKey    string `json:"captchaKey"`
 }
 
-type FileUpload struct {
-	Hash string `json:"hash,optional"`
-	Name string `json:"name,optional"`
-	Ext  string `json:"ext,optional"`
-	Size int64  `json:"size,optional"`
-	Path string `json:"path,optional"`
-}
-
 type GoodsEditRep struct {
 	Id          int64                   `json:"id,optional"`
 	ShopId      int64                   `json:"shopId"`
@@ -746,10 +738,29 @@ type SysUserPageResp struct {
 	List  []*SysUserInfo `json:"list"`
 }
 
+type SysUserProfileResq struct {
+	Id        int64  `json:"id"`
+	Username  string `json:"username"` // 用户名
+	Nickname  string `json:"nickname"` // 昵称
+	Gender    int64  `json:"gender"`   // 性别((1:男;2:女))
+	Avatar    string `json:"avatar"`   // 用户头像
+	Mobile    string `json:"mobile"`   // 联系方式
+	Status    int64  `json:"status"`   // 用户状态((1:正常;0:禁用))
+	Email     string `json:"email"`    // 用户邮箱
+	RoleNames string `json:"roleNames"`
+	DeptName  string `json:"deptName"`
+	CreatedAt string `json:"created_at"`
+}
+
 type TokenResp struct {
 	AccessToken  string `json:"accessToken"`
 	AccessExpire int64  `json:"accessExpire"`
 	RefreshAfter int64  `json:"refreshAfter"`
+}
+
+type UploadInfo struct {
+	Name string `json:"name,optional"`
+	Url  string `json:"url,optional"`
 }
 
 type UserAddress struct {

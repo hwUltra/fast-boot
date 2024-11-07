@@ -26,7 +26,7 @@ func NewPmsCategoryAttributeAddLogic(ctx context.Context, svcCtx *svc.ServiceCon
 
 func (l *PmsCategoryAttributeAddLogic) PmsCategoryAttributeAdd(in *pmsPb.PmsCategoryAttributeAddReq) (*pmsPb.SuccessResp, error) {
 
-	if err := l.svcCtx.GormConn.Transaction(func(tx *gorm.DB) error {
+	if err := l.svcCtx.GormClient.GormDb.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Where("type = ?", in.Type).
 			Where("category_id = ?", in.CategoryId).
 			Delete(&model.PmsCategoryAttributeModel{}).Error; err != nil {

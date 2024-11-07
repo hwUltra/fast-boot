@@ -1,12 +1,12 @@
 package model
 
 import (
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"gorm.io/gorm"
 )
 
 type SysDictDataModel struct {
-	gormV2.Base
+	gormx.Base
 	DictId int64  `gorm:"column:dict_id" json:"dictId"`
 	Value  string `gorm:"column:value" json:"value"`
 	Label  string `gorm:"column:label;not null" json:"label"`
@@ -39,3 +39,11 @@ func (*SysDictDataModel) WithStatus(status int64) func(db *gorm.DB) *gorm.DB {
 		return db
 	}
 }
+
+// -----------------
+// for SysDictDataModel CacheFun
+// -----------------
+
+const CacheSysDictDataModelIdPrefix = "Cache:SysDictDataModel:ID:"
+
+type SysDictDataCache gormx.CacheTool

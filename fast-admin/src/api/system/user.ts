@@ -293,7 +293,7 @@ export interface UserProfileVO {
   roleNames?: string;
 
   /** 创建时间 */
-  createTime?: Date;
+  createdAt?: Date;
 }
 
 /** 个人中心用户信息表单 */

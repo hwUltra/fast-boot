@@ -4,7 +4,7 @@ import (
 	"context"
 	"fast-boot/app/rpc/model"
 	"fast-boot/common/xerr"
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 
@@ -32,7 +32,7 @@ func (l *SysNoticePageLogic) SysNoticePage(in *sysPb.SysNoticePageReq) (*sysPb.S
 
 	snModel := model.SysNoticeModel{}
 	total := int64(0)
-	if err := l.svcCtx.GormConn.Model(snModel).
+	if err := l.svcCtx.GormClient.GormDb.Model(snModel).
 		Scopes(
 			snModel.WithCreatedAt(in.StartTime, in.EndTime),
 			snModel.WithTitle(in.Title),
@@ -44,13 +44,13 @@ func (l *SysNoticePageLogic) SysNoticePage(in *sysPb.SysNoticePageReq) (*sysPb.S
 	list := make([]*sysPb.SysNotice, 0)
 	if total > 0 {
 		items := make([]*model.SysNoticeModel, 0)
-		l.svcCtx.GormConn.Model(snModel).
+		l.svcCtx.GormClient.GormDb.Model(snModel).
 			Scopes(
 				snModel.WithCreatedAt(in.StartTime, in.EndTime),
 				snModel.WithTitle(in.Title),
 				snModel.WithUid(in.Uid),
 				snModel.WithStatus(in.PublishStatus),
-				gormV2.Paginate(int(in.PageNum), int(in.PageSize))).
+				gormx.Paginate(int(in.PageNum), int(in.PageSize))).
 			Order("id desc").Find(&items)
 
 		for _, item := range items {

@@ -5,7 +5,7 @@ import (
 	"fast-boot/app/rpc/model"
 	"fast-boot/app/rpc/pms/internal/svc"
 	"fast-boot/app/rpc/pms/pmsPb"
-	"github.com/hwUltra/fb-tools/gormV2/types"
+	"github.com/hwUltra/fb-tools/gormx/types"
 	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/status"
@@ -28,7 +28,7 @@ func NewPmsCategoryAttributeListLogic(ctx context.Context, svcCtx *svc.ServiceCo
 func (l *PmsCategoryAttributeListLogic) PmsCategoryAttributeList(in *pmsPb.PmsCategoryAttributeListReq) (*pmsPb.PmsCategoryAttributeListResp, error) {
 	m := model.PmsCategoryAttributeModel{}
 	items := make([]*model.PmsCategoryAttributeModel, 0)
-	l.svcCtx.GormConn.Model(m).
+	l.svcCtx.GormClient.GormDb.Model(m).
 		Where("type = ?", in.Type).
 		Where("category_id = ?", in.CategoryId).
 		Order("id asc").Find(&items)

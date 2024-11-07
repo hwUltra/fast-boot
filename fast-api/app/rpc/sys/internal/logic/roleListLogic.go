@@ -4,7 +4,7 @@ import (
 	"context"
 	"fast-boot/app/rpc/model"
 	"fast-boot/common/xerr"
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 
@@ -33,7 +33,7 @@ func (l *RoleListLogic) RoleList(in *sysPb.RoleListReq) (*sysPb.RoleListResp, er
 	roleModel := model.SysRoleModel{}
 
 	total := int64(0)
-	if err := l.svcCtx.GormConn.Model(roleModel).
+	if err := l.svcCtx.GormClient.GormDb.Model(roleModel).
 		Scopes(roleModel.WithKeywords(in.Keywords)).
 		Count(&total).Error; err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Failed to get  err : %v , in :%+v", err, in)
@@ -41,9 +41,9 @@ func (l *RoleListLogic) RoleList(in *sysPb.RoleListReq) (*sysPb.RoleListResp, er
 	list := make([]*sysPb.SysRole, 0)
 	if total > 0 {
 		items := make([]*model.SysRoleModel, 0)
-		l.svcCtx.GormConn.Model(roleModel).
+		l.svcCtx.GormClient.GormDb.Model(roleModel).
 			Scopes(
-				gormV2.Paginate(int(in.PageNum), int(in.PageSize)),
+				gormx.Paginate(int(in.PageNum), int(in.PageSize)),
 				roleModel.WithKeywords(in.Keywords)).
 			Order("id asc").Find(&items)
 

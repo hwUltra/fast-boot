@@ -27,7 +27,7 @@ func NewDictDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DictDelLo
 
 func (l *DictDelLogic) DictDel(in *sysPb.IdsReq) (*sysPb.SuccessResp, error) {
 	ids := strings.Split(in.Ids, ",")
-	l.svcCtx.GormConn.Delete(&model.SysDictModel{}, ids)
+	l.svcCtx.GormClient.GormDb.Delete(&model.SysDictModel{}, ids)
 
 	return &sysPb.SuccessResp{}, nil
 }

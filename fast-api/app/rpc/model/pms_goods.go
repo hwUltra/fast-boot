@@ -1,12 +1,12 @@
 package model
 
 import (
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"gorm.io/gorm"
 )
 
 type PmsGoodsModel struct {
-	gormV2.BaseDel
+	gormx.BaseDel
 	Name        string                   `gorm:"column:name;not null" json:"name"`                // 商品名称
 	ShopId      int64                    `gorm:"column:shop_id;not null;default:1" json:"shopId"` // shopID
 	CategoryId  int64                    `gorm:"column:category_id;not null" json:"categoryId"`   // 商品类型ID
@@ -76,3 +76,11 @@ func (*PmsGoodsModel) WithCreatedAt(startTime string, endTime string) func(db *g
 		return db
 	}
 }
+
+// -----------------
+// for PmsGoodsModel CacheFun
+// -----------------
+
+const CachePmsGoodsModelIdPrefix = "Cache:PmsGoodsModel:ID:"
+
+type PmsGoodsCache gormx.CacheTool

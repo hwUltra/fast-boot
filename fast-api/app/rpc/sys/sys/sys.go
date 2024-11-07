@@ -67,6 +67,7 @@ type (
 	SysRole           = sysPb.SysRole
 	SysRoleMenu       = sysPb.SysRoleMenu
 	SysUser           = sysPb.SysUser
+	SysUserProfile    = sysPb.SysUserProfile
 	SysUserRole       = sysPb.SysUserRole
 	UserAddReq        = sysPb.UserAddReq
 	UserChangePwdReq  = sysPb.UserChangePwdReq
@@ -80,6 +81,7 @@ type (
 		RefreshToken(ctx context.Context, in *RefreshTokenReq, opts ...grpc.CallOption) (*LoginResp, error)
 		UserPage(ctx context.Context, in *UserPageReq, opts ...grpc.CallOption) (*UserPageResp, error)
 		UserGet(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*UserGetResp, error)
+		UserProfile(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*SysUserProfile, error)
 		UserAdd(ctx context.Context, in *UserAddReq, opts ...grpc.CallOption) (*IdResp, error)
 		UserUpdate(ctx context.Context, in *UserUpdateReq, opts ...grpc.CallOption) (*SuccessResp, error)
 		UserChangePwd(ctx context.Context, in *UserChangePwdReq, opts ...grpc.CallOption) (*SuccessResp, error)
@@ -148,6 +150,11 @@ func (m *defaultSys) UserPage(ctx context.Context, in *UserPageReq, opts ...grpc
 func (m *defaultSys) UserGet(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*UserGetResp, error) {
 	client := sysPb.NewSysClient(m.cli.Conn())
 	return client.UserGet(ctx, in, opts...)
+}
+
+func (m *defaultSys) UserProfile(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*SysUserProfile, error) {
+	client := sysPb.NewSysClient(m.cli.Conn())
+	return client.UserProfile(ctx, in, opts...)
 }
 
 func (m *defaultSys) UserAdd(ctx context.Context, in *UserAddReq, opts ...grpc.CallOption) (*IdResp, error) {

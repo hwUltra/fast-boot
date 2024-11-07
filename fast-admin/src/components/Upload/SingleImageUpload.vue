@@ -70,7 +70,7 @@ const imgUrl = defineModel("modelValue", {
  */
 async function uploadFile(options: UploadRequestOptions): Promise<any> {
   const data = await FileAPI.upload(options.file);
-  imgUrl.value = data.path;
+  imgUrl.value = data.url;
 }
 
 /**

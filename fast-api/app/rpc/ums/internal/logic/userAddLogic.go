@@ -4,6 +4,7 @@ import (
 	"context"
 	"fast-boot/app/rpc/model"
 	"fast-boot/common/xerr"
+	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 
@@ -32,8 +33,9 @@ func (l *UserAddLogic) UserAdd(in *umsPb.UserForm) (*umsPb.SuccessIdResp, error)
 	if err := copier.Copy(&item, in); err != nil {
 		return nil, errors.Wrapf(xerr.NewErrMsg("数据转化有误"), "UserAdd err:%v", err)
 	}
-
-	l.svcCtx.GormConn.Create(&item)
-
-	return &umsPb.SuccessIdResp{}, nil
+	ct := (*model.UserCache)(gormx.NewCacheTool(l.svcCtx.Config.CacheConf, l.svcCtx.GormClient.GormDb))
+	if err := ct.Create(&item); err != nil {
+		return nil, err
+	}
+	return &umsPb.SuccessIdResp{Id: item.Id}, nil
 }

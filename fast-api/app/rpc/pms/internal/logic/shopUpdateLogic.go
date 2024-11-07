@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
+	"github.com/hwUltra/fb-tools/gormx"
 	"google.golang.org/grpc/status"
 
 	"fast-boot/app/rpc/pms/internal/svc"
@@ -27,7 +28,7 @@ func NewShopUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShopUp
 
 func (l *ShopUpdateLogic) ShopUpdate(in *pmsPb.ShopForm) (*pmsPb.SuccessResp, error) {
 	info := model.PmsShopModel{}
-	l.svcCtx.GormConn.First(&info, in.Id)
+	l.svcCtx.GormClient.GormDb.First(&info, in.Id)
 
 	if info.Id == 0 {
 		logx.WithContext(l.ctx).Errorf("不存在: %s", in.Id)
@@ -48,10 +49,9 @@ func (l *ShopUpdateLogic) ShopUpdate(in *pmsPb.ShopForm) (*pmsPb.SuccessResp, er
 	if info.DistributionFee != in.DistributionFee {
 		info.DistributionFee = in.DistributionFee
 	}
-
-	res := l.svcCtx.GormConn.Save(&info)
-	if res.Error != nil {
-		return nil, res.Error
+	ct := (*model.PmsShopCache)(gormx.NewCacheTool(l.svcCtx.Config.CacheConf, l.svcCtx.GormClient.GormDb))
+	if err := ct.Update(&info); err != nil {
+		return nil, err
 	}
 	return &pmsPb.SuccessResp{}, nil
 }

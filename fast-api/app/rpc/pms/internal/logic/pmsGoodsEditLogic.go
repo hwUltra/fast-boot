@@ -45,7 +45,7 @@ func (l *PmsGoodsEditLogic) PmsGoodsEdit(in *pmsPb.PmsGoodsForm) (*pmsPb.Success
 	m.Description = in.Description
 	m.Detail = in.Detail
 
-	if err := l.svcCtx.GormConn.Transaction(func(tx *gorm.DB) error {
+	if err := l.svcCtx.GormClient.GormDb.Transaction(func(tx *gorm.DB) error {
 		if in.Id == 0 {
 			if err := tx.Create(&m).Error; err != nil {
 				return err

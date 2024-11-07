@@ -27,7 +27,7 @@ func NewPmsCategoryGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Pm
 
 func (l *PmsCategoryGetLogic) PmsCategoryGet(in *pmsPb.IdReq) (*pmsPb.PmsCategory, error) {
 	item := model.PmsCategoryModel{}
-	l.svcCtx.GormConn.First(&item, in.Id)
+	l.svcCtx.GormClient.GormDb.First(&item, in.Id)
 	var info pmsPb.PmsCategory
 	if err := copier.Copy(&info, item); err != nil {
 		return nil, err

@@ -1,13 +1,13 @@
 package config
 
 import (
-	"github.com/hwUltra/fb-tools/gormV2"
-	"github.com/zeromicro/go-zero/core/stores/redis"
+	"github.com/hwUltra/fb-tools/gormx"
+	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type Config struct {
 	zrpc.RpcServerConf
-	Gorm      gormV2.Conf
-	RedisConf redis.RedisConf
+	GormConf  gormx.Conf
+	CacheConf cache.CacheConf
 }

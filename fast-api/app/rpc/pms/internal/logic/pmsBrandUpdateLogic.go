@@ -27,7 +27,7 @@ func NewPmsBrandUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Pm
 
 func (l *PmsBrandUpdateLogic) PmsBrandUpdate(in *pmsPb.PmsBrandForm) (*pmsPb.SuccessResp, error) {
 	info := model.PmsBrandModel{}
-	l.svcCtx.GormConn.First(&info, in.Id)
+	l.svcCtx.GormClient.GormDb.First(&info, in.Id)
 
 	if info.Id == 0 {
 		logx.WithContext(l.ctx).Errorf("不存在: %s", in.Id)
@@ -37,7 +37,7 @@ func (l *PmsBrandUpdateLogic) PmsBrandUpdate(in *pmsPb.PmsBrandForm) (*pmsPb.Suc
 	info.Name = in.Name
 	info.Logo = in.Logo
 	info.Sort = in.Sort
-	res := l.svcCtx.GormConn.Save(&info)
+	res := l.svcCtx.GormClient.GormDb.Save(&info)
 	if res.Error != nil {
 		return nil, res.Error
 	}

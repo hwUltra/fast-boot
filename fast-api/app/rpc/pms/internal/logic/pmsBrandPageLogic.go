@@ -4,8 +4,8 @@ import (
 	"context"
 	"fast-boot/app/rpc/model"
 	"fast-boot/common/xerr"
-	"github.com/hwUltra/fb-tools/gormV2"
-	"github.com/hwUltra/fb-tools/gormV2/types"
+	"github.com/hwUltra/fb-tools/gormx"
+	"github.com/hwUltra/fb-tools/gormx/types"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/status"
@@ -34,7 +34,7 @@ func (l *PmsBrandPageLogic) PmsBrandPage(in *pmsPb.PmsBrandPageReq) (*pmsPb.PmsB
 	m := model.PmsBrandModel{}
 
 	total := int64(0)
-	if err := l.svcCtx.GormConn.Model(m).
+	if err := l.svcCtx.GormClient.GormDb.Model(m).
 		Scopes(
 			m.WithShopId(in.ShopId),
 			m.WithKeywords(in.Keywords)).
@@ -46,9 +46,9 @@ func (l *PmsBrandPageLogic) PmsBrandPage(in *pmsPb.PmsBrandPageReq) (*pmsPb.PmsB
 
 	if total > 0 {
 		items := make([]*model.PmsBrandModel, 0)
-		l.svcCtx.GormConn.Model(m).
+		l.svcCtx.GormClient.GormDb.Model(m).
 			Scopes(
-				gormV2.Paginate(int(in.PageNum), int(in.PageSize)),
+				gormx.Paginate(int(in.PageNum), int(in.PageSize)),
 				m.WithShopId(in.ShopId),
 				m.WithKeywords(in.Keywords)).
 			Order("id asc").Find(&items)

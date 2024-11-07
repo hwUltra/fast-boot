@@ -29,7 +29,7 @@ func NewByOpenIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ByOpenId
 
 func (l *ByOpenIdLogic) ByOpenId(in *umsPb.OpenIdReq) (*umsPb.UserInfoResp, error) {
 	item := model.UserThirdModel{}
-	l.svcCtx.GormConn.Where("platform = 'wxapp' and openid = ?", in.OpenId).
+	l.svcCtx.GormClient.GormDb.Where("platform = 'wxapp' and openid = ?", in.OpenId).
 		Preload("User").First(&item)
 
 	fmt.Println("item", item)
@@ -39,7 +39,7 @@ func (l *ByOpenIdLogic) ByOpenId(in *umsPb.OpenIdReq) (*umsPb.UserInfoResp, erro
 		//没有数据插入数据
 		item.Openid = in.OpenId
 		item.Platform = "wxapp"
-		l.svcCtx.GormConn.Create(&item)
+		l.svcCtx.GormClient.GormDb.Create(&item)
 	} else {
 		if item.Uid > 0 {
 			now := time.Now().Unix()

@@ -30,6 +30,6 @@ func (l *DeptAddLogic) DeptAdd(in *sysPb.DeptForm) (*sysPb.SuccessResp, error) {
 	if err := copier.Copy(&item, in); err != nil {
 		return nil, err
 	}
-	l.svcCtx.GormConn.Create(&item)
+	l.svcCtx.GormClient.GormDb.Create(&item)
 	return &sysPb.SuccessResp{}, nil
 }

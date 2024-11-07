@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"gorm.io/gorm"
 	"time"
 )
@@ -20,7 +20,7 @@ const (
 
 // SysLogModel mapped from table <sys_log>
 type SysLogModel struct {
-	gormV2.Base
+	gormx.Base
 	Module         ModuleType     `gorm:"column:module;type:enum('LOGIN','USER','ROLE','DEPT','MENU','DICT','OTHER')" json:"module"` // 日志模块
 	Content        string         `gorm:"column:content;not null" json:"content"`                                                    // 日志内容
 	RequestURI     string         `gorm:"column:request_uri;not null" json:"request_uri"`                                            // 请求路径

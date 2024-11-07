@@ -7,8 +7,8 @@ Etcd:
 
 Gorm:
   SqlType: 1
-  IsOpenReadDb: false   # 是否开启读写分离配置（true=开启、false=关闭），IsOpenReadDb=开启,Read 部分参数有效，否则Read部分参数直接忽略
-  SlowThreshold: 30     # 慢 SQL 阈值(sql执行时间超过此时间单位（秒），就会触发系统日志记录)
+  IsOpenReadDb: false
+  SlowThreshold: 30
   Write:
     Host: 192.168.3.88
     DataBase: mall-boot
@@ -19,13 +19,11 @@ Gorm:
     Charset: utf8
     SetMaxIdleConn: 10
     SetMaxOpenConn: 128
-    SetConnMaxLifetime: 60     # 连接不活动时的最大生存时间(秒)
-    #ReConnectInterval: 1      # 保留项,重连数据库间隔秒数
-    #PingFailRetryTimes: 3     # 保留项,最大重连次数
+    SetConnMaxLifetime: 60
   Read:
     Host: 192.168.3.88
     DataBase: mall-boot
-    Port: 15432                  #注意，非13306，请自行调整
+    Port: 15432
     Prefix:
     User: kyle
     Pass: kyle@2023
@@ -34,10 +32,6 @@ Gorm:
     SetMaxOpenConn: 128
     SetConnMaxLifetime: 60
 
-RedisConf:
-  Host: 192.168.3.88:16379
-  Pass:
-  Type: node
 
 Salt: H0VOFkGgPTrz9ICwd7qnJaZR9KQ2i8xe
 

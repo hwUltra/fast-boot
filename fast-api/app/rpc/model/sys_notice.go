@@ -1,14 +1,14 @@
 package model
 
 import (
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/hwUltra/fb-tools/utils"
 	"gorm.io/gorm"
 	"time"
 )
 
 type SysNoticeModel struct {
-	gormV2.BaseDel
+	gormx.BaseDel
 	Title         string    `gorm:"column:title;not null" json:"title"`                     // 通知标题
 	Content       string    `gorm:"column:content;not null" json:"content"`                 // 通知内容
 	Type          int8      `gorm:"column:type;not null" json:"type"`                       // 通知类型（关联字典编码：notice_type）
@@ -41,7 +41,7 @@ func (*SysNoticeModel) WithUid(uid int64) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if uid > 0 {
 
-			//if SqlType == gormV2.PostgresqlType {
+			//if SqlType == gormx.PostgresqlType {
 			//'1' = ANY(string_to_array(target_user_ids, ','));
 			return db.Where("?=ANY(string_to_array(target_user_ids, ','))", utils.ToString(uid))
 			//} else {

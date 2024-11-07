@@ -1,12 +1,12 @@
 package model
 
 import (
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"gorm.io/gorm"
 )
 
 type SysDeptModel struct {
-	gormV2.BaseDel
+	gormx.BaseDel
 	Name     string `gorm:"column:name;not null" json:"name"` // 部门名称
 	Code     string `gorm:"column:code;not null" json:"code"`
 	ParentID int64  `gorm:"column:parent_id;not null" json:"parent_id"`     // 父节点id
@@ -39,3 +39,11 @@ func (*SysDeptModel) WithStatus(status int64) func(db *gorm.DB) *gorm.DB {
 		return db
 	}
 }
+
+// -----------------
+// for SysDeptModel CacheFun
+// -----------------
+
+const CacheSysDeptModelIdPrefix = "Cache:SysDeptModel:ID:"
+
+type SysDeptCache gormx.CacheTool

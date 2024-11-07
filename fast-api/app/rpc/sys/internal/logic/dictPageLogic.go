@@ -4,7 +4,7 @@ import (
 	"context"
 	"fast-boot/app/rpc/model"
 	"fast-boot/common/xerr"
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 
@@ -32,7 +32,7 @@ func (l *DictPageLogic) DictPage(in *sysPb.DictPageReq) (*sysPb.DictPageResp, er
 	dictModel := model.SysDictModel{}
 
 	total := int64(0)
-	if err := l.svcCtx.GormConn.Model(dictModel).
+	if err := l.svcCtx.GormClient.GormDb.Model(dictModel).
 		Scopes(dictModel.WithKeywords(in.Keywords)).
 		Count(&total).Error; err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Failed to get  err : %v , in :%+v", err, in)
@@ -40,9 +40,9 @@ func (l *DictPageLogic) DictPage(in *sysPb.DictPageReq) (*sysPb.DictPageResp, er
 	list := make([]*sysPb.SysDict, 0)
 	if total > 0 {
 		items := make([]*model.SysDictModel, 0)
-		l.svcCtx.GormConn.Model(dictModel).
+		l.svcCtx.GormClient.GormDb.Model(dictModel).
 			Scopes(
-				gormV2.Paginate(int(in.PageNum), int(in.PageSize))).
+				gormx.Paginate(int(in.PageNum), int(in.PageSize))).
 			Order("id asc").Find(&items)
 
 		for _, item := range items {

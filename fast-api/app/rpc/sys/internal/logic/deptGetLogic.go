@@ -27,7 +27,7 @@ func NewDeptGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeptGetLo
 
 func (l *DeptGetLogic) DeptGet(in *sysPb.IdReq) (*sysPb.SysDept, error) {
 	item := model.SysDeptModel{}
-	l.svcCtx.GormConn.First(&item, in.Id)
+	l.svcCtx.GormClient.GormDb.First(&item, in.Id)
 	var sysDept sysPb.SysDept
 	if err := copier.Copy(&sysDept, item); err != nil {
 		return nil, err

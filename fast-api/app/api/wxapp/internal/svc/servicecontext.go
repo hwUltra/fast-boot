@@ -18,7 +18,7 @@ type ServiceContext struct {
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:      c,
-		RedisClient: redis.MustNewRedis(c.Redis),
+		RedisClient: redis.MustNewRedis(c.RedisConf),
 		WxMiniApp:   wechat.NewMini(c.WxMini),
 		UmsRpc:      ums.NewUms(zrpc.MustNewClient(c.UmsRpc)),
 	}

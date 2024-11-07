@@ -27,7 +27,7 @@ func NewPmsGoodsGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PmsGo
 
 func (l *PmsGoodsGetLogic) PmsGoodsGet(in *pmsPb.IdReq) (*pmsPb.PmsGoodsInfo, error) {
 	m := model.PmsGoodsModel{}
-	l.svcCtx.GormConn.
+	l.svcCtx.GormClient.GormDb.
 		//Preload("Shop", "status = 1").
 		Preload("Category", "visible = true").
 		Preload("Brand").

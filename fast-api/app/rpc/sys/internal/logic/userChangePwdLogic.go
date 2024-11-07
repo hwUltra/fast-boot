@@ -27,13 +27,13 @@ func NewUserChangePwdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Use
 
 func (l *UserChangePwdLogic) UserChangePwd(in *sysPb.UserChangePwdReq) (*sysPb.SuccessResp, error) {
 	user := model.SysUserModel{}
-	l.svcCtx.GormConn.First(&user, in.UserId)
+	l.svcCtx.GormClient.GormDb.First(&user, in.UserId)
 	if user.Id == 0 {
 		return nil, status.Error(100, "该用户不存在")
 	}
 	if len(in.Password) > 0 {
 		user.Password = utils.PasswordEncrypt(l.svcCtx.Config.Salt, in.Password)
 	}
-	l.svcCtx.GormConn.Save(&user)
+	l.svcCtx.GormClient.GormDb.Save(&user)
 	return &sysPb.SuccessResp{}, nil
 }

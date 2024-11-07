@@ -27,7 +27,7 @@ func NewDeptUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeptUp
 
 func (l *DeptUpdateLogic) DeptUpdate(in *sysPb.DeptForm) (*sysPb.SuccessResp, error) {
 	info := model.SysDeptModel{}
-	l.svcCtx.GormConn.First(&info, in.Id)
+	l.svcCtx.GormClient.GormDb.First(&info, in.Id)
 
 	if info.Id == 0 {
 		logx.WithContext(l.ctx).Errorf("不存在: %s", in.Id)
@@ -42,7 +42,7 @@ func (l *DeptUpdateLogic) DeptUpdate(in *sysPb.DeptForm) (*sysPb.SuccessResp, er
 	info.Status = int8(in.Status)
 	info.UpdateBy = in.UpdateBy
 
-	res := l.svcCtx.GormConn.Save(&info)
+	res := l.svcCtx.GormClient.GormDb.Save(&info)
 	if res.Error != nil {
 		return nil, res.Error
 	}

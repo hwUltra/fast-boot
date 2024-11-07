@@ -3,13 +3,11 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
-	"fast-boot/common/xerr"
-	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
-
 	"fast-boot/app/rpc/ums/internal/svc"
 	"fast-boot/app/rpc/ums/umsPb"
-
+	"fast-boot/common/globalkey"
+	"github.com/hwUltra/fb-tools/gormx"
+	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -28,15 +26,14 @@ func NewUserGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserGetLo
 }
 
 func (l *UserGetLogic) UserGet(in *umsPb.IdReq) (*umsPb.User, error) {
-	userInfo := model.UserModel{}
-	l.svcCtx.GormConn.Where("id = ?", in.Id).First(&userInfo)
+
+	ct := (*model.UserCache)(gormx.NewCacheTool(l.svcCtx.Config.CacheConf, l.svcCtx.GormClient.GormDb))
+	userInfo := ct.Get(in.Id)
 
 	res := &umsPb.User{}
-	if err := copier.Copy(&res, userInfo); err != nil {
-		return nil, errors.Wrapf(xerr.NewErrMsg("数据转化有误"), "UserAdd err:%v", err)
+	if err := copier.CopyWithOption(&res, userInfo, globalkey.CopierProtoOptions); err != nil {
+		return nil, err
 	}
 
-	//特别处理
-	//res.Birthday = userInfo.Birthday.Time.Format("2006-01-02")
 	return res, nil
 }

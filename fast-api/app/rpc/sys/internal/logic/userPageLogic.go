@@ -6,7 +6,7 @@ import (
 	"fast-boot/common/static"
 	"fast-boot/common/xerr"
 	"fmt"
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 
@@ -37,13 +37,13 @@ func (l *UserPageLogic) UserPage(in *sysPb.UserPageReq) (*sysPb.UserPageResp, er
 
 	//适配Postgresql
 	deptIdWhere := ""
-	if l.svcCtx.Config.Gorm.SqlType == gormV2.PostgresqlType {
+	if l.svcCtx.Config.GormConf.SqlType == gormx.PostgresqlType {
 		deptIdWhere = fmt.Sprint("concat(',',concat(sys_dept.tree_path::text,',',sys_dept.id::int),',') like concat('%,',?::int,',%')")
 	} else {
 		deptIdWhere = fmt.Sprint("concat(',',concat(sys_dept.tree_path,',',sys_dept.id),',') like concat('%,',?,',%')")
 	}
 
-	if err := l.svcCtx.GormConn.Model(userModel).
+	if err := l.svcCtx.GormClient.GormDb.Model(userModel).
 		Joins("left join sys_dept on sys_user.dept_id = sys_dept.id").
 		Scopes(
 			userModel.WithStatus(in.Status),
@@ -58,12 +58,12 @@ func (l *UserPageLogic) UserPage(in *sysPb.UserPageReq) (*sysPb.UserPageResp, er
 
 	if total > 0 {
 		items := make([]*model.SysUserModel, 0)
-		l.svcCtx.GormConn.Model(userModel).
+		l.svcCtx.GormClient.GormDb.Model(userModel).
 			Joins("left join sys_dept on sys_user.dept_id = sys_dept.id").
 			Preload("Dept", "status = 1").
 			Preload("Roles", "status = 1").
 			Scopes(
-				gormV2.Paginate(int(in.PageNum), int(in.PageSize)),
+				gormx.Paginate(int(in.PageNum), int(in.PageSize)),
 				userModel.WithStatus(in.Status),
 				userModel.WithCreatedAt(in.StartTime, in.EndTime),
 				userModel.WithKeywords(in.Keywords)).

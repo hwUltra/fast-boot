@@ -27,7 +27,7 @@ func NewPmsBrandGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PmsBr
 
 func (l *PmsBrandGetLogic) PmsBrandGet(in *pmsPb.IdReq) (*pmsPb.PmsBrand, error) {
 	item := model.PmsBrandModel{}
-	l.svcCtx.GormConn.First(&item, in.Id)
+	l.svcCtx.GormClient.GormDb.First(&item, in.Id)
 	var info pmsPb.PmsBrand
 	if err := copier.Copy(&info, item); err != nil {
 		return nil, err

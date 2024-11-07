@@ -2,7 +2,7 @@ package other
 
 import (
 	"context"
-	captchaTool "github.com/hwUltra/fb-tools/captcha"
+	"github.com/hwUltra/fb-tools/captchax"
 
 	"fast-boot/app/api/admin/internal/svc"
 	"fast-boot/app/api/admin/internal/types"
@@ -26,15 +26,14 @@ func NewCaptchaLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CaptchaLo
 }
 
 func (l *CaptchaLogic) Captcha() (resp *types.CaptchaResp, err error) {
-	var ct = captchaTool.NewCaptchaTool(captchaTool.CaptchaConf{
-		Type:      captchaTool.MathType,
-		Store:     captchaTool.RedisType,
-		RedisConf: l.svcCtx.Config.Redis,
+	var ct = captchax.NewCaptchaTool(captchax.CaptchaConf{
+		Type:      captchax.MathType,
+		Store:     captchax.RedisType,
+		CacheConf: l.svcCtx.Config.CacheConf,
 	})
 	if id, b64s, _, err := ct.Make(); err != nil {
 		return nil, err
 	} else {
-		//fmt.Printf(" id = %s \n b64s = %s \n answer = %s \n", id, b64s, answer)
 		return &types.CaptchaResp{
 			CaptchaBase64: b64s,
 			CaptchaKey:    id,

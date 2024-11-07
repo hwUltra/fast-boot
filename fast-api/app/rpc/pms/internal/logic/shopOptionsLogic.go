@@ -28,7 +28,7 @@ func (l *ShopOptionsLogic) ShopOptions(in *pmsPb.AnyReq) (*pmsPb.OptionsResp, er
 
 	var items []*pmsPb.OptionItem
 
-	l.svcCtx.GormConn.Model(shopModel).
+	l.svcCtx.GormClient.GormDb.Model(shopModel).
 		Select("id as value", "name as label ").
 		Where("status = 1").
 		Order("id asc ").

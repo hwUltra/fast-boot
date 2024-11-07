@@ -30,7 +30,7 @@ func NewMenuGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *MenuGetLo
 // MenuGet 获取单个
 func (l *MenuGetLogic) MenuGet(in *sysPb.IdReq) (*sysPb.SysMenu, error) {
 	item := model.SysMenuModel{}
-	l.svcCtx.GormConn.First(&item, in.Id)
+	l.svcCtx.GormClient.GormDb.First(&item, in.Id)
 	var sysRole sysPb.SysMenu
 	if err := copier.Copy(&sysRole, item); err != nil {
 		return nil, err

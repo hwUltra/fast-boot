@@ -30,14 +30,14 @@ func NewUserUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserUp
 // UserUpdate 修改
 func (l *UserUpdateLogic) UserUpdate(in *sysPb.UserUpdateReq) (*sysPb.SuccessResp, error) {
 	user := model.SysUserModel{}
-	l.svcCtx.GormConn.First(&user, in.Id)
+	l.svcCtx.GormClient.GormDb.First(&user, in.Id)
 	if user.Id == 0 {
 		return nil, status.Error(100, "该用户不存在")
 	}
 	//校验用户名
 	if in.Username != "" && in.Username != user.Username {
 		oldUser := model.SysUserModel{}
-		l.svcCtx.GormConn.Where("username = ?", in.Username).First(&oldUser)
+		l.svcCtx.GormClient.GormDb.Where("username = ?", in.Username).First(&oldUser)
 		if oldUser.Id != 0 {
 			return nil, status.Error(100, "用户名已存在")
 		}
@@ -70,7 +70,7 @@ func (l *UserUpdateLogic) UserUpdate(in *sysPb.UserUpdateReq) (*sysPb.SuccessRes
 		user.Status = int8(in.Status)
 	}
 
-	if err := l.svcCtx.GormConn.Transaction(func(tx *gorm.DB) error {
+	if err := l.svcCtx.GormClient.GormDb.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Save(&user).Error; err != nil {
 			return err
 		}

@@ -28,7 +28,7 @@ func NewMenuListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *MenuList
 // MenuList 菜单列表
 func (l *MenuListLogic) MenuList(in *sysPb.MenuListReq) (*sysPb.MenuListResp, error) {
 	items := make([]*model.SysMenuModel, 0)
-	l.svcCtx.GormConn.Model(&model.SysMenuModel{}).
+	l.svcCtx.GormClient.GormDb.Model(&model.SysMenuModel{}).
 		Order("id asc").Find(&items)
 
 	list := make([]*sysPb.SysMenuItem, 0)

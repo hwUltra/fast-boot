@@ -1,12 +1,12 @@
 package model
 
 import (
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"gorm.io/gorm"
 )
 
 type UserThirdModel struct {
-	gormV2.BaseDel
+	gormx.BaseDel
 	Uid      int64      `gorm:"column:uid;not null" json:"uid"`           // 会员ID
 	Platform string     `gorm:"column:platform;not null" json:"platform"` // 第三方应用
 	Openid   string     `gorm:"column:openid;not null" json:"openid"`     // 第三方唯一ID

@@ -5,6 +5,7 @@ import (
 	"fast-boot/app/rpc/model"
 	"fast-boot/app/rpc/pms/internal/svc"
 	"fast-boot/app/rpc/pms/pmsPb"
+	"github.com/hwUltra/fb-tools/gormx"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,8 +25,7 @@ func NewShopDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShopDelLo
 }
 
 func (l *ShopDelLogic) ShopDel(in *pmsPb.IdsReq) (*pmsPb.SuccessResp, error) {
-	//ids := strings.Split(in.Ids, ",")
-	//l.svcCtx.GormConn.Delete(&model.PmsShopModel{}, ids)
-	model.CreatePmsShopModelHelp(l.svcCtx.GormConn, l.svcCtx.Rsc).Delete(in.Ids)
+	ct := (*model.PmsShopCache)(gormx.NewCacheTool(l.svcCtx.Config.CacheConf, l.svcCtx.GormClient.GormDb))
+	ct.Del(in.Ids)
 	return &pmsPb.SuccessResp{}, nil
 }

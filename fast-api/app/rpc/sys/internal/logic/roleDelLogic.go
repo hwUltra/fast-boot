@@ -29,7 +29,7 @@ func NewRoleDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RoleDelLo
 func (l *RoleDelLogic) RoleDel(in *sysPb.IdsReq) (*sysPb.SuccessResp, error) {
 
 	ids := strings.Split(in.Ids, ",")
-	l.svcCtx.GormConn.Delete(&model.SysRoleModel{}, ids)
+	l.svcCtx.GormClient.GormDb.Delete(&model.SysRoleModel{}, ids)
 
 	return &sysPb.SuccessResp{}, nil
 }

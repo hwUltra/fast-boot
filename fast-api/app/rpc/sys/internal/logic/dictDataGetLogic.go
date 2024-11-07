@@ -27,7 +27,7 @@ func NewDictDataGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DictD
 
 func (l *DictDataGetLogic) DictDataGet(in *sysPb.IdReq) (*sysPb.SysDictData, error) {
 	item := model.SysDictDataModel{}
-	l.svcCtx.GormConn.First(&item, in.Id)
+	l.svcCtx.GormClient.GormDb.First(&item, in.Id)
 	var sysDictData sysPb.SysDictData
 	if err := copier.Copy(&sysDictData, item); err != nil {
 		return nil, err

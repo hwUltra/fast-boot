@@ -27,6 +27,6 @@ func NewPmsBrandDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PmsBr
 
 func (l *PmsBrandDelLogic) PmsBrandDel(in *pmsPb.IdsReq) (*pmsPb.SuccessResp, error) {
 	ids := strings.Split(in.Ids, ",")
-	l.svcCtx.GormConn.Delete(&model.PmsBrandModel{}, ids)
+	l.svcCtx.GormClient.GormDb.Delete(&model.PmsBrandModel{}, ids)
 	return &pmsPb.SuccessResp{}, nil
 }

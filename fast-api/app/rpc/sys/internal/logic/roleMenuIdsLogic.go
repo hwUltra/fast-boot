@@ -28,7 +28,7 @@ func (l *RoleMenuIdsLogic) RoleMenuIds(in *sysPb.IdReq) (*sysPb.RoleMenuIdsResp,
 
 	rmModel := model.SysRoleMenuModel{}
 	menuIds := make([]int64, 0)
-	l.svcCtx.GormConn.Model(rmModel).
+	l.svcCtx.GormClient.GormDb.Model(rmModel).
 		Where("role_id = ?", in.Id).
 		Pluck("menu_id", &menuIds)
 	return &sysPb.RoleMenuIdsResp{Items: menuIds}, nil

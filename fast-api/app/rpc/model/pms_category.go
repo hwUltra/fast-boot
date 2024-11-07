@@ -1,12 +1,12 @@
 package model
 
 import (
-	"github.com/hwUltra/fb-tools/gormV2"
+	"github.com/hwUltra/fb-tools/gormx"
 	"gorm.io/gorm"
 )
 
 type PmsCategoryModel struct {
-	gormV2.BaseDel
+	gormx.BaseDel
 	ShopId   int64  `gorm:"column:shop_id;not null" json:"shopId"`            // shop_id
 	ParentId int64  `gorm:"column:parent_id;not null" json:"parentId"`        // 父级ID
 	Name     string `gorm:"column:name;not null" json:"name"`                 // 商品分类名称

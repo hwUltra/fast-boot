@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
+	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/jinzhu/copier"
 
 	"fast-boot/app/rpc/pms/internal/svc"
@@ -30,10 +31,9 @@ func (l *ShopAddLogic) ShopAdd(in *pmsPb.ShopForm) (*pmsPb.SuccessIdResp, error)
 	if err := copier.Copy(&item, in); err != nil {
 		return nil, err
 	}
-	//l.svcCtx.GormConn.Create(&item)
-	insertId, err := model.CreatePmsShopModelHelp(l.svcCtx.GormConn, l.svcCtx.Rsc).Insert(&item)
-	if err != nil {
+	ct := (*model.PmsShopCache)(gormx.NewCacheTool(l.svcCtx.Config.CacheConf, l.svcCtx.GormClient.GormDb))
+	if err := ct.Create(&item); err != nil {
 		return nil, err
 	}
-	return &pmsPb.SuccessIdResp{Id: insertId}, nil
+	return &pmsPb.SuccessIdResp{Id: item.Id}, nil
 }

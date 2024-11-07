@@ -11,20 +11,25 @@ Auth:
   AccessSecret: ad879037-c7a4-4063-9236-6bfc35d54b7d
   AccessExpire: 86400
 
-Redis:
+CacheConf:
+  - Host: 192.168.3.88:16379
+    Pass:
+
+RedisConf:
   Host: 192.168.3.88:16379
-  Pass:
+  Pass: 
   Type: node
 
-MinioX:
-  MinIOAccessKeyID: c4h0z6z3GxY8UXJkb7Fd
-  MinIOAccessSecretKey: 2ej0kOfnNNxt5Jlz6pIw98aGuqUOSOg0BGqyV5L2
-  MinIOEndpoint: 192.168.3.88:9000
-  MinIOBucket: files
-  MinIOFile: file
-  MinIOSSLBool: false
-  MinIOBucketLocation: cn-north-12
-  MinIOBasePath: http://192.168.3.88:9000
+OSSConf:
+  Type: 1
+  MinIoConf:
+    MinIOAccessKeyID: c4h0z6z3GxY8UXJkb7Fd
+    MinIOAccessSecretKey: 2ej0kOfnNNxt5Jlz6pIw98aGuqUOSOg0BGqyV5L2
+    MinIOEndpoint: 192.168.3.88:9000
+    MinIOBucket: files
+    MinIOSSLBool: false
+    MinIOBucketLocation: cn-north-12
+    MinIOBasePath: http://192.168.3.88:9000
 
 
 #系统

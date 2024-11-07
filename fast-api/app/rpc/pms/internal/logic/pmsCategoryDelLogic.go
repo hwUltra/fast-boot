@@ -27,6 +27,6 @@ func NewPmsCategoryDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Pm
 
 func (l *PmsCategoryDelLogic) PmsCategoryDel(in *pmsPb.IdsReq) (*pmsPb.SuccessResp, error) {
 	ids := strings.Split(in.Ids, ",")
-	l.svcCtx.GormConn.Delete(&model.PmsCategoryModel{}, ids)
+	l.svcCtx.GormClient.GormDb.Delete(&model.PmsCategoryModel{}, ids)
 	return &pmsPb.SuccessResp{}, nil
 }

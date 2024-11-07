@@ -29,7 +29,7 @@ func (l *PmsBrandOptionsLogic) PmsBrandOptions(in *pmsPb.IdReq) (*pmsPb.OptionsR
 
 	var items []*pmsPb.OptionItem
 
-	l.svcCtx.GormConn.Model(m).
+	l.svcCtx.GormClient.GormDb.Model(m).
 		Scopes(
 			m.WithShopId(in.Id)).
 		Select("id as value", "name as label ").

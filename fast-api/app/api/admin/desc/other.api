@@ -1,10 +1,10 @@
 type (
-    FileUpload {
-        Hash string `json:"hash,optional"`
+    UploadInfo {
+//        Hash string `json:"hash,optional"`
         Name string `json:"name,optional"`
-        Ext  string `json:"ext,optional"`
-        Size int64  `json:"size,optional"`
-        Path string `json:"path,optional"`
+//        Ext  string `json:"ext,optional"`
+//        Size int64  `json:"size,optional"`
+        Url string `json:"url,optional"`
     }
 
     CaptchaResp{
@@ -22,8 +22,8 @@ service admin {
     @doc(
         summary: "文件上传"
     )
-    @handler FileUpload
-    post /upload returns (FileUpload)
+    @handler Upload
+    post /upload returns (UploadInfo)
 
     @doc(
         summary: "验证码"

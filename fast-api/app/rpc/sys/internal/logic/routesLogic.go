@@ -26,7 +26,7 @@ func NewRoutesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RoutesLogi
 }
 
 func (l *RoutesLogic) Routes(in *sysPb.RoutesReq) (*sysPb.RoutesResp, error) {
-	gormDb := l.svcCtx.GormConn
+	gormDb := l.svcCtx.GormClient.GormDb
 	items := make([]*model.SysMenuModel, 0)
 	if in.Uid > 0 {
 		roleIds := make([]int64, 0)
@@ -35,7 +35,6 @@ func (l *RoutesLogic) Routes(in *sysPb.RoutesReq) (*sysPb.RoutesResp, error) {
 			Where("sys_user_role.user_id = ?", 1).
 			Where("sys_role.status = ?", 1).
 			Pluck("sys_role.id", &roleIds)
-		//fmt.Print("roleIds = ", roleIds)
 
 		menuIds := make([]int64, 0)
 		gormDb.Model(&model.SysRoleMenuModel{}).

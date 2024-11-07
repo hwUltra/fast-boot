@@ -32,7 +32,7 @@ func (l *PmsGoodsPageLogic) PmsGoodsPage(in *pmsPb.PmsGoodsPageReq) (*pmsPb.PmsG
 	m := model.PmsGoodsModel{}
 	fmt.Println("PmsGoodsListReq", in)
 	total := int64(0)
-	if err := l.svcCtx.GormConn.Model(m).
+	if err := l.svcCtx.GormClient.GormDb.Model(m).
 		Scopes(
 			m.WithShopId(in.ShopId),
 			m.WithStatus(in.Status),
@@ -47,7 +47,7 @@ func (l *PmsGoodsPageLogic) PmsGoodsPage(in *pmsPb.PmsGoodsPageReq) (*pmsPb.PmsG
 
 	if total > 0 {
 		items := make([]*model.PmsGoodsModel, 0)
-		l.svcCtx.GormConn.Model(m).
+		l.svcCtx.GormClient.GormDb.Model(m).
 			Scopes(
 				m.WithShopId(in.ShopId),
 				m.WithStatus(in.Status),

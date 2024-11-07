@@ -28,6 +28,6 @@ func NewUserDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserDelLo
 // UserDel 删除
 func (l *UserDelLogic) UserDel(in *sysPb.IdsReq) (*sysPb.SuccessResp, error) {
 	ids := strings.Split(in.Ids, ",")
-	l.svcCtx.GormConn.Delete(&model.SysUserModel{}, ids)
+	l.svcCtx.GormClient.GormDb.Delete(&model.SysUserModel{}, ids)
 	return &sysPb.SuccessResp{}, nil
 }

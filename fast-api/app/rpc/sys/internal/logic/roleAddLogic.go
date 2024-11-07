@@ -31,7 +31,7 @@ func (l *RoleAddLogic) RoleAdd(in *sysPb.RoleForm) (*sysPb.IdResp, error) {
 	if err := copier.Copy(&item, in); err != nil {
 		return nil, err
 	}
-	result := l.svcCtx.GormConn.Create(&item)
+	result := l.svcCtx.GormClient.GormDb.Create(&item)
 	if result.Error != nil {
 		return nil, result.Error
 	}

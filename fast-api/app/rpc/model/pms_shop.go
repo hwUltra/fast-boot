@@ -1,12 +1,14 @@
 package model
 
 import (
-	"github.com/hwUltra/fb-tools/gormV2"
+	"fmt"
+	"github.com/hwUltra/fb-tools/gormx"
 	"gorm.io/gorm"
+	"strings"
 )
 
 type PmsShopModel struct {
-	gormV2.BaseDel          // id
+	gormx.BaseDel           // id
 	Name            string  `gorm:"column:name;not null" json:"name"` // 店铺名称
 	Tel             string  `gorm:"column:tel;not null" json:"tel"`   // 店铺电话
 	Notice          string  `gorm:"column:notice;not null" json:"notice"`
@@ -46,10 +48,44 @@ func (*PmsShopModel) WithCreatedAt(startTime string, endTime string) func(db *go
 	}
 }
 
-func (t *PmsShopModel) Insert() {
+// -----------------
+// for PmsShopModel CacheFun
+// -----------------
 
+const CachePmsShopModelIdPrefix = "Cache:PmsShopModel:ID:"
+
+type PmsShopCache gormx.CacheTool
+
+func (m *PmsShopCache) Create(u *PmsShopModel) error {
+	if err := m.Db.Create(&u).Error; err != nil {
+		return err
+	}
+	cacheKey := fmt.Sprintf("%s%v", CachePmsShopModelIdPrefix, u.Id)
+	return m.Cache.Set(cacheKey, u)
 }
 
-func (*PmsShopModel) Update() {
+func (m *PmsShopCache) Update(u *PmsShopModel) error {
+	if err := m.Db.Save(&u).Error; err != nil {
+		return err
+	}
+	cacheKey := fmt.Sprintf("%s%v", CachePmsShopModelIdPrefix, u.Id)
+	return m.Cache.Set(cacheKey, u)
+}
 
+func (m *PmsShopCache) Del(idStr string) {
+	ids := strings.Split(idStr, ",")
+	m.Db.Delete(&UserModel{}, ids)
+	for _, id := range ids {
+		cacheKey := fmt.Sprintf("%s%v", CachePmsShopModelIdPrefix, id)
+		_ = m.Cache.Del(cacheKey)
+	}
+}
+
+func (m *PmsShopCache) Get(id int64) *PmsShopModel {
+	cacheKey := fmt.Sprintf("%s%v", CachePmsShopModelIdPrefix, id)
+	psm := PmsShopModel{}
+	_ = m.Cache.Take(&psm, cacheKey, func(psm any) error {
+		return m.Db.Model(UserModel{}).Where("id = ?", id).First(&psm).Error
+	})
+	return &psm
 }

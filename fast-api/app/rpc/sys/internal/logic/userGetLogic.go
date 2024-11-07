@@ -27,7 +27,7 @@ func NewUserGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserGetLo
 
 func (l *UserGetLogic) UserGet(in *sysPb.IdReq) (*sysPb.UserGetResp, error) {
 
-	gormDb := l.svcCtx.GormConn
+	gormDb := l.svcCtx.GormClient.GormDb
 	userInfo := model.SysUserModel{}
 	gormDb.Preload("Roles", "status = ?", 1).First(&userInfo, in.Id)
 

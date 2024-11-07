@@ -26,7 +26,7 @@ func NewDeptListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeptList
 func (l *DeptListLogic) DeptList(in *sysPb.DeptListReq) (*sysPb.DeptListResp, error) {
 	deptModel := model.SysDeptModel{}
 	var items []*model.SysDeptModel
-	l.svcCtx.GormConn.Model(deptModel).
+	l.svcCtx.GormClient.GormDb.Model(deptModel).
 		Scopes(
 			deptModel.WithStatus(in.Status),
 			deptModel.WithKeywords(in.Keywords)).

@@ -1,9 +1,9 @@
 package model
 
-import "github.com/hwUltra/fb-tools/gormV2"
+import "github.com/hwUltra/fb-tools/gormx"
 
 type PmsGoodsAttributeModel struct {
-	gormV2.BaseDel
+	gormx.BaseDel
 	GoodsId     int64  `gorm:"column:goods_id;not null" json:"goodsId"`
 	AttributeId int64  `gorm:"column:attribute_id;not null" json:"attributeId"` // 属性ID
 	Name        string `gorm:"column:name;not null" json:"name"`                // 属性名称

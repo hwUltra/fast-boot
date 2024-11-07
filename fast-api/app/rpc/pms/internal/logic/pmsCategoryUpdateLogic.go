@@ -27,7 +27,7 @@ func NewPmsCategoryUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 
 func (l *PmsCategoryUpdateLogic) PmsCategoryUpdate(in *pmsPb.PmsCategoryForm) (*pmsPb.SuccessResp, error) {
 	info := model.PmsCategoryModel{}
-	l.svcCtx.GormConn.First(&info, in.Id)
+	l.svcCtx.GormClient.GormDb.First(&info, in.Id)
 
 	if info.Id == 0 {
 		logx.WithContext(l.ctx).Errorf("不存在: %s", in.Id)
@@ -40,7 +40,7 @@ func (l *PmsCategoryUpdateLogic) PmsCategoryUpdate(in *pmsPb.PmsCategoryForm) (*
 	info.Icon = in.Icon
 	info.Sort = in.Sort
 	info.Visible = in.Visible
-	res := l.svcCtx.GormConn.Save(&info)
+	res := l.svcCtx.GormClient.GormDb.Save(&info)
 	if res.Error != nil {
 		return nil, res.Error
 	}

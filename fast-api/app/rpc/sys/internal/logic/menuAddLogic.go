@@ -36,11 +36,11 @@ func (l *MenuAddLogic) MenuAdd(in *sysPb.MenuForm) (*sysPb.SuccessResp, error) {
 	treePath := "0"
 	if in.ParentId > 0 {
 		pTreePath := ""
-		l.svcCtx.GormConn.Model(model.SysMenuModel{}).Where("id = ?", in.ParentId).Pluck("tree_path", &pTreePath)
+		l.svcCtx.GormClient.GormDb.Model(model.SysMenuModel{}).Where("id = ?", in.ParentId).Pluck("tree_path", &pTreePath)
 		treePath = pTreePath + "," + strconv.Itoa(int(in.ParentId))
 	}
 	item.TreePath = treePath
 
-	l.svcCtx.GormConn.Create(&item)
+	l.svcCtx.GormClient.GormDb.Create(&item)
 	return &sysPb.SuccessResp{}, nil
 }

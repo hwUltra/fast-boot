@@ -1,8 +1,10 @@
 package model
 
 import (
-	"github.com/hwUltra/fb-tools/gormV2"
-	"github.com/hwUltra/fb-tools/gormV2/types"
+	"fmt"
+	"github.com/hwUltra/fb-tools/gormx"
+	"github.com/hwUltra/fb-tools/gormx/types"
+	"strings"
 )
 
 //type MenuType string
@@ -14,7 +16,7 @@ import (
 //)
 
 type SysMenuModel struct {
-	gormV2.BaseDel
+	gormx.BaseDel
 	ParentID   int64          `gorm:"column:parent_id;not null" json:"parentId"` // 父菜单ID
 	TreePath   string         `gorm:"column:tree_path;not null" json:"treePath"` // 父节点ID路径
 	Name       string         `gorm:"column:name;not null" json:"name"`
@@ -36,3 +38,46 @@ type SysMenuModel struct {
 func (*SysMenuModel) TableName() string {
 	return "sys_menu"
 }
+
+func (m *SysMenuCache) Del(idStr string) {
+	ids := strings.Split(idStr, ",")
+	m.Db.Delete(&SysMenuModel{}, ids)
+	for _, id := range ids {
+		cacheKey := fmt.Sprintf("%s%v", CacheSysMenuModelIdPrefix, id)
+		_ = m.Cache.Del(cacheKey)
+	}
+}
+
+func (m *SysMenuCache) Create(u *SysMenuModel) error {
+	if err := m.Db.Create(&u).Error; err != nil {
+		return err
+	}
+	cacheKey := fmt.Sprintf("%s%v", CacheSysMenuModelIdPrefix, u.Id)
+	return m.Cache.Set(cacheKey, u)
+}
+
+func (m *SysMenuCache) Update(u *SysMenuModel) error {
+	if err := m.Db.Save(&u).Error; err != nil {
+		return err
+	}
+	cacheKey := fmt.Sprintf("%s%v", CacheSysMenuModelIdPrefix, u.Id)
+	return m.Cache.Set(cacheKey, u)
+}
+
+func (m *SysMenuCache) Get(id int64) *SysMenuModel {
+	cacheKey := fmt.Sprintf("%s%v", CacheSysMenuModelIdPrefix, id)
+	item := SysMenuModel{}
+	_ = m.Cache.Take(&item, cacheKey, func(user any) error {
+		return m.Db.Where("id = ?", id).Model(SysMenuModel{}).First(&user).Error
+	})
+	return &item
+}
+
+// -----------------
+// for SysMenuCache CacheFun
+// -----------------
+
+const CacheSysMenuModelIdPrefix = "Cache:SysMenuModel:ID:"
+const CacheSysMenuRoutesUIdPrefix = "Cache:SysMenuRoutes:UID:"
+
+type SysMenuCache gormx.CacheTool

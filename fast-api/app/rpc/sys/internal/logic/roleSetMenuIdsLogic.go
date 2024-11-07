@@ -27,7 +27,7 @@ func NewRoleSetMenuIdsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ro
 
 func (l *RoleSetMenuIdsLogic) RoleSetMenuIds(in *sysPb.RoleSetMenuIdsReq) (*sysPb.SuccessResp, error) {
 
-	if err := l.svcCtx.GormConn.Transaction(func(tx *gorm.DB) error {
+	if err := l.svcCtx.GormClient.GormDb.Transaction(func(tx *gorm.DB) error {
 		//删除
 		if err := tx.Where("role_id = ?", in.RoleId).Delete(&model.SysRoleMenuModel{}).Error; err != nil {
 			return err
