@@ -13,17 +13,17 @@ import (
 	"fast-boot/app/api/admin/internal/handler"
 	"fast-boot/app/api/admin/internal/svc"
 
-	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 )
 
-var configFile = flag.String("f", "etc/admin.yaml", "the config file")
+//var configFile = flag.String("f", "etc/admin.yaml", "the config file")
 
 func main() {
 	flag.Parse()
 
-	var c config.Config
-	conf.MustLoad(*configFile, &c)
+	//var c config.Config
+	//conf.MustLoad(*configFile, &c)
+	c := config.PullConfig()
 
 	server := rest.MustNewServer(c.RestConf, rest.WithUnauthorizedCallback(func(w http.ResponseWriter, r *http.Request, err error) {
 		// Unauthorized

@@ -6,15 +6,15 @@ import (
 	"github.com/zeromicro/go-zero/core/service"
 
 	"fast-boot/app/mq/internal/config"
-	"github.com/zeromicro/go-zero/core/conf"
 )
 
-var configFile = flag.String("f", "etc/mq.yaml", "the config file")
+//var configFile = flag.String("f", "etc/mq.yaml", "the config file")
 
 func main() {
 	flag.Parse()
-	var c config.Config
-	conf.MustLoad(*configFile, &c)
+	//var c config.Config
+	//conf.MustLoad(*configFile, &c)
+	c := config.PullConfig()
 
 	//log、prometheus、trace、metricsUrl.
 	if err := c.SetUp(); err != nil {

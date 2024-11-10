@@ -9,19 +9,19 @@ import (
 	"fmt"
 	"github.com/hwUltra/fb-tools/result"
 	"github.com/hwUltra/fb-tools/wsCore"
-	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 )
 
-var configFile = flag.String("f", "etc/wxapp.yaml", "the config file")
+//var configFile = flag.String("f", "etc/wxapp.yaml", "the config file")
 
 func main() {
 	flag.Parse()
 
-	var c config.Config
-	conf.MustLoad(*configFile, &c)
+	//var c config.Config
+	//conf.MustLoad(*configFile, &c)
+	c := config.PullConfig()
 
 	ctx := svc.NewServiceContext(c)
 	//server := rest.MustNewServer(c.RestConf)

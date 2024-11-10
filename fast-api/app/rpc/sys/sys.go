@@ -9,20 +9,20 @@ import (
 	"fast-boot/app/rpc/sys/internal/svc"
 	"fast-boot/app/rpc/sys/sysPb"
 
-	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
-var configFile = flag.String("f", "etc/sys.yaml", "the config file")
+//var configFile = flag.String("f", "etc/sys.yaml", "the config file")
 
 func main() {
 	flag.Parse()
 
-	var c config.Config
-	conf.MustLoad(*configFile, &c)
+	//var c config.Config
+	//conf.MustLoad(*configFile, &c)
+	c := config.PullConfig()
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
