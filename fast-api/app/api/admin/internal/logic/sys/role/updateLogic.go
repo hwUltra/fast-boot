@@ -25,7 +25,7 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 	}
 }
 
-func (l *UpdateLogic) Update(req *types.SysRoleFormReq) (resp *types.NullResp, err error) {
+func (l *UpdateLogic) Update(req *types.SysRoleFormReq) (resp *types.SysRoleFormResp, err error) {
 	if _, err := l.svcCtx.SysRpc.RoleUpdate(l.ctx, &sysPb.RoleForm{
 		Id:        req.Id,
 		Name:      req.Name,
@@ -34,8 +34,8 @@ func (l *UpdateLogic) Update(req *types.SysRoleFormReq) (resp *types.NullResp, e
 		Status:    req.Status,
 		DataScope: req.DataScope,
 	}); err != nil {
-		return &types.NullResp{}, err
+		return nil, err
 	}
 
-	return &types.NullResp{}, nil
+	return &types.SysRoleFormResp{}, nil
 }

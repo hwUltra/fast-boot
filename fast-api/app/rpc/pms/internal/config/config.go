@@ -10,8 +10,8 @@ import (
 
 type Config struct {
 	zrpc.RpcServerConf
-	GormConf  gormx.Conf
-	CacheConf cache.CacheConf
+	Gorm  gormx.Conf
+	Cache cache.CacheConf
 }
 
 func PullConfig() Config {

@@ -26,7 +26,7 @@ func NewEditLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EditLogic {
 	}
 }
 
-func (l *EditLogic) Edit(req *types.GoodsEditRep) (resp *types.IdResp, err error) {
+func (l *EditLogic) Edit(req *types.GoodsEditRep) (resp *types.GoodsIdResp, err error) {
 	form := pmsPb.PmsGoodsForm{}
 	_ = copier.Copy(&form, req)
 
@@ -34,7 +34,7 @@ func (l *EditLogic) Edit(req *types.GoodsEditRep) (resp *types.IdResp, err error
 	if err != nil {
 		return nil, err
 	}
-	return &types.IdResp{
+	return &types.GoodsIdResp{
 		Id: res.Id,
 	}, nil
 }

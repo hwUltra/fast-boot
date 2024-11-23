@@ -44,4 +44,4 @@ func (*SysDictModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
 
 const CacheSysDictModelIdPrefix = "Cache:SysDictModel:ID:"
 
-type SysDictCache gormx.CacheTool
+type SysDictCache gormx.GormCache

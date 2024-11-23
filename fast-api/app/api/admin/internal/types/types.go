@@ -3,12 +3,33 @@
 
 package types
 
+type BrandDelReq struct {
+	Ids string `path:"ids"`
+}
+
+type BrandDelResp struct {
+}
+
 type BrandForm struct {
 	Id     int64  `path:"id,optional"`
 	ShopId int64  `json:"shopId"` // shopID
 	Name   string `json:"name"`   // 品牌名称
 	Logo   string `json:"logo"`   // LOGO图片
 	Sort   int64  `json:"sort"`   // 排序
+}
+
+type BrandFormResp struct {
+	Id int64 `json:"id,optional"`
+}
+
+type BrandGetReq struct {
+	Id int64 `path:"id"`
+}
+
+type BrandOption struct {
+	Label    string         `json:"label"`
+	Value    int64          `json:"value"`
+	Children []*BrandOption `json:"children,omitempty"`
 }
 
 type BrandPageReq struct {
@@ -19,13 +40,20 @@ type BrandPageReq struct {
 }
 
 type BrandPageResp struct {
-	List  []PmsBrand `json:"list"`
-	Total int64      `json:"total"`
+	List  []*PmsBrand `json:"list"`
+	Total int64       `json:"total"`
 }
 
 type CaptchaResp struct {
 	CaptchaBase64 string `json:"captchaBase64"`
 	CaptchaKey    string `json:"captchaKey"`
+}
+
+type GoodsDelReq struct {
+	Ids string `path:"ids"`
+}
+
+type GoodsDelResp struct {
 }
 
 type GoodsEditRep struct {
@@ -47,16 +75,12 @@ type GoodsEditRep struct {
 	SpecList    []PmsGoodsFormAttribute `json:"specList,optional"`
 }
 
-type IdReq struct {
-	Id int64 `form:"id"`
+type GoodsIdReq struct {
+	Id int64 `path:"id"`
 }
 
-type IdResp struct {
+type GoodsIdResp struct {
 	Id int64 `json:"id"`
-}
-
-type IdsReq struct {
-	Ids string `form:"ids"`
 }
 
 type LoginReq struct {
@@ -78,25 +102,20 @@ type MeResp struct {
 	Perms    []string `json:"perms,omitempty"`
 }
 
-type NullReq struct {
-}
-
-type NullResp struct {
-}
-
-type OptionItem struct {
-	Label    string        `json:"label"`
-	Value    int64         `json:"value"`
-	Children []*OptionItem `json:"children,omitempty"`
-}
-
-type OptionsResp struct {
-	List []*OptionItem `json:"list"`
+type OrderDelResp struct {
 }
 
 type OrderFormReq struct {
 	Id      int64  `path:"id,optional"`
 	OrderNo string `json:"order_no,optional"`
+}
+
+type OrderFormResp struct {
+	Id int64 `json:"id,optional"`
+}
+
+type OrderIdReq struct {
+	Id int64 `path:"id"`
 }
 
 type OrderInfo struct {
@@ -124,29 +143,21 @@ type OrderInfo struct {
 	CreatedAt        string  `json:"created_at"`
 }
 
-type OrderPageResp struct {
-	Total int64        `json:"total"`
-	List  []*OrderInfo `json:"list"`
-}
-
-type PageReq struct {
+type OrderPageReq struct {
 	Keywords string `form:"keywords,omitempty,optional"`
 	Status   int64  `form:"status,default=-1"`
 	PageNum  int64  `form:"pageNum,default=1"`
 	PageSize int64  `form:"pageSize,default=10"`
 }
 
+type OrderPageResp struct {
+	Total int64        `json:"total"`
+	List  []*OrderInfo `json:"list"`
+}
+
 type ParamsItem struct {
 	Key   string `json:"key"`
 	Value string `json:"value"`
-}
-
-type PathIdReq struct {
-	Id int64 `path:"id"`
-}
-
-type PathIdsReq struct {
-	Ids string `path:"ids"`
 }
 
 type PmsBrand struct {
@@ -189,6 +200,13 @@ type PmsCategoryAttributeListReq struct {
 	Type       int64 `form:"type"`       // 类型(1:规格;2:属性;)
 }
 
+type PmsCategoryDelReq struct {
+	Ids string `path:"ids"`
+}
+
+type PmsCategoryDelResp struct {
+}
+
 type PmsCategoryForm struct {
 	Id       int64  `path:"id,optional"`
 	ShopId   int64  `json:"shopId"`
@@ -199,12 +217,30 @@ type PmsCategoryForm struct {
 	Visible  bool   `json:"visible"`
 }
 
+type PmsCategoryFormResp struct {
+	Id int64 `json:"id,optional"`
+}
+
+type PmsCategoryGetReq struct {
+	Id int64 `path:"id"`
+}
+
 type PmsCategoryListReq struct {
 	Status   int64  `form:"status,default=-1"`
 	Keywords string `form:"keywords,omitempty,optional"`
 	ShopId   int64  `form:"shopId,default=1"` // shopID
 	PageNum  int64  `form:"pageNum,default=1"`
 	PageSize int64  `form:"pageSize,default=10"`
+}
+
+type PmsCategoryOption struct {
+	Label    string               `json:"label"`
+	Value    int64                `json:"value"`
+	Children []*PmsCategoryOption `json:"children,omitempty"`
+}
+
+type PmsCategoryOptionsReq struct {
+	Id int64 `path:"id"`
 }
 
 type PmsGoods struct {
@@ -272,8 +308,8 @@ type PmsGoodsPageReq struct {
 }
 
 type PmsGoodsPageResp struct {
-	Total int64      `json:"total"`
-	List  []PmsGoods `json:"list"`
+	Total int64       `json:"total"`
+	List  []*PmsGoods `json:"list"`
 }
 
 type PmsSku struct {
@@ -320,6 +356,13 @@ type Shop struct {
 	CreatedAt       string  `json:"createdAt"`
 }
 
+type ShopDelReq struct {
+	Ids string `path:"ids"`
+}
+
+type ShopDelResp struct {
+}
+
 type ShopForm struct {
 	Id              int64   `path:"id,optional"`
 	Name            string  `json:"name"`
@@ -328,9 +371,37 @@ type ShopForm struct {
 	DistributionFee float64 `json:"distributionFee"`
 }
 
+type ShopFormResp struct {
+	Id int64 `json:"id,optional"`
+}
+
+type ShopGetReq struct {
+	Id int64 `path:"id"`
+}
+
+type ShopOptionItem struct {
+	Label    string            `json:"label"`
+	Value    int64             `json:"value"`
+	Children []*ShopOptionItem `json:"children,omitempty"`
+}
+
+type ShopPageReq struct {
+	Keywords string `form:"keywords,omitempty,optional"`
+	Status   int64  `form:"status,default=-1"`
+	PageNum  int64  `form:"pageNum,default=1"`
+	PageSize int64  `form:"pageSize,default=10"`
+}
+
 type ShopPageResp struct {
 	Total int64   `json:"total"`
 	List  []*Shop `json:"list"`
+}
+
+type SysDeptDelReq struct {
+	Ids string `path:"ids"`
+}
+
+type SysDeptDelResp struct {
 }
 
 type SysDeptFormReq struct {
@@ -343,6 +414,14 @@ type SysDeptFormReq struct {
 	Status   int64  `json:"status"`
 	CreateBy int64  `json:"create_by"`
 	UpdateBy int64  `json:"update_by"`
+}
+
+type SysDeptFormResp struct {
+	Id int64 `json:"id,omitempty,optional"`
+}
+
+type SysDeptGetReq struct {
+	Id int64 `path:"id"`
 }
 
 type SysDeptInfo struct {
@@ -383,6 +462,13 @@ type SysDeptOption struct {
 	Children []*SysDeptOption `json:"children,omitempty"`
 }
 
+type SysDictDataDelReq struct {
+	Ids string `path:"ids"`
+}
+
+type SysDictDataDelResp struct {
+}
+
 type SysDictDataForm struct {
 	Id     int64  `json:"id,optional"`
 	DictId int64  `json:"dictId"`
@@ -392,6 +478,14 @@ type SysDictDataForm struct {
 	Tag    string `json:"tag"`
 	Sort   int64  `json:"sort,default=1"`
 	Remark string `json:"remark,optional"`
+}
+
+type SysDictDataFormResp struct {
+	Id int64 `json:"id,omitempty,optional"`
+}
+
+type SysDictDataGetReq struct {
+	Id int64 `path:"id"`
 }
 
 type SysDictDataItem struct {
@@ -419,12 +513,27 @@ type SysDictDataPageResp struct {
 	List  []*SysDictDataItem `json:"list"`
 }
 
+type SysDictDelReq struct {
+	Ids string `path:"ids"`
+}
+
+type SysDictDelResp struct {
+}
+
 type SysDictForm struct {
 	Id     int64  `path:"id,optional"`
 	Code   string `json:"code"`
 	Name   string `json:"name"`
 	Status int64  `json:"status"`
 	Remark string `json:"remark,optional"`
+}
+
+type SysDictFormResp struct {
+	Id int64 `json:"id,omitempty,optional"`
+}
+
+type SysDictGetReq struct {
+	Id int64 `path:"id"`
 }
 
 type SysDictItem struct {
@@ -478,6 +587,10 @@ type SysLogFormReq struct {
 	CreateBy       int64  `json:"create_by"`
 }
 
+type SysLogFormResp struct {
+	Id int64 `json:"id,optional"`
+}
+
 type SysLogListReq struct {
 	Status   int64 `form:"status,omitempty,optional,default=-1"`
 	PageNum  int64 `form:"pageNum,omitempty,optional,default=1"`
@@ -494,44 +607,63 @@ type SysMenuChangeVisibleReq struct {
 	Visible int64 `json:"visible"`
 }
 
+type SysMenuDelReq struct {
+	Ids string `path:"ids"`
+}
+
+type SysMenuDelResp struct {
+}
+
 type SysMenuForm struct {
-	Id         int64        `path:"id,optional"`
-	ParentId   int64        `json:"parentId"`
-	TreePath   string       `json:"treePath"`
-	Name       string       `json:"name"`
-	Type       int64        `json:"type"`
-	RouteName  string       `json:"routeName"`
-	RoutePath  string       `json:"routePath"`
-	Component  string       `json:"component"`
-	Perm       string       `json:"perm,optional,omitempty"`
-	AlwaysShow int64        `json:"alwaysShow"`
-	KeepAlive  int64        `json:"keepAlive"`
-	Visible    int64        `json:"visible"`
-	Sort       int64        `json:"sort,default=1"`
-	Icon       string       `json:"icon"`
-	Params     []ParamsItem `json:"params,optional,omitempty"`
-	Redirect   string       `json:"redirect"`
+	Id         int64         `path:"id,optional"`
+	ParentId   int64         `json:"parentId"`
+	TreePath   string        `json:"treePath"`
+	Name       string        `json:"name"`
+	Type       int64         `json:"type"`
+	RouteName  string        `json:"routeName"`
+	RoutePath  string        `json:"routePath"`
+	Component  string        `json:"component"`
+	Perm       string        `json:"perm,optional,omitempty"`
+	AlwaysShow bool          `json:"alwaysShow"`
+	KeepAlive  bool          `json:"keepAlive"`
+	Visible    bool          `json:"visible"`
+	Sort       int64         `json:"sort,default=1"`
+	Icon       string        `json:"icon"`
+	Params     []*ParamsItem `json:"params,optional,omitempty"`
+	Redirect   string        `json:"redirect"`
+}
+
+type SysMenuFormResp struct {
+	Id int64 `json:"id,omitempty,optional"`
+}
+
+type SysMenuGetReq struct {
+	Id int64 `path:"id"`
+}
+
+type SysMenuIdReq struct {
+	Id int64 `path:"id"`
 }
 
 type SysMenuInfo struct {
-	Id         int64        `json:"id"`
-	ParentId   int64        `json:"parentId"`
-	TreePath   string       `json:"treePath"`
-	Name       string       `json:"name"`
-	Type       int64        `json:"type"`
-	RouteName  string       `json:"routeName"`
-	RoutePath  string       `json:"routePath"`
-	Component  string       `json:"component"`
-	Perm       string       `json:"perm,omitempty"`
-	AlwaysShow int64        `json:"alwaysShow"`
-	KeepAlive  int64        `json:"keepAlive"`
-	Visible    int64        `json:"visible"`
-	Sort       int64        `json:"sort,default=1"`
-	Icon       string       `json:"icon"`
-	Params     []ParamsItem `json:"params,optional,omitempty"`
-	Redirect   string       `json:"redirect"`
-	CreatedAt  string       `json:"created_at"`
-	UpdatedAt  string       `json:"updated_at"`
+	Id         int64         `json:"id"`
+	ParentId   int64         `json:"parentId"`
+	TreePath   string        `json:"treePath"`
+	Name       string        `json:"name"`
+	Type       int64         `json:"type"`
+	RouteName  string        `json:"routeName"`
+	RoutePath  string        `json:"routePath"`
+	Component  string        `json:"component"`
+	Perm       string        `json:"perm,omitempty"`
+	AlwaysShow bool          `json:"alwaysShow"`
+	KeepAlive  bool          `json:"keepAlive"`
+	Visible    bool          `json:"visible"`
+	Sort       int64         `json:"sort,default=1"`
+	Icon       string        `json:"icon"`
+	Params     []*ParamsItem `json:"params,optional,omitempty"`
+	Redirect   string        `json:"redirect"`
+	CreatedAt  string        `json:"created_at"`
+	UpdatedAt  string        `json:"updated_at"`
 }
 
 type SysMenuItem struct {
@@ -555,9 +687,9 @@ type SysMenuItem struct {
 }
 
 type SysMenuOption struct {
-	Label    string          `json:"label"`
-	Value    int64           `json:"value"`
-	Children []SysMenuOption `json:"children,omitempty"`
+	Label    string           `json:"label"`
+	Value    int64            `json:"value"`
+	Children []*SysMenuOption `json:"children,omitempty"`
 }
 
 type SysMenuPageReq struct {
@@ -598,6 +730,10 @@ type SysNoticeFormReq struct {
 	UpdateBy      int64  `json:"update_by"`                                // 更新人ID
 }
 
+type SysNoticeFormResp struct {
+	Id int64 `json:"id"`
+}
+
 type SysNoticePageReq struct {
 	Title     string `form:"title,omitempty,optional"`
 	Status    int64  `form:"status,omitempty,optional,default=-1"`
@@ -617,6 +753,13 @@ type SysRoleChangeStatusReq struct {
 	Status string `json:"status"`
 }
 
+type SysRoleDelReq struct {
+	Ids string `path:"ids"`
+}
+
+type SysRoleDelResp struct {
+}
+
 type SysRoleFormReq struct {
 	Id        int64  `path:"id,optional"`
 	Name      string `json:"name"`      // 角色名称
@@ -624,6 +767,14 @@ type SysRoleFormReq struct {
 	Sort      int64  `json:"sort"`      // 显示顺序
 	Status    int64  `json:"status"`    // 角色状态(1-正常；0-停用)
 	DataScope int64  `json:"dataScope"` // 数据权限(0-所有数据；1-部门及子部门数据；2-本部门数据；3-本人数据)
+}
+
+type SysRoleFormResp struct {
+	Id int64 `json:"id,omitempty,optional"`
+}
+
+type SysRoleGetReq struct {
+	Id int64 `path:"id"`
 }
 
 type SysRoleInfo struct {
@@ -649,6 +800,9 @@ type SysRolePageReq struct {
 type SysRolePageResp struct {
 	Total int64          `json:"total"`
 	List  []*SysRoleInfo `json:"list"`
+}
+
+type SysRoleSucessResp struct {
 }
 
 type SysSetMenuIdsReq struct {
@@ -678,6 +832,13 @@ type SysUserChangeStatusReq struct {
 	Status string `json:"status"`
 }
 
+type SysUserDelReq struct {
+	Ids string `path:"ids"`
+}
+
+type SysUserDelResp struct {
+}
+
 type SysUserFormReq struct {
 	Id       int64   `path:"id,optional"`
 	Username string  `json:"username"`
@@ -692,6 +853,10 @@ type SysUserFormReq struct {
 	RoleIds  []int64 `json:"roleIds"`
 }
 
+type SysUserFormResp struct {
+	Id int64 `json:"id,omitempty,optional"`
+}
+
 type SysUserGet struct {
 	Id       int64   `json:"id"`
 	Username string  `json:"username"` // 用户名
@@ -703,6 +868,10 @@ type SysUserGet struct {
 	Status   int64   `json:"status"`   // 用户状态((1:正常;0:禁用))
 	Email    string  `json:"email"`    // 用户邮箱
 	RoleIds  []int64 `json:"roleIds"`
+}
+
+type SysUserGetReq struct {
+	Id int64 `path:"id"`
 }
 
 type SysUserInfo struct {
@@ -789,6 +958,10 @@ type UserForm struct {
 	SourceUid int64  `json:"sourceUid,optional"`
 }
 
+type UserFormResp struct {
+	Id int64 `json:"id,optional"`
+}
+
 type UserInfo struct {
 	Id        int64          `json:"id"`
 	Mobile    string         `json:"mobile"` //电话号码
@@ -844,4 +1017,22 @@ type VisitTrendResp struct {
 	PvList []int64  `json:"pvList"`
 	UvList []int64  `json:"uvList"`
 	IpList []int64  `json:"ipList"`
+}
+
+type UserDelReq struct {
+	Ids string `path:"ids"`
+}
+
+type UserDelResp struct {
+}
+
+type UserGetReq struct {
+	Id int64 `path:"id"`
+}
+
+type UserPageReq struct {
+	Keywords string `form:"keywords,omitempty,optional"`
+	Status   int64  `form:"status,default=-1"`
+	PageNum  int64  `form:"pageNum,default=1"`
+	PageSize int64  `form:"pageSize,default=10"`
 }

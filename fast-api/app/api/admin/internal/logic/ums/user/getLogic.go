@@ -26,7 +26,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 	}
 }
 
-func (l *GetLogic) Get(req *types.PathIdReq) (resp *types.UserInfo, err error) {
+func (l *GetLogic) Get(req *types.UserGetReq) (resp *types.UserInfo, err error) {
 	res, err := l.svcCtx.UmsRpc.UserGet(l.ctx, &umsPb.IdReq{Id: req.Id})
 	if err != nil {
 		return nil, err

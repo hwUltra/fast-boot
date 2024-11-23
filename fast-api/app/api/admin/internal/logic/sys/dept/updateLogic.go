@@ -26,13 +26,13 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 	}
 }
 
-func (l *UpdateLogic) Update(req *types.SysDeptFormReq) (resp *types.NullResp, err error) {
+func (l *UpdateLogic) Update(req *types.SysDeptFormReq) (resp *types.SysDeptFormResp, err error) {
 	form := sysPb.DeptForm{}
 	_ = copier.Copy(&form, req)
 
 	if _, err := l.svcCtx.SysRpc.DeptUpdate(l.ctx, &form); err != nil {
-		return &types.NullResp{}, err
+		return nil, err
 	}
 
-	return &types.NullResp{}, nil
+	return &types.SysDeptFormResp{}, nil
 }

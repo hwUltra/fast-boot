@@ -6,10 +6,7 @@ type (
 	PathIdsReq {
 		Ids string `path:"ids"`
 	}
-)
 
-
-type(
 	IdReq {
 		Id int64 `form:"id"`
 	}
@@ -21,23 +18,15 @@ type(
 	IdResp {
 		Id int64 `json:"id"`
 	}
-)
 
-type (
-	NullReq {}
 	NullResp {}
-)
-
-type(
 	PageReq{
 		Keywords string `form:"keywords,omitempty,optional"`
 		Status int64 `form:"status,default=-1"`
 		PageNum int64 `form:"pageNum,default=1"`
 		PageSize int64 `form:"pageSize,default=10"`
 	}
-)
 
-type(
 	OptionItem {
 		Label string `json:"label"`
 		Value int64 `json:"value"`

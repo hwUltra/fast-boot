@@ -25,9 +25,9 @@ func NewDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DelLogic {
 	}
 }
 
-func (l *DelLogic) Del(req *types.PathIdsReq) (resp *types.NullResp, err error) {
+func (l *DelLogic) Del(req *types.UserDelReq) (resp *types.UserDelResp, err error) {
 	if _, err := l.svcCtx.UmsRpc.UserDel(l.ctx, &umsPb.IdsReq{Ids: req.Ids}); err != nil {
-		return &types.NullResp{}, err
+		return nil, err
 	}
-	return &types.NullResp{}, nil
+	return &types.UserDelResp{}, nil
 }

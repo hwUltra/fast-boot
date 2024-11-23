@@ -3,11 +3,9 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
-	"fast-boot/common/xerr"
 	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/hwUltra/fb-tools/gormx/types"
 	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
 	"google.golang.org/grpc/status"
 
 	"fast-boot/app/rpc/pms/internal/svc"
@@ -39,7 +37,7 @@ func (l *PmsBrandPageLogic) PmsBrandPage(in *pmsPb.PmsBrandPageReq) (*pmsPb.PmsB
 			m.WithShopId(in.ShopId),
 			m.WithKeywords(in.Keywords)).
 		Count(&total).Error; err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Failed to get  err : %v , in :%+v", err, in)
+		return nil, err
 	}
 
 	list := make([]*pmsPb.PmsBrand, 0)

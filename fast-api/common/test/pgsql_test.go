@@ -1,7 +1,7 @@
 package test
 
 import (
-	"fast-boot/app/rpc/model"
+	"fast-boot/app/model"
 	"fmt"
 	"github.com/hwUltra/fb-tools/gormx"
 	"testing"

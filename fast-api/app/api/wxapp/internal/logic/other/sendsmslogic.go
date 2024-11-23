@@ -7,7 +7,6 @@ import (
 	"fast-boot/common/xerr"
 	"fmt"
 	"github.com/hwUltra/fb-tools/sms"
-	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -29,10 +28,10 @@ func (l *SendSmsLogic) SendSms(req types.SendSmsReq) (err error) {
 	fmt.Println("sendSms req: ", req)
 
 	var aliSms = sms.NewAliSms(l.svcCtx.Config.Sms.AliConf)
-	err = aliSms.SendCode(l.svcCtx.Config.Sms.Template.Reg, req.Mobile, "123213")
+	err = aliSms.SendCode(l.svcCtx.Config.Sms.Template["Reg"], req.Mobile, "123213")
 
 	if err != nil {
-		return errors.Wrapf(xerr.NewErrMsg(err.Error()), "sendSms fail req: %+v , err : %v ", req, err)
+		return xerr.NewErrMsg(err.Error())
 
 	}
 

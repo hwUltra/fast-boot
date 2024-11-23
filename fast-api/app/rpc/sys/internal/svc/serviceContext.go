@@ -13,10 +13,9 @@ type ServiceContext struct {
 
 func NewServiceContext(c config.Config) *ServiceContext {
 
-	gormClient, _ := gormx.NewClient(c.GormConf)
 	return &ServiceContext{
 		Config:     c,
-		GormClient: gormClient,
+		GormClient: gormx.MustNewClient(c.Gorm),
 		//Rsc:        redis.MustNewRedis(c.RedisConf),
 	}
 }

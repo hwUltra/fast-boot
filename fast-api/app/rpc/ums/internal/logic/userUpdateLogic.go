@@ -8,7 +8,6 @@ import (
 	"fast-boot/common/globalkey"
 	"fast-boot/common/xerr"
 	"github.com/hwUltra/fb-tools/gormx"
-	"github.com/pkg/errors"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -31,9 +30,11 @@ func NewUserUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserUp
 // UserUpdate  修改用户
 func (l *UserUpdateLogic) UserUpdate(in *umsPb.UserForm) (*umsPb.SuccessResp, error) {
 	info := model.UserModel{}
-	l.svcCtx.GormClient.GormDb.Where("id = ?", in.Id).First(&info)
+	if err := l.svcCtx.GormClient.GormDb.Where("id = ?", in.Id).First(&info).Error; err != nil {
+		return nil, err
+	}
 	if info.Id == 0 {
-		return nil, errors.Wrapf(xerr.NewErrMsg("用户不存在"), "用户不存在：%d ", in.Id)
+		return nil, xerr.NewErrMsg("用户不存在")
 	}
 
 	if len(in.Username) > 0 && (in.Username != info.Username) {
@@ -72,7 +73,7 @@ func (l *UserUpdateLogic) UserUpdate(in *umsPb.UserForm) (*umsPb.SuccessResp, er
 		info.SourceUid = in.SourceUid
 	}
 
-	ct := (*model.UserCache)(gormx.NewCacheTool(l.svcCtx.Config.CacheConf, l.svcCtx.GormClient.GormDb))
+	ct := (*model.UserCache)(gormx.NewCacheTool(l.svcCtx.Config.Cache, l.svcCtx.GormClient.GormDb))
 	err := ct.Update(&info)
 	if err != nil {
 		return nil, err

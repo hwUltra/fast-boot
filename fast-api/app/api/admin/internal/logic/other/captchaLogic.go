@@ -29,7 +29,7 @@ func (l *CaptchaLogic) Captcha() (resp *types.CaptchaResp, err error) {
 	var ct = captchax.NewCaptchaTool(captchax.CaptchaConf{
 		Type:      captchax.MathType,
 		Store:     captchax.RedisType,
-		CacheConf: l.svcCtx.Config.CacheConf,
+		CacheConf: l.svcCtx.Config.Cache,
 	})
 	if id, b64s, _, err := ct.Make(); err != nil {
 		return nil, err

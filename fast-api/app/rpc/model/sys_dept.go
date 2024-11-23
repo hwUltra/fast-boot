@@ -46,4 +46,4 @@ func (*SysDeptModel) WithStatus(status int64) func(db *gorm.DB) *gorm.DB {
 
 const CacheSysDeptModelIdPrefix = "Cache:SysDeptModel:ID:"
 
-type SysDeptCache gormx.CacheTool
+type SysDeptCache gormx.GormCache

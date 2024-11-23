@@ -25,7 +25,7 @@ func NewDataGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DataGetLo
 	}
 }
 
-func (l *DataGetLogic) DataGet(req *types.PathIdReq) (resp *types.SysDictDataItem, err error) {
+func (l *DataGetLogic) DataGet(req *types.SysDictDataGetReq) (resp *types.SysDictDataItem, err error) {
 	res, err := l.svcCtx.SysRpc.DictDataGet(l.ctx, &sysPb.IdReq{Id: req.Id})
 	if err != nil {
 		return nil, err

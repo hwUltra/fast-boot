@@ -26,14 +26,14 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 	}
 }
 
-func (l *UpdateLogic) Update(req *types.UserForm) (resp *types.NullResp, err error) {
+func (l *UpdateLogic) Update(req *types.UserForm) (resp *types.UserFormResp, err error) {
 	form := umsPb.UserForm{}
 	if err := copier.Copy(&form, req); err != nil {
-		return &types.NullResp{}, err
+		return nil, err
 	}
 	if _, err := l.svcCtx.UmsRpc.UserUpdate(l.ctx, &form); err != nil {
-		return &types.NullResp{}, err
+		return nil, err
 	}
 
-	return &types.NullResp{}, nil
+	return &types.UserFormResp{}, nil
 }

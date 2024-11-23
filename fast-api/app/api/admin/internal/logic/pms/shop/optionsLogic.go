@@ -26,13 +26,13 @@ func NewOptionsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *OptionsLo
 	}
 }
 
-func (l *OptionsLogic) Options() (resp []*types.OptionItem, err error) {
+func (l *OptionsLogic) Options() (resp []*types.ShopOptionItem, err error) {
 	options, err := l.svcCtx.PmsRpc.ShopOptions(l.ctx, &pmsPb.AnyReq{})
 	if err != nil {
 		return nil, err
 	}
 
-	list := make([]*types.OptionItem, 0)
+	list := make([]*types.ShopOptionItem, 0)
 	_ = copier.Copy(&list, options.Items)
 
 	return list, nil

@@ -25,14 +25,14 @@ func NewChangePwdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ChangeP
 	}
 }
 
-func (l *ChangePwdLogic) ChangePwd(req *types.SysUserChangePwdReq) (resp *types.NullResp, err error) {
+func (l *ChangePwdLogic) ChangePwd(req *types.SysUserChangePwdReq) (resp *types.SysUserFormResp, err error) {
 	_, err = l.svcCtx.SysRpc.UserChangePwd(l.ctx, &sysPb.UserChangePwdReq{
 		UserId:   req.UserId,
 		Password: req.Password,
 	})
 	if err != nil {
-		return &types.NullResp{}, err
+		return nil, err
 	}
 
-	return &types.NullResp{}, nil
+	return &types.SysUserFormResp{}, nil
 }

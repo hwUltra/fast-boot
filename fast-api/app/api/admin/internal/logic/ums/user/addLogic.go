@@ -26,7 +26,7 @@ func NewAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddLogic {
 	}
 }
 
-func (l *AddLogic) Add(req *types.UserForm) (resp *types.IdResp, err error) {
+func (l *AddLogic) Add(req *types.UserForm) (resp *types.UserFormResp, err error) {
 	form := umsPb.UserForm{}
 	if err = copier.Copy(&form, req); err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func (l *AddLogic) Add(req *types.UserForm) (resp *types.IdResp, err error) {
 		return nil, err
 	}
 
-	return &types.IdResp{
+	return &types.UserFormResp{
 		Id: req.Id,
 	}, nil
 }

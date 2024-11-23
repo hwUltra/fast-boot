@@ -3,15 +3,12 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
+	"fast-boot/app/rpc/sys/internal/svc"
+	"fast-boot/app/rpc/sys/sysPb"
 	"fast-boot/common/static"
-	"fast-boot/common/xerr"
 	"fmt"
 	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
-
-	"fast-boot/app/rpc/sys/internal/svc"
-	"fast-boot/app/rpc/sys/sysPb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -37,7 +34,7 @@ func (l *UserPageLogic) UserPage(in *sysPb.UserPageReq) (*sysPb.UserPageResp, er
 
 	//适配Postgresql
 	deptIdWhere := ""
-	if l.svcCtx.Config.GormConf.SqlType == gormx.PostgresqlType {
+	if l.svcCtx.Config.Gorm.SqlType == gormx.PostgresqlType {
 		deptIdWhere = fmt.Sprint("concat(',',concat(sys_dept.tree_path::text,',',sys_dept.id::int),',') like concat('%,',?::int,',%')")
 	} else {
 		deptIdWhere = fmt.Sprint("concat(',',concat(sys_dept.tree_path,',',sys_dept.id),',') like concat('%,',?,',%')")
@@ -51,7 +48,7 @@ func (l *UserPageLogic) UserPage(in *sysPb.UserPageReq) (*sysPb.UserPageResp, er
 			userModel.WithKeywords(in.Keywords)).
 		Where(deptIdWhere, in.DeptId).
 		Count(&total).Error; err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Failed to get  err : %v , in :%+v", err, in)
+		return nil, err
 	}
 
 	list := make([]*sysPb.SysUser, 0)

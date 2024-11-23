@@ -20,9 +20,9 @@ type Config struct {
 		AccessSecret string
 		AccessExpire int64
 	}
-	CacheConf cache.CacheConf
-	RedisConf redis.RedisConf
-	OSSConf   uploadx.OSSConf
+	Cache     cache.CacheConf
+	Redis     redis.RedisConf
+	OSS       uploadx.OSSConf
 	WebSocket struct {
 		Enable bool
 		Path   string

@@ -49,7 +49,7 @@ func (l *ShopUpdateLogic) ShopUpdate(in *pmsPb.ShopForm) (*pmsPb.SuccessResp, er
 	if info.DistributionFee != in.DistributionFee {
 		info.DistributionFee = in.DistributionFee
 	}
-	ct := (*model.PmsShopCache)(gormx.NewCacheTool(l.svcCtx.Config.CacheConf, l.svcCtx.GormClient.GormDb))
+	ct := (*model.PmsShopCache)(gormx.NewCacheTool(l.svcCtx.Config.Cache, l.svcCtx.GormClient.GormDb))
 	if err := ct.Update(&info); err != nil {
 		return nil, err
 	}

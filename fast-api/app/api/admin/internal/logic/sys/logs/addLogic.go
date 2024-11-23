@@ -23,7 +23,7 @@ func NewAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddLogic {
 	}
 }
 
-func (l *AddLogic) Add(req *types.SysLogFormReq) (resp *types.IdResp, err error) {
+func (l *AddLogic) Add(req *types.SysLogFormReq) (resp *types.SysLogFormResp, err error) {
 	// todo: add your logic here and delete this line
 
 	return

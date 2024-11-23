@@ -33,9 +33,9 @@ func NewRefreshTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Refr
 func (l *RefreshTokenLogic) RefreshToken() (resp *types.TokenResp, err error) {
 	userId := jwtx.GetUid(l.ctx)
 	key := fmt.Sprintf(globalkey.CacheUserTokenKey, userId)
-	cc := cachex.NewStore(l.svcCtx.Config.CacheConf)
+	cc := cachex.NewStore(l.svcCtx.Config.Cache)
 	var res types.TokenResp
-	if err := cc.Get(key, &res); err != nil {
+	if err := cc.Cache.Get(key, &res); err != nil {
 		return nil, result.NewErrCodeMsg(10001, "token已过期")
 	}
 	now := time.Now().Unix()
@@ -50,7 +50,7 @@ func (l *RefreshTokenLogic) RefreshToken() (resp *types.TokenResp, err error) {
 			AccessExpire: now + accessExpire,
 			RefreshAfter: now + accessExpire/2,
 		}
-		_ = cc.SetWithExpire(key, res, time.Duration(l.svcCtx.Config.Auth.AccessExpire)*time.Second)
+		_ = cc.Cache.SetWithExpire(key, res, time.Duration(l.svcCtx.Config.Auth.AccessExpire)*time.Second)
 	}
 	return &res, nil
 

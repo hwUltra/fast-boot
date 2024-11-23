@@ -28,13 +28,13 @@ func NewUploadLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UploadLogi
 }
 
 func (l *UploadLogic) Upload(file multipart.File, fileHeader *multipart.FileHeader) (resp *types.UploadInfo, err error) {
-	oss := uploadx.NewOss(l.svcCtx.Config.OSSConf)
+	oss := uploadx.NewOss(l.svcCtx.Config.OSS)
 	res, err := oss.UploadFile(file, fileHeader)
 	if err != nil {
 		return nil, xerr.NewErrCodeMsg(10011, "请上传正确的文件")
 	}
 	return &types.UploadInfo{
 		Name: res.Name,
-		Url:  fmt.Sprintf("%s/%s", l.svcCtx.Config.OSSConf.MinIoConf.MinIOBasePath, res.Path),
+		Url:  fmt.Sprintf("%s/%s", l.svcCtx.Config.OSS.MinIoConf.MinIOBasePath, res.Path),
 	}, nil
 }

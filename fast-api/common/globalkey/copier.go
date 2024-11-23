@@ -1,8 +1,8 @@
 package globalkey
 
 import (
+	"errors"
 	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
 	"strconv"
 	"time"
 )

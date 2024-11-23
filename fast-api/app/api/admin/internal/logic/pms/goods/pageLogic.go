@@ -39,7 +39,7 @@ func (l *PageLogic) Page(req *types.PmsGoodsPageReq) (resp *types.PmsGoodsPageRe
 		return nil, err
 	}
 
-	list := make([]types.PmsGoods, 0)
+	list := make([]*types.PmsGoods, 0)
 	_ = copier.Copy(&list, res.List)
 	return &types.PmsGoodsPageResp{List: list, Total: res.Total}, nil
 }

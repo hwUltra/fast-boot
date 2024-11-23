@@ -4,7 +4,6 @@ info(
     email: "skywalkerwei@gmail.com"
 )
 
-import "../base.api"
 
 type (
     SysUserInfo {
@@ -91,6 +90,20 @@ type (
         CreatedAt  string `json:"created_at"`
     }
 
+    SysUserFormResp{
+        Id int64 `json:"id,omitempty,optional"`
+    }
+
+    SysUserDelReq{
+        Ids string `path:"ids"`
+    }
+
+    SysUserDelResp{}
+
+    SysUserGetReq{
+        Id int64 `path:"id"`
+    }
+
 
 )
 
@@ -102,19 +115,19 @@ type (
 service admin {
     @doc "新增用户"
     @handler Add
-    post / (SysUserFormReq) returns (IdResp)
+    post / (SysUserFormReq) returns (SysUserFormResp)
 
     @doc "修改用户"
     @handler Update
-    put /:id (SysUserFormReq) returns (NullResp)
+    put /:id (SysUserFormReq) returns (SysUserFormResp)
 
     @doc "删除多个用户"
     @handler Del
-    delete /:ids (PathIdsReq) returns (NullResp)
+    delete /:ids (SysUserDelReq) returns (SysUserDelResp)
 
     @doc "获取用户"
     @handler Get
-    get /:id (PathIdReq) returns (SysUserGet)
+    get /:id (SysUserGetReq) returns (SysUserGet)
 
     @doc "Profile 获取用户"
     @handler Profile
@@ -126,10 +139,10 @@ service admin {
 
     @doc "修改用户密码"
     @handler ChangePwd
-    post /changePwd (SysUserChangePwdReq) returns (NullResp)
+    post /changePwd (SysUserChangePwdReq) returns (SysUserFormResp)
 
     @doc "修改用户状态"
     @handler ChangeStatus
-    post /changeStatus (SysUserChangeStatusReq) returns (NullResp)
+    post /changeStatus (SysUserChangeStatusReq) returns (SysUserFormResp)
 
 }

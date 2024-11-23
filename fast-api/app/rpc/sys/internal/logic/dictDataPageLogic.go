@@ -3,13 +3,10 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
-	"fast-boot/common/xerr"
-	"github.com/hwUltra/fb-tools/gormx"
-	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
-
 	"fast-boot/app/rpc/sys/internal/svc"
 	"fast-boot/app/rpc/sys/sysPb"
+	"github.com/hwUltra/fb-tools/gormx"
+	"github.com/jinzhu/copier"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -36,7 +33,7 @@ func (l *DictDataPageLogic) DictDataPage(in *sysPb.DictDataPageReq) (*sysPb.Dict
 		Where("dict_id = ?", in.DictId).
 		Scopes(dictDataModel.WithKeywords(in.Keywords)).
 		Count(&total).Error; err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Failed to get  err : %v , in :%+v", err, in)
+		return nil, err
 	}
 	list := make([]*sysPb.SysDictData, 0)
 	if total > 0 {

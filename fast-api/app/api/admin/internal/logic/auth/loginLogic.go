@@ -34,7 +34,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.TokenResp, err erro
 	var ct = captchax.NewCaptchaTool(captchax.CaptchaConf{
 		Type:      captchax.MathType,
 		Store:     captchax.RedisType,
-		CacheConf: l.svcCtx.Config.CacheConf,
+		CacheConf: l.svcCtx.Config.Cache,
 	})
 	if ok := ct.VerifyCaptcha(req.CaptchaKey, req.CaptchaCode, true); ok == false {
 		return nil, xerr.NewErrMsg("验证码错误")
@@ -49,7 +49,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.TokenResp, err erro
 		RefreshAfter: res.RefreshAfter,
 		AccessExpire: res.AccessExpire,
 	}
-	cc := cachex.NewStore(l.svcCtx.Config.CacheConf)
-	_ = cc.SetWithExpire(cc.FormatPrimary(globalkey.CacheUserTokenKey, res.UserId), resp, time.Duration(l.svcCtx.Config.Auth.AccessExpire)*time.Second)
+	cc := cachex.NewStore(l.svcCtx.Config.Cache)
+	_ = cc.Cache.SetWithExpire(cc.FormatPrimary(globalkey.CacheUserTokenKey, res.UserId), resp, time.Duration(l.svcCtx.Config.Auth.AccessExpire)*time.Second)
 	return resp, nil
 }

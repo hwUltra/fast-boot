@@ -54,7 +54,7 @@ func (*PmsShopModel) WithCreatedAt(startTime string, endTime string) func(db *go
 
 const CachePmsShopModelIdPrefix = "Cache:PmsShopModel:ID:"
 
-type PmsShopCache gormx.CacheTool
+type PmsShopCache gormx.GormCache
 
 func (m *PmsShopCache) Create(u *PmsShopModel) error {
 	if err := m.Db.Create(&u).Error; err != nil {
@@ -84,7 +84,7 @@ func (m *PmsShopCache) Del(idStr string) {
 func (m *PmsShopCache) Get(id int64) *PmsShopModel {
 	cacheKey := fmt.Sprintf("%s%v", CachePmsShopModelIdPrefix, id)
 	psm := PmsShopModel{}
-	_ = m.Cache.Take(&psm, cacheKey, func(psm any) error {
+	_ = m.Cache.Take(&psm, cacheKey, func(val any) error {
 		return m.Db.Model(UserModel{}).Where("id = ?", id).First(&psm).Error
 	})
 	return &psm

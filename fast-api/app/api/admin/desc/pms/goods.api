@@ -5,7 +5,7 @@ info(
 	email: "skywalkerwei@gmail.com"
 )
 
-import "../base.api"
+
 
 type (
 	//--------------------------------商品表--------------------------------
@@ -44,7 +44,7 @@ type (
 
 	PmsGoodsPageResp{
 		Total int64 `json:"total"`
-		List []PmsGoods `json:"list"`
+		List []*PmsGoods `json:"list"`
 	}
 
 	//--------------------------------商品属性/规格表--------------------------------
@@ -114,6 +114,22 @@ type (
 		PicUrl  string `json:"picUrl,optional"`  // 商品图片地址
 	}
 
+	GoodsIdResp{
+		Id int64 `json:"id"`
+	}
+
+
+	GoodsDelReq {
+		Ids string `path:"ids"`
+	}
+
+	GoodsDelResp {
+	}
+
+	GoodsIdReq{
+		Id int64 `path:"id"`
+	}
+
 )
 
 
@@ -125,15 +141,15 @@ type (
 service admin {
 	@doc "新增商品"
 	@handler Edit
-	post /edit (GoodsEditRep) returns (IdResp)
+	post /edit (GoodsEditRep) returns (GoodsIdResp)
 
 	@doc "删除"
 	@handler Del
-	delete /:ids (PathIdsReq) returns (NullResp)
+	delete /:ids (GoodsDelReq) returns (GoodsDelResp)
 
 	@doc "获取商品"
 	@handler Get
-	get /:id (PathIdReq)  returns (PmsGoods)
+	get /:id (GoodsIdReq)  returns (PmsGoods)
 
 	@doc "商品列表"
 	@handler Page

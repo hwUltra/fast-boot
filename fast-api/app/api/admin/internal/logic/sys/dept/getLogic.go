@@ -26,7 +26,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 	}
 }
 
-func (l *GetLogic) Get(req *types.PathIdReq) (resp *types.SysDeptInfo, err error) {
+func (l *GetLogic) Get(req *types.SysDeptGetReq) (resp *types.SysDeptInfo, err error) {
 	res, err := l.svcCtx.SysRpc.DeptGet(l.ctx, &sysPb.IdReq{Id: req.Id})
 	if err != nil {
 		return nil, err

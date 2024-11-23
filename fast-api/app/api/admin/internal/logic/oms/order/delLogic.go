@@ -25,7 +25,7 @@ func NewDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DelLogic {
 	}
 }
 
-func (l *DelLogic) Del(req *types.PathIdReq) (resp *types.NullResp, err error) {
+func (l *DelLogic) Del(req *types.OrderIdReq) (resp *types.OrderDelResp, err error) {
 	fmt.Println("order del = ", req.Id)
 
 	return

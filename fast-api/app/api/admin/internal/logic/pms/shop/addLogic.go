@@ -26,14 +26,14 @@ func NewAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddLogic {
 	}
 }
 
-func (l *AddLogic) Add(req *types.ShopForm) (resp *types.IdResp, err error) {
+func (l *AddLogic) Add(req *types.ShopForm) (resp *types.ShopFormResp, err error) {
 	form := pmsPb.ShopForm{}
 	_ = copier.Copy(&form, req)
 	if _, err = l.svcCtx.PmsRpc.ShopAdd(l.ctx, &form); err != nil {
 		return nil, err
 	}
 
-	return &types.IdResp{
+	return &types.ShopFormResp{
 		Id: req.Id,
 	}, nil
 }

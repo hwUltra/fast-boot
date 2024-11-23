@@ -36,7 +36,7 @@ func (l *BrandPageLogic) BrandPage(req *types.BrandPageReq) (resp *types.BrandPa
 	if err != nil {
 		return nil, err
 	}
-	list := make([]types.PmsBrand, 0)
+	list := make([]*types.PmsBrand, 0)
 	_ = copier.Copy(&list, res.List)
 	return &types.BrandPageResp{List: list, Total: res.Total}, nil
 }

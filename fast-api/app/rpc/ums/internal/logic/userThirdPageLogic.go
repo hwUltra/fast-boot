@@ -3,13 +3,10 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
-	"fast-boot/common/xerr"
-	"github.com/hwUltra/fb-tools/gormx"
-	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
-
 	"fast-boot/app/rpc/ums/internal/svc"
 	"fast-boot/app/rpc/ums/umsPb"
+	"github.com/hwUltra/fb-tools/gormx"
+	"github.com/jinzhu/copier"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -35,7 +32,7 @@ func (l *UserThirdPageLogic) UserThirdPage(in *umsPb.PageReq) (*umsPb.UserThirdP
 	if err := l.svcCtx.GormClient.GormDb.Model(gModel).
 		Scopes(gModel.WithKeywords(in.Keywords)).
 		Count(&total).Error; err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Failed to get  err : %v , in :%+v", err, in)
+		return nil, err
 	}
 	list := make([]*umsPb.UserThird, 0)
 	if total > 0 {

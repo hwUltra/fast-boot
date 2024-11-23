@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fast-boot/common/cachex"
 	"fmt"
 	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/hwUltra/fb-tools/gormx/types"
@@ -39,6 +40,15 @@ func (*SysMenuModel) TableName() string {
 	return "sys_menu"
 }
 
+// -----------------
+// for SysMenuCache CacheFun
+// -----------------
+
+const CacheSysMenuModelIdPrefix = "Cache:SysMenuModel:ID:"
+const CacheSysMenuRoutesUIdPrefix = "Cache:SysMenuRoutes:UID:"
+
+type SysMenuCache gormx.GormCache
+
 func (m *SysMenuCache) Del(idStr string) {
 	ids := strings.Split(idStr, ",")
 	m.Db.Delete(&SysMenuModel{}, ids)
@@ -73,11 +83,38 @@ func (m *SysMenuCache) Get(id int64) *SysMenuModel {
 	return &item
 }
 
-// -----------------
-// for SysMenuCache CacheFun
-// -----------------
+func (m *SysMenuCache) Routes(uid int64) []*SysMenuModel {
+	cacheKey := fmt.Sprintf("%s%v", CacheSysMenuRoutesUIdPrefix, uid)
+	items := make([]*SysMenuModel, 0)
+	_ = m.Cache.Take(&items, cacheKey, func(val any) error {
+		roleIds := make([]int64, 0)
+		if err := m.Db.Model(&SysUserRoleModel{}).
+			Joins("JOIN sys_role on sys_role.id = sys_user_role.role_id").
+			Where("sys_user_role.user_id = ?", 1).
+			Where("sys_role.status = ?", 1).
+			Pluck("sys_role.id", &roleIds).Error; err != nil {
+			return err
+		}
 
-const CacheSysMenuModelIdPrefix = "Cache:SysMenuModel:ID:"
-const CacheSysMenuRoutesUIdPrefix = "Cache:SysMenuRoutes:UID:"
+		menuIds := make([]int64, 0)
+		if err := m.Db.Model(&SysRoleMenuModel{}).
+			Joins("JOIN sys_menu on sys_menu.id = sys_role_menu.menu_id").
+			Where("sys_role_menu.role_id IN ?", roleIds).
+			Pluck("sys_role_menu.menu_id", &menuIds).Error; err != nil {
+			return err
+		}
 
-type SysMenuCache gormx.CacheTool
+		if err := m.Db.Model(&SysMenuModel{}).
+			Where("id IN ? and type in ?", menuIds, []int64{1, 2, 3}).
+			Order("sort asc,id asc").Preload("Roles", "status = ?", 1).Find(&items).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+
+	return items
+}
+
+func (m *SysMenuCache) RoutesClear() {
+	cachex.NewStore(m.Conf).ClearRedisPrefix(CacheSysMenuRoutesUIdPrefix)
+}

@@ -26,7 +26,7 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 	}
 }
 
-func (l *UpdateLogic) Update(req *types.SysUserFormReq) (resp *types.NullResp, err error) {
+func (l *UpdateLogic) Update(req *types.SysUserFormReq) (resp *types.SysUserFormResp, err error) {
 	userForm := sysPb.UserUpdateReq{}
 	if err := copier.Copy(&userForm, req); err != nil {
 		return resp, err

@@ -26,7 +26,7 @@ func NewSimListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SimListLo
 	}
 }
 
-func (l *SimListLogic) SimList(req *types.NullReq) (resp []types.SysSimDict, err error) {
+func (l *SimListLogic) SimList() (resp []types.SysSimDict, err error) {
 	res, err := l.svcCtx.SysRpc.DictSimList(l.ctx, &sysPb.AnyReq{})
 	if err != nil {
 		return nil, err

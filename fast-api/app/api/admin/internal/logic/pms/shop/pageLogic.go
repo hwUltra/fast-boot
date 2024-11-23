@@ -26,7 +26,7 @@ func NewPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PageLogic {
 	}
 }
 
-func (l *PageLogic) Page(req *types.PageReq) (resp *types.ShopPageResp, err error) {
+func (l *PageLogic) Page(req *types.ShopPageReq) (resp *types.ShopPageResp, err error) {
 	res, err := l.svcCtx.PmsRpc.ShopPage(l.ctx, &pmsPb.PageReq{
 		Keywords: req.Keywords,
 		Status:   req.Status,

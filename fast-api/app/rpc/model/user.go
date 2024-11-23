@@ -55,7 +55,7 @@ func (*UserModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
 
 const CacheUserModelIdPrefix = "Cache:UserModel:ID:"
 
-type UserCache gormx.CacheTool
+type UserCache gormx.GormCache
 
 func (m *UserCache) Create(u *UserModel) error {
 	if err := m.Db.Create(&u).Error; err != nil {
@@ -86,7 +86,7 @@ func (m *UserCache) Get(id int64) *UserModel {
 	cacheKey := fmt.Sprintf("%s%v", CacheUserModelIdPrefix, id)
 	user := UserModel{}
 	_ = m.Cache.Take(&user, cacheKey, func(val any) error {
-		return m.Db.Model(UserModel{}).Where("id = ?", id).First(&val).Error
+		return m.Db.Model(UserModel{}).Where("id = ?", id).First(&user).Error
 	})
 	return &user
 }

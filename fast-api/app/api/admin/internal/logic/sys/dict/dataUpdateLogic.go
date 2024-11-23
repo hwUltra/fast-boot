@@ -25,12 +25,12 @@ func NewDataUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DataUp
 	}
 }
 
-func (l *DataUpdateLogic) DataUpdate(req *types.SysDictDataForm) (resp *types.NullResp, err error) {
+func (l *DataUpdateLogic) DataUpdate(req *types.SysDictDataForm) (resp *types.SysDictDataFormResp, err error) {
 	form := sysPb.DictDataForm{}
 	_ = copier.Copy(&form, req)
 
 	if _, err := l.svcCtx.SysRpc.DictDataUpdate(l.ctx, &form); err != nil {
-		return &types.NullResp{}, err
+		return nil, err
 	}
-	return &types.NullResp{}, nil
+	return &types.SysDictDataFormResp{}, nil
 }

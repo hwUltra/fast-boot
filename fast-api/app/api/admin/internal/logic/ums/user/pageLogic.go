@@ -26,7 +26,7 @@ func NewPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PageLogic {
 	}
 }
 
-func (l *PageLogic) Page(req *types.PageReq) (resp *types.UserPageRsqp, err error) {
+func (l *PageLogic) Page(req *types.UserPageReq) (resp *types.UserPageRsqp, err error) {
 	result, err := l.svcCtx.UmsRpc.UserPage(l.ctx, &umsPb.PageReq{
 		Keywords: req.Keywords,
 		PageNum:  req.PageNum,

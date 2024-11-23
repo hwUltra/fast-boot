@@ -1,29 +1,23 @@
-node_modules
-unpackage
-dist
-.hbuilderx
-/.idea/
-.idea/
-.idea
-.vscode
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-
-# Test binary, built with `go test -c`
-*.test
-
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
-*.zip
-
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# Logs
+logs
 *.log
-*/logs/*
-*.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
+.vscode
+node_modules
 .DS_Store
+dist
+*.local
+.history
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

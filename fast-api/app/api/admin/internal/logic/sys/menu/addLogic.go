@@ -26,7 +26,7 @@ func NewAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddLogic {
 	}
 }
 
-func (l *AddLogic) Add(req *types.SysMenuForm) (resp *types.IdResp, err error) {
+func (l *AddLogic) Add(req *types.SysMenuForm) (resp *types.SysMenuFormResp, err error) {
 	menuForm := sysPb.MenuForm{}
 	_ = copier.Copy(&menuForm, req)
 
@@ -34,7 +34,7 @@ func (l *AddLogic) Add(req *types.SysMenuForm) (resp *types.IdResp, err error) {
 		return nil, err
 	}
 
-	return &types.IdResp{
+	return &types.SysMenuFormResp{
 		Id: req.Id,
 	}, nil
 }

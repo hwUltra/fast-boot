@@ -26,13 +26,13 @@ func NewCategoryUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ca
 	}
 }
 
-func (l *CategoryUpdateLogic) CategoryUpdate(req *types.PmsCategoryForm) (resp *types.NullResp, err error) {
+func (l *CategoryUpdateLogic) CategoryUpdate(req *types.PmsCategoryForm) (resp *types.PmsCategoryFormResp, err error) {
 	form := pmsPb.PmsCategoryForm{}
 	_ = copier.Copy(&form, req)
 
 	if _, err := l.svcCtx.PmsRpc.PmsCategoryUpdate(l.ctx, &form); err != nil {
-		return &types.NullResp{}, err
+		return nil, err
 	}
 
-	return &types.NullResp{}, nil
+	return &types.PmsCategoryFormResp{}, nil
 }

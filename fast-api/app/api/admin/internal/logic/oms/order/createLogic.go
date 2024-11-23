@@ -25,7 +25,7 @@ func NewCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateLogi
 	}
 }
 
-func (l *CreateLogic) Create(req *types.OrderFormReq) (resp *types.IdResp, err error) {
+func (l *CreateLogic) Create(req *types.OrderFormReq) (resp *types.OrderFormResp, err error) {
 	fmt.Println("Order Create OrderNo = ", req.OrderNo)
 	return
 }

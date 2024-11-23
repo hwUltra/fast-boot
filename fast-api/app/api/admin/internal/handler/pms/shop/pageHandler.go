@@ -15,7 +15,7 @@ import (
 // 店铺列表
 func PageHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.PageReq
+		var req types.ShopPageReq
 		if err := httpx.Parse(r, &req); err != nil {
 			result.ParamErrorResult(r, w, err)
 			return

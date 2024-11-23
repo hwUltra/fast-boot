@@ -24,7 +24,7 @@ func NewChangeStatusLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Chan
 	}
 }
 
-func (l *ChangeStatusLogic) ChangeStatus(req *types.SysRoleChangeStatusReq) (resp *types.NullResp, err error) {
+func (l *ChangeStatusLogic) ChangeStatus(req *types.SysRoleChangeStatusReq) (resp *types.SysRoleSucessResp, err error) {
 	// todo: add your logic here and delete this line
 
 	return

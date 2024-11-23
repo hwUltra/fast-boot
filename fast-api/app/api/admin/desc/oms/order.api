@@ -5,7 +5,6 @@ info(
 	email: "skywalkerwei@gmail.com"
 )
 
-import "../base.api"
 
 type (
 	OrderInfo{
@@ -43,6 +42,25 @@ type (
 		OrderNo  string `json:"order_no,optional"`
 	}
 
+	OrderFormResp{
+		Id int64 `json:"id,optional"`
+	}
+
+	OrderIdReq{
+		Id int64 `path:"id"`
+	}
+
+	OrderDelResp{
+
+	}
+
+	OrderPageReq{
+		Keywords string `form:"keywords,omitempty,optional"`
+		Status int64 `form:"status,default=-1"`
+		PageNum int64 `form:"pageNum,default=1"`
+		PageSize int64 `form:"pageSize,default=10"`
+	}
+
 )
 
 @server(
@@ -53,21 +71,21 @@ type (
 service admin {
 	@doc "创建订单"
 	@handler Create
-	post / (OrderFormReq)  returns (IdResp)
+	post / (OrderFormReq)  returns (OrderFormResp)
 
 	@doc "删除订单"
 	@handler Del
-	delete /:id (PathIdReq)  returns (NullResp)
+	delete /:id (OrderIdReq)  returns (OrderDelResp)
 
 	@doc "修改订单"
 	@handler Update
-	put /:id (OrderFormReq)  returns (NullResp)
+	put /:id (OrderFormReq)  returns (OrderFormReq)
 
 	@doc "获取订单"
 	@handler Get
-	get /:id (PathIdReq)  returns (OrderInfo)
+	get /:id (OrderIdReq)  returns (OrderInfo)
 
 	@doc "订单列表"
 	@handler Page
-	get /(PageReq)  returns (OrderPageResp)
+	get /(OrderPageReq)  returns (OrderPageResp)
 }

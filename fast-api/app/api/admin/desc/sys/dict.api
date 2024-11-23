@@ -4,7 +4,6 @@ info(
     email: "skywalkerwei@gmail.com"
 )
 
-import "../base.api"
 
 type (
     SysDictItem {
@@ -83,7 +82,40 @@ type (
         Total int64 `json:"total"`
         List []*SysDictDataItem `json:"list"`
     }
-//
+
+    SysDictFormResp{
+        Id int64 `json:"id,omitempty,optional"`
+    }
+
+    SysDictDelReq{
+        Ids string `path:"ids"`
+    }
+
+    SysDictDelResp{
+
+    }
+
+    SysDictGetReq{
+        Id int64 `path:"id"`
+    }
+
+    SysDictDataFormResp{
+        Id int64 `json:"id,omitempty,optional"`
+    }
+
+    SysDictDataDelReq{
+        Ids string `path:"ids"`
+    }
+
+    SysDictDataDelResp{
+
+    }
+
+    SysDictDataGetReq{
+        Id int64 `path:"id"`
+    }
+
+
 //    SysTypeReq{
 //        TypeCode string `path:"typeCode"`
 //    }
@@ -104,110 +136,39 @@ type (
 )
 service admin {
     @handler SimList
-    get /simlist (NullReq) returns ([]SysSimDict)
+    get /simlist  returns ([]SysSimDict)
 
     //-----dict------
     @handler Add
-    post / (SysDictForm) returns (IdResp)
+    post / (SysDictForm) returns (SysDictFormResp)
 
     @handler Update
-    put /:id (SysDictForm) returns (NullResp)
+    put /:id (SysDictForm) returns (SysDictFormResp)
 
     @handler Del
-    delete /:ids (PathIdsReq) returns (NullResp)
+    delete /:ids (SysDictDelReq) returns (SysDictDelResp)
 
     @handler Get
-    get /:id (PathIdReq) returns (SysDictItem)
+    get /:id (SysDictGetReq) returns (SysDictItem)
 
     @handler Page
     get / (SysDictPageReq) returns (SysDictPageResp)
 
     //----dictdata-----
     @handler DataAdd
-    post /data (SysDictDataForm) returns (IdResp)
+    post /data (SysDictDataForm) returns (SysDictDataFormResp)
 
     @handler DataUpdate
-    put /data/:id (SysDictDataForm) returns (NullResp)
+    put /data/:id (SysDictDataForm) returns (SysDictDataFormResp)
 
     @handler DataDel
-    delete /data/:ids (PathIdsReq) returns (NullResp)
+    delete /data/:ids (SysDictDataDelReq) returns (SysDictDataDelResp)
 
     @handler DataGet
-    get /data/:id (PathIdReq) returns (SysDictDataItem)
+    get /data/:id (SysDictDataGetReq) returns (SysDictDataItem)
 
     @handler DataPage
     get /data (SysDictDataPageReq) returns (SysDictDataPageResp)
-
-
-//    @doc(
-//        summary: "Add"
-//    )
-//    @handler Add
-//    post / (SysDictForm) returns (IdResp)
-//
-//    @doc(
-//        summary: "Update"
-//    )
-//    @handler Update
-//    put /:id (SysDictForm)  returns (NullResp)
-//
-//    @doc(
-//        summary: "Get"
-//    )
-//    @handler Get
-//    get /:id (PathIdReq)  returns (SysDictItem)
-//
-
-//
-//    @doc(
-//        summary: "Options"
-//    )
-//    @handler Options
-//    get /options  returns ([]SysDictOption)
-//
-//    @doc(
-//        summary: "Del"
-//    )
-//    @handler Del
-//    delete /:ids (PathIdsReq)  returns (NullResp)
-//
-//    //-------type----------------
-//
-//    @doc(
-//        summary: "TypeAdd"
-//    )
-//    @handler TypeAdd
-//    post /type (SysDictTypeForm) returns (IdResp)
-//
-//    @doc(
-//        summary: "TypeUpdate"
-//    )
-//    @handler TypeUpdate
-//    put /type (SysDictTypeForm) returns (NullResp)
-//
-//    @doc(
-//        summary: "TypeGet"
-//    )
-//    @handler TypeGet
-//    get /type/:id (PathIdReq)  returns (SysDictTypeItem)
-//
-//    @doc(
-//        summary: "TypeList"
-//    )
-//    @handler TypeList
-//    get /type (SysDictTypeListReq) returns (SysDictTypeListResp)
-//
-//    @doc(
-//        summary: "TypeDel"
-//    )
-//    @handler TypeDel
-//    delete /type/:ids (PathIdsReq) returns (NullResp)
-//
-//    @doc(
-//        summary: "TypeOptions"
-//    )
-//    @handler TypeOptions
-//    get /:typeCode/options (SysTypeReq) returns ([]SysDictOption)
 
 
 }

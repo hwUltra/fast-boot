@@ -27,7 +27,7 @@ func NewUserGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserGetLo
 
 func (l *UserGetLogic) UserGet(in *umsPb.IdReq) (*umsPb.User, error) {
 
-	ct := (*model.UserCache)(gormx.NewCacheTool(l.svcCtx.Config.CacheConf, l.svcCtx.GormClient.GormDb))
+	ct := (*model.UserCache)(gormx.NewCacheTool(l.svcCtx.Config.Cache, l.svcCtx.GormClient.GormDb))
 	userInfo := ct.Get(in.Id)
 
 	res := &umsPb.User{}

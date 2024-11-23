@@ -26,12 +26,12 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 	}
 }
 
-func (l *UpdateLogic) Update(req *types.SysMenuForm) (resp *types.NullResp, err error) {
+func (l *UpdateLogic) Update(req *types.SysMenuForm) (resp *types.SysMenuFormResp, err error) {
 	menuForm := sysPb.MenuForm{}
 	_ = copier.Copy(&menuForm, req)
 	if _, err := l.svcCtx.SysRpc.MenuUpdate(l.ctx, &menuForm); err != nil {
-		return &types.NullResp{}, err
+		return nil, err
 	}
 
-	return &types.NullResp{}, nil
+	return &types.SysMenuFormResp{}, nil
 }

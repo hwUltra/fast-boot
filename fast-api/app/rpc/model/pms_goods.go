@@ -83,4 +83,4 @@ func (*PmsGoodsModel) WithCreatedAt(startTime string, endTime string) func(db *g
 
 const CachePmsGoodsModelIdPrefix = "Cache:PmsGoodsModel:ID:"
 
-type PmsGoodsCache gormx.CacheTool
+type PmsGoodsCache gormx.GormCache

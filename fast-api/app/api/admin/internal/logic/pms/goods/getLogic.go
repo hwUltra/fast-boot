@@ -26,7 +26,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 	}
 }
 
-func (l *GetLogic) Get(req *types.PathIdReq) (resp *types.PmsGoods, err error) {
+func (l *GetLogic) Get(req *types.GoodsIdReq) (resp *types.PmsGoods, err error) {
 	res, err := l.svcCtx.PmsRpc.PmsGoodsGet(l.ctx, &pmsPb.IdReq{Id: req.Id})
 	if err != nil {
 		return nil, err

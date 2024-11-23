@@ -25,7 +25,7 @@ func NewMenuIdsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *MenuIdsLo
 	}
 }
 
-func (l *MenuIdsLogic) MenuIds(req *types.PathIdReq) (resp []int64, err error) {
+func (l *MenuIdsLogic) MenuIds(req *types.SysMenuIdReq) (resp []int64, err error) {
 	result, err := l.svcCtx.SysRpc.RoleMenuIds(l.ctx, &sysPb.IdReq{
 		Id: req.Id,
 	})

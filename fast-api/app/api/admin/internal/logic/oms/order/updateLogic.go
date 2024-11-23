@@ -25,7 +25,7 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 	}
 }
 
-func (l *UpdateLogic) Update(req *types.OrderFormReq) (resp *types.NullResp, err error) {
+func (l *UpdateLogic) Update(req *types.OrderFormReq) (resp *types.OrderFormResp, err error) {
 	fmt.Println("Order Update Id = ", req.Id)
 	fmt.Println("Order Update OrderNo = ", req.OrderNo)
 	return

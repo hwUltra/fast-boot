@@ -25,7 +25,7 @@ func NewShopDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShopDelLo
 }
 
 func (l *ShopDelLogic) ShopDel(in *pmsPb.IdsReq) (*pmsPb.SuccessResp, error) {
-	ct := (*model.PmsShopCache)(gormx.NewCacheTool(l.svcCtx.Config.CacheConf, l.svcCtx.GormClient.GormDb))
+	ct := (*model.PmsShopCache)(gormx.NewCacheTool(l.svcCtx.Config.Cache, l.svcCtx.GormClient.GormDb))
 	ct.Del(in.Ids)
 	return &pmsPb.SuccessResp{}, nil
 }

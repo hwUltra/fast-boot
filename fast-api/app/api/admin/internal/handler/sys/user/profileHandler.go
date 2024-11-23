@@ -1,10 +1,11 @@
 package user
 
 import (
-	"fast-boot/app/api/admin/internal/logic/sys/user"
-	"fast-boot/app/api/admin/internal/svc"
 	"github.com/hwUltra/fb-tools/result"
 	"net/http"
+
+	"fast-boot/app/api/admin/internal/logic/sys/user"
+	"fast-boot/app/api/admin/internal/svc"
 )
 
 // Profile 获取用户

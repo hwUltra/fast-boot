@@ -12,5 +12,6 @@ func NewErrCode(errCode uint32) *result.CodeError {
 }
 
 func NewErrMsg(errMsg string) *result.CodeError {
+
 	return result.NewErrCodeMsg(SERVER_COMMON_ERROR, errMsg)
 }

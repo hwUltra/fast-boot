@@ -35,4 +35,4 @@ func (*SysRoleModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
 
 const CacheSysRoleModelIdPrefix = "Cache:SysRoleModel:ID:"
 
-type SysRoleCache gormx.CacheTool
+type SysRoleCache gormx.GormCache

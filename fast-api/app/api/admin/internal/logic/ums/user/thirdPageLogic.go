@@ -26,7 +26,7 @@ func NewThirdPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ThirdPa
 	}
 }
 
-func (l *ThirdPageLogic) ThirdPage(req *types.PageReq) (resp *types.UserThirdPageRsqp, err error) {
+func (l *ThirdPageLogic) ThirdPage(req *types.UserPageReq) (resp *types.UserThirdPageRsqp, err error) {
 	result, err := l.svcCtx.UmsRpc.UserThirdPage(l.ctx, &umsPb.PageReq{
 		Keywords: req.Keywords,
 		PageNum:  req.PageNum,

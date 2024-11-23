@@ -21,7 +21,7 @@ func (*PmsBrandModel) TableName() string {
 func (*PmsBrandModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(keyword) > 0 {
-			return db.Where("`name` LIKE ?", "%"+keyword+"%")
+			return db.Where("name LIKE ?", "%"+keyword+"%")
 		}
 		return db
 	}
@@ -30,7 +30,7 @@ func (*PmsBrandModel) WithKeywords(keyword string) func(db *gorm.DB) *gorm.DB {
 func (*PmsBrandModel) WithShopId(shopId int64) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if shopId > 0 {
-			return db.Where("`shop_id` = ?", shopId)
+			return db.Where("shop_id = ?", shopId)
 		}
 		return db
 	}
@@ -42,4 +42,4 @@ func (*PmsBrandModel) WithShopId(shopId int64) func(db *gorm.DB) *gorm.DB {
 
 const CachePmsBrandModelIdPrefix = "Cache:PmsBrandModel:ID:"
 
-type PmsBrandCache gormx.CacheTool
+type PmsBrandCache gormx.GormCache

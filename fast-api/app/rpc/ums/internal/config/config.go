@@ -10,9 +10,9 @@ import (
 
 type Config struct {
 	zrpc.RpcServerConf
-	GormConf  gormx.Conf
-	CacheConf cache.CacheConf
-	JWT       struct {
+	Gorm  gormx.Conf
+	Cache cache.CacheConf
+	JWT   struct {
 		AccessSecret string
 		AccessExpire int64
 	}

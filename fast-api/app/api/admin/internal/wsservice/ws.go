@@ -24,7 +24,7 @@ func OnOpen(hub *wsCore.Hub, rw http.ResponseWriter, r *http.Request, c config.C
 	if client, ok := (&wsCore.Client{}).OnOpen(hub, rw, r); ok {
 		ws := &Ws{}
 		ws.WsClient = client
-		ws.RedisClient = redis.MustNewRedis(c.RedisConf)
+		ws.RedisClient = redis.MustNewRedis(c.Redis)
 
 		client.ClientId = uuid.New().String()
 

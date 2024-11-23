@@ -26,13 +26,13 @@ func NewBrandUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Brand
 	}
 }
 
-func (l *BrandUpdateLogic) BrandUpdate(req *types.BrandForm) (resp *types.NullResp, err error) {
+func (l *BrandUpdateLogic) BrandUpdate(req *types.BrandForm) (resp *types.BrandFormResp, err error) {
 	form := pmsPb.PmsBrandForm{}
 	_ = copier.Copy(&form, req)
 
 	if _, err := l.svcCtx.PmsRpc.PmsBrandUpdate(l.ctx, &form); err != nil {
-		return &types.NullResp{}, err
+		return nil, err
 	}
 
-	return &types.NullResp{}, nil
+	return &types.BrandFormResp{}, nil
 }

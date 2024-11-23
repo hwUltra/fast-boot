@@ -46,4 +46,4 @@ func (*SysDictDataModel) WithStatus(status int64) func(db *gorm.DB) *gorm.DB {
 
 const CacheSysDictDataModelIdPrefix = "Cache:SysDictDataModel:ID:"
 
-type SysDictDataCache gormx.CacheTool
+type SysDictDataCache gormx.GormCache

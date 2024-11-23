@@ -1,11 +1,11 @@
 package auth
 
 import (
-	"github.com/hwUltra/fb-tools/result"
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 
+	"github.com/hwUltra/fb-tools/result"
 	"github.com/hwUltra/fb-tools/utils"
-	"github.com/zeromicro/go-zero/rest/httpx"
 
 	"fast-boot/app/api/admin/internal/logic/auth"
 	"fast-boot/app/api/admin/internal/svc"
@@ -20,12 +20,10 @@ func LoginHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			result.ParamErrorResult(r, w, err)
 			return
 		}
-
 		if err := utils.ValidatorCheck(r, &req); err != nil {
 			result.ParamErrorResult(r, w, err)
 			return
 		}
-
 		l := auth.NewLoginLogic(r.Context(), svcCtx)
 		resp, err := l.Login(&req)
 		result.HttpResult(r, w, resp, err)

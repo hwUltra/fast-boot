@@ -6,10 +6,8 @@ import (
 	"fast-boot/app/rpc/ums/internal/svc"
 	"fast-boot/app/rpc/ums/umsPb"
 	"fast-boot/common/globalkey"
-	"fast-boot/common/xerr"
 	"github.com/hwUltra/fb-tools/gormx"
 	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -34,7 +32,7 @@ func (l *UserPageLogic) UserPage(in *umsPb.PageReq) (*umsPb.UserPageResp, error)
 	if err := l.svcCtx.GormClient.GormDb.Model(userModel).
 		Scopes(userModel.WithKeywords(in.Keywords)).
 		Count(&total).Error; err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Failed to get  err : %v , in :%+v", err, in)
+		return nil, err
 	}
 	list := make([]*umsPb.User, 0)
 	if total > 0 {

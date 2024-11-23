@@ -25,12 +25,12 @@ func NewSetMenuIdsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SetMen
 	}
 }
 
-func (l *SetMenuIdsLogic) SetMenuIds(req *types.SysSetMenuIdsReq) (resp *types.NullResp, err error) {
+func (l *SetMenuIdsLogic) SetMenuIds(req *types.SysSetMenuIdsReq) (resp *types.SysRoleSucessResp, err error) {
 	if _, err := l.svcCtx.SysRpc.RoleSetMenuIds(l.ctx, &sysPb.RoleSetMenuIdsReq{
 		RoleId:  req.RoleId,
 		MenuIds: req.MenuIds,
 	}); err != nil {
-		return &types.NullResp{}, err
+		return nil, err
 	}
-	return &types.NullResp{}, nil
+	return &types.SysRoleSucessResp{}, nil
 }

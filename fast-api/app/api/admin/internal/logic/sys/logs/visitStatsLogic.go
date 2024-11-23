@@ -23,7 +23,7 @@ func NewVisitStatsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *VisitS
 	}
 }
 
-func (l *VisitStatsLogic) VisitStats(req *types.NullReq) (resp []types.VisitStatsItem, err error) {
+func (l *VisitStatsLogic) VisitStats() (resp []types.VisitStatsItem, err error) {
 	return []types.VisitStatsItem{
 		{
 			Type:             "pv",

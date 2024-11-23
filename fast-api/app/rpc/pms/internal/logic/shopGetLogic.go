@@ -28,7 +28,7 @@ func NewShopGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShopGetLo
 
 func (l *ShopGetLogic) ShopGet(in *pmsPb.IdReq) (*pmsPb.Shop, error) {
 
-	ct := (*model.PmsShopCache)(gormx.NewCacheTool(l.svcCtx.Config.CacheConf, l.svcCtx.GormClient.GormDb))
+	ct := (*model.PmsShopCache)(gormx.NewCacheTool(l.svcCtx.Config.Cache, l.svcCtx.GormClient.GormDb))
 	item := ct.Get(in.Id)
 
 	var info pmsPb.Shop

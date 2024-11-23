@@ -9,11 +9,11 @@ type (
 	userForm {
 		Id        int64  `json:"id,optional"`
 		Mobile    string `json:"mobile,optional"`         //电话号码
-		Username      string `json:"username,optional"`             //姓名
+		Username  string `json:"username,optional"`             //姓名
 		Nickname  string `json:"nickname,optional"`     //昵称
 		Avatar    string `json:"avatar,optional"`         //头像
 		IdCard    string `json:"idCard,optional"`         //身份证号码
-		Gender       int64  `json:"gender,optional"`              //性别 0 未知 1男 2女
+		Gender    int64  `json:"gender,optional"`              //性别 0 未知 1男 2女
 		Signature string `json:"signature,optional"`
 		Birthday  string `json:"birthday,optional"`
 		Tags      string `json:"tags,optional"`

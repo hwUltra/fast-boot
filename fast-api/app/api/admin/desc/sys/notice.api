@@ -4,7 +4,6 @@ info(
     email: "skywalkerwei@gmail.com"
 )
 
-import "../base.api"
 
 type (
     SysNotice {
@@ -41,6 +40,10 @@ type (
         UpdateBy  int64 `json:"update_by"`  // 更新人ID
     }
 
+    SysNoticeFormResp{
+        Id int64 `json:"id"`
+    }
+
     SysNoticePageReq  {
         Title string `form:"title,omitempty,optional"`
         Status int64 `form:"status,omitempty,optional,default=-1"`
@@ -55,6 +58,8 @@ type (
         List []*SysNotice `json:"list"`
     }
 
+
+
 )
 
 @server(
@@ -64,7 +69,7 @@ type (
 )
 service admin {
     @handler Add
-    post / (SysNoticeFormReq)  returns(IdResp)
+    post / (SysNoticeFormReq)  returns(SysNoticeFormResp)
 
     @handler Page
     get / (SysNoticePageReq) returns (SysNoticePageResp)

@@ -26,7 +26,7 @@ func NewAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddLogic {
 	}
 }
 
-func (l *AddLogic) Add(req *types.SysDeptFormReq) (resp *types.IdResp, err error) {
+func (l *AddLogic) Add(req *types.SysDeptFormReq) (resp *types.SysDeptFormResp, err error) {
 	deptForm := sysPb.DeptForm{}
 	_ = copier.Copy(&deptForm, req)
 
@@ -34,7 +34,7 @@ func (l *AddLogic) Add(req *types.SysDeptFormReq) (resp *types.IdResp, err error
 		return nil, err
 	}
 
-	return &types.IdResp{
+	return &types.SysDeptFormResp{
 		Id: req.Id,
 	}, nil
 }

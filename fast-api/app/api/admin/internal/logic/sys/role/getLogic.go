@@ -26,7 +26,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 	}
 }
 
-func (l *GetLogic) Get(req *types.PathIdReq) (resp *types.SysRoleInfo, err error) {
+func (l *GetLogic) Get(req *types.SysRoleGetReq) (resp *types.SysRoleInfo, err error) {
 	result, err := l.svcCtx.SysRpc.RoleGet(l.ctx, &sysPb.IdReq{
 		Id: req.Id,
 	})

@@ -4,9 +4,6 @@ info(
     email: "skywalkerwei@gmail.com"
 )
 
-
-import "../base.api"
-
 type (
     RouteMetaData {
         Title string `json:"title"`
@@ -40,13 +37,13 @@ type (
         RoutePath  string `json:"routePath"`
         Component  string `json:"component"`
         Perm  string `json:"perm,omitempty"`
-        AlwaysShow  int64 `json:"alwaysShow"`
-        KeepAlive  int64 `json:"keepAlive"`
-        Visible  int64 `json:"visible"`
+        AlwaysShow  bool `json:"alwaysShow"`
+        KeepAlive  bool `json:"keepAlive"`
+        Visible  bool `json:"visible"`
         Sort  int64 `json:"sort,default=1"`
         Icon  string `json:"icon"`
 //        Params string `json:"params,omitempty"`
-        Params []ParamsItem `json:"params,optional,omitempty"`
+        Params []*ParamsItem `json:"params,optional,omitempty"`
         Redirect  string `json:"redirect"`
         CreatedAt  string `json:"created_at"`
         UpdatedAt  string `json:"updated_at"`
@@ -62,12 +59,12 @@ type (
         RoutePath  string `json:"routePath"`
         Component  string `json:"component"`
         Perm  string `json:"perm,optional,omitempty"`
-        AlwaysShow  int64 `json:"alwaysShow"`
-        KeepAlive  int64 `json:"keepAlive"`
-        Visible  int64 `json:"visible"`
+        AlwaysShow  bool `json:"alwaysShow"`
+        KeepAlive  bool `json:"keepAlive"`
+        Visible  bool `json:"visible"`
         Sort  int64 `json:"sort,default=1"`
         Icon  string `json:"icon"`
-        Params []ParamsItem `json:"params,optional,omitempty"`
+        Params []*ParamsItem `json:"params,optional,omitempty"`
         Redirect  string `json:"redirect"`
     }
 
@@ -110,7 +107,21 @@ type (
     SysMenuOption {
         Label string `json:"label"`
         Value int64 `json:"value"`
-        Children []SysMenuOption `json:"children,omitempty"`
+        Children []*SysMenuOption `json:"children,omitempty"`
+    }
+
+    SysMenuFormResp{
+        Id int64 `json:"id,omitempty,optional"`
+    }
+
+    SysMenuDelReq{
+        Ids string `path:"ids"`
+    }
+
+    SysMenuDelResp{}
+
+    SysMenuGetReq{
+        Id int64 `path:"id"`
     }
 
 )
@@ -131,19 +142,19 @@ service admin {
 
     @doc "新增菜单"
     @handler Add
-    post / (SysMenuForm) returns (IdResp)
+    post / (SysMenuForm) returns (SysMenuFormResp)
 
     @doc "修改菜单"
     @handler Update
-    put /:id (SysMenuForm) returns (NullResp)
+    put /:id (SysMenuForm) returns (SysMenuFormResp)
 
     @doc "删除角色"
     @handler Del
-    delete /:ids (PathIdsReq) returns (NullResp)
+    delete /:ids (SysMenuDelReq) returns (SysMenuDelResp)
 
     @doc "获取菜单"
     @handler Get
-    get /:id (PathIdReq)  returns (SysMenuInfo)
+    get /:id (SysMenuGetReq)  returns (SysMenuInfo)
 
     @doc "菜单下拉列表"
     @handler Options

@@ -3,13 +3,10 @@ package logic
 import (
 	"context"
 	"fast-boot/app/rpc/model"
-	"fast-boot/common/xerr"
-	"fmt"
-	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
-
 	"fast-boot/app/rpc/pms/internal/svc"
 	"fast-boot/app/rpc/pms/pmsPb"
+	"fmt"
+	"github.com/jinzhu/copier"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -40,7 +37,7 @@ func (l *PmsGoodsPageLogic) PmsGoodsPage(in *pmsPb.PmsGoodsPageReq) (*pmsPb.PmsG
 			m.WithCategoryId(in.CategoryId),
 			m.WithCreatedAt(in.StartTime, in.EndTime)).
 		Count(&total).Error; err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Failed to get  err : %v , in :%+v", err, in)
+		return nil, err
 	}
 
 	list := make([]*pmsPb.PmsGoodsInfo, 0)

@@ -23,7 +23,7 @@ func NewChangeStatusLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Chan
 	}
 }
 
-func (l *ChangeStatusLogic) ChangeStatus(req *types.SysUserChangeStatusReq) (resp *types.NullResp, err error) {
+func (l *ChangeStatusLogic) ChangeStatus(req *types.SysUserChangeStatusReq) (resp *types.SysUserFormResp, err error) {
 	// todo: add your logic here and delete this line
 
 	return

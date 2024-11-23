@@ -24,9 +24,9 @@ func NewDataDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DataDelLo
 	}
 }
 
-func (l *DataDelLogic) DataDel(req *types.PathIdsReq) (resp *types.NullResp, err error) {
+func (l *DataDelLogic) DataDel(req *types.SysDictDataDelReq) (resp *types.SysDictDataDelResp, err error) {
 	if _, err := l.svcCtx.SysRpc.DictDataDel(l.ctx, &sysPb.IdsReq{Ids: req.Ids}); err != nil {
-		return &types.NullResp{}, err
+		return nil, err
 	}
-	return &types.NullResp{}, nil
+	return &types.SysDictDataDelResp{}, nil
 }

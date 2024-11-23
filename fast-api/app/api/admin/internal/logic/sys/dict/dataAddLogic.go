@@ -25,7 +25,7 @@ func NewDataAddLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DataAddLo
 	}
 }
 
-func (l *DataAddLogic) DataAdd(req *types.SysDictDataForm) (resp *types.IdResp, err error) {
+func (l *DataAddLogic) DataAdd(req *types.SysDictDataForm) (resp *types.SysDictDataFormResp, err error) {
 	form := sysPb.DictDataForm{}
 	_ = copier.Copy(&form, req)
 
@@ -33,7 +33,7 @@ func (l *DataAddLogic) DataAdd(req *types.SysDictDataForm) (resp *types.IdResp, 
 		return nil, err
 	}
 
-	return &types.IdResp{
+	return &types.SysDictDataFormResp{
 		Id: req.Id,
 	}, nil
 }

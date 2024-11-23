@@ -26,12 +26,12 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 	}
 }
 
-func (l *UpdateLogic) Update(req *types.SysDictForm) (resp *types.NullResp, err error) {
+func (l *UpdateLogic) Update(req *types.SysDictForm) (resp *types.SysDictFormResp, err error) {
 	form := sysPb.DictForm{}
 	_ = copier.Copy(&form, req)
 
 	if _, err := l.svcCtx.SysRpc.DictUpdate(l.ctx, &form); err != nil {
-		return &types.NullResp{}, err
+		return nil, err
 	}
-	return &types.NullResp{}, nil
+	return &types.SysDictFormResp{}, nil
 }

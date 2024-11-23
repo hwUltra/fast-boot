@@ -31,7 +31,7 @@ func (l *ShopAddLogic) ShopAdd(in *pmsPb.ShopForm) (*pmsPb.SuccessIdResp, error)
 	if err := copier.Copy(&item, in); err != nil {
 		return nil, err
 	}
-	ct := (*model.PmsShopCache)(gormx.NewCacheTool(l.svcCtx.Config.CacheConf, l.svcCtx.GormClient.GormDb))
+	ct := (*model.PmsShopCache)(gormx.NewCacheTool(l.svcCtx.Config.Cache, l.svcCtx.GormClient.GormDb))
 	if err := ct.Create(&item); err != nil {
 		return nil, err
 	}

@@ -25,7 +25,7 @@ func NewPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PageLogic {
 	}
 }
 
-func (l *PageLogic) Page(req *types.PageReq) (resp *types.OrderPageResp, err error) {
+func (l *PageLogic) Page(req *types.OrderPageReq) (resp *types.OrderPageResp, err error) {
 	fmt.Println("order List = ", req)
 
 	return

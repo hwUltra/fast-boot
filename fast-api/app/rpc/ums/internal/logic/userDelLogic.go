@@ -26,7 +26,7 @@ func NewUserDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserDelLo
 
 func (l *UserDelLogic) UserDel(in *umsPb.IdsReq) (*umsPb.SuccessResp, error) {
 
-	ct := (*model.UserCache)(gormx.NewCacheTool(l.svcCtx.Config.CacheConf, l.svcCtx.GormClient.GormDb))
+	ct := (*model.UserCache)(gormx.NewCacheTool(l.svcCtx.Config.Cache, l.svcCtx.GormClient.GormDb))
 	ct.Del(in.Ids)
 	return &umsPb.SuccessResp{}, nil
 

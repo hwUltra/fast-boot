@@ -4,10 +4,8 @@ info(
     email: "skywalkerwei@gmail.com"
 )
 
-import "../base.api"
 
 type (
-
     SysLog {
         Id  int64 `json:"id"`  // 主键
         Module  string `json:"module"`  // 日志模块
@@ -37,6 +35,10 @@ type (
         BrowserVersion  string `json:"browser_version" validate:"min=2,max=100"`
         Os  string `json:"os" validate:"min=2,max=100"`
         CreateBy  int64 `json:"create_by"`
+    }
+
+    SysLogFormResp{
+        Id int64 `json:"id,optional"`
     }
 
     SysLogListReq  {
@@ -81,14 +83,14 @@ type (
 )
 service admin {
     @handler Add
-    post / (SysLogFormReq)  returns(IdResp)
+    post / (SysLogFormReq)  returns(SysLogFormResp)
 
     @handler List
     get / (SysLogListReq) returns(SysLogListResp)
 
     @handler visitStats
-    get /visit-stats (NullReq) returns([]*VisitStatsItem)
+    get /visit-stats  returns([]*VisitStatsItem)
 
     @handler visitTrend
-    get /visit-trend (VisitTrendReq) returns(VisitTrendResp)
+    get /visit-trend () returns(VisitTrendResp)
 }

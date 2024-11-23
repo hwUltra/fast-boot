@@ -25,7 +25,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 	}
 }
 
-func (l *GetLogic) Get(req *types.PathIdReq) (resp *types.OrderInfo, err error) {
+func (l *GetLogic) Get(req *types.OrderIdReq) (resp *types.OrderInfo, err error) {
 	fmt.Println("order Get = ", req.Id)
 
 	return

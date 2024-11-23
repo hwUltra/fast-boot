@@ -23,7 +23,7 @@ func NewVisitTrendLogic(ctx context.Context, svcCtx *svc.ServiceContext) *VisitT
 	}
 }
 
-func (l *VisitTrendLogic) VisitTrend(req *types.VisitTrendReq) (resp *types.VisitTrendResp, err error) {
+func (l *VisitTrendLogic) VisitTrend() (resp *types.VisitTrendResp, err error) {
 
 	return &types.VisitTrendResp{
 		Dates:  []string{"2024-10-15", "2024-10-16", "2024-10-17", "2024-10-18", "2024-10-19", "2024-10-20", "2024-10-21", "2024-10-22"},
